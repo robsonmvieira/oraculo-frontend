@@ -23,7 +23,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          'relative rounded-full overflow-hidden bg-gradient-to-br from-lime to-lime-hover border-2 border-dashed border-gray-200 hover:border-lime transition-colors duration-300',
+          'relative rounded-full overflow-hidden bg-gradient-to-br from-lime to-lime-hover border-2 border-solid border-gray-200 hover:border-lime transition-colors duration-300',
           sizeClasses[size],
           className
         )}

@@ -9,7 +9,7 @@ import { useReducedMotion } from '@/hooks'
 const pageNames: Record<string, string> = {
   '/': 'Dashboard',
   '/orders': 'Orders',
-  '/products': 'Products',
+  '/audiences': 'Audiences',
   '/campaigns': 'Campaigns',
   '/cart': 'Cart',
   '/analytics': 'Analytics',
@@ -28,7 +28,7 @@ export function Topbar() {
   const { theme, toggleTheme } = useTheme()
   const prefersReducedMotion = useReducedMotion()
 
-  const pageName = pageNames[location.pathname] || 'Dashboard!'
+  const pageName = pageNames[location.pathname] || 'Dashboard'
 
   useEffect(() => {
     if (!topbarRef.current || prefersReducedMotion) return

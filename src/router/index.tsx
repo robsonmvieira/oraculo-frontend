@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/components/layout'
 
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
+const Audiences = lazy(() => import('@/pages/Audiences'))
 const Placeholder = lazy(() => import('@/pages/Placeholder'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -36,10 +37,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'products',
+        path: 'audiences',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <Placeholder />
+            <Audiences />
           </Suspense>
         ),
       },
