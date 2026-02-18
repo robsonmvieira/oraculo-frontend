@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* ============================================
+   STALISTY DESIGN SYSTEM - CSS VARIABLES
+   ============================================ */
+
+@theme {
+  /* Primary Colors */
+  --color-lime: #c3f53c;
+  --color-lime-hover: #b2e032;
+  --color-dark: #1a1a1a;
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* Gray Scale */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #6a7282;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Semantic Colors - Success */
+  --color-success-bg: #f0fdf4;
+  --color-success: #16a34a;
+  --color-success-light: #10b981;
+
+  /* Semantic Colors - Warning */
+  --color-warning-bg: #fef3c7;
+  --color-warning: #d97706;
+
+  /* Semantic Colors - Error */
+  --color-error-bg: #fee2e2;
+  --color-error: #dc2626;
+  --color-error-light: #ef4444;
+
+  /* Semantic Colors - Info */
+  --color-info-bg: #dbeafe;
+  --color-info: #0369a1;
+
+  /* Semantic Colors - Purple */
+  --color-purple-bg: #f3e8ff;
+  --color-purple: #7c3aed;
+
+  /* Text Colors */
+  --color-text-primary: #101828;
+  --color-text-secondary: #6a7282;
+  --color-text-muted: #9ca3af;
+  --color-text-nav: #99a1af;
+
+  /* Surface Colors */
+  --color-surface-page: #f9fafb;
+  --color-surface-card: #ffffff;
+  --color-surface-product: #f5f5f5;
+  --color-surface-info: #f3f4f6;
+
+  /* Border Colors */
+  --color-border: #e5e7eb;
+  --color-border-subtle: #f3f4f6;
+  --color-border-focus: #c3f53c;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 1.875rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Animation Timing */
+  --animation-fast: 0.15s;
+  --animation-normal: 0.3s;
+  --animation-slow: 0.5s;
+
+  /* Font Family */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-lime);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+.dark {
+  --color-surface-page: #0f0f0f;
+  --color-surface-card: #1a1a1a;
+  --color-surface-info: #262626;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-border: #27272a;
+  --color-border-subtle: #1f1f1f;
+  --color-gray-50: #18181b;
+  --color-gray-100: #27272a;
+  --color-gray-200: #3f3f46;
+  --color-gray-900: #fafafa;
+}
+
+.dark body {
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-gray-800);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-gray-600);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: border-color var(--animation-normal) ease;
+  border: 1px solid transparent;
+}
+
+.card-hover:hover {
+  border-color: var(--color-border);
+}
+
+/* Image zoom effect */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img {
+  transition: transform var(--animation-normal) ease;
+}
+
+.img-zoom:hover img {
+  transform: scale(1.1);
+}

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Design System - Stalisty</title>
+  <link href="assets/favicon_c270449ad7ab.svg" rel="icon" type="image/svg+xml"/>
+  <link href="assets/7a4bf2e373a12438_b255c60190f8.css" rel="stylesheet"/>
+  <style>
+    /* Design system specific styles */
+    body { background: #f9fafb; }
+    .ds-nav { position: sticky; top: 0; z-index: 100; background: #1a1a1a; padding: 0 2rem; display: flex; gap: 0; align-items: center; height: 56px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .ds-nav a { color: #99a1af; font-size: 0.875rem; font-weight: 700; padding: 1rem 1rem; white-space: nowrap; text-decoration: none; transition: color 0.15s; border-bottom: 2px solid transparent; }
+    .ds-nav a:hover, .ds-nav a.active { color: #c3f53c; border-bottom-color: #c3f53c; }
+    .ds-section { padding: 4rem 2rem; max-width: 1400px; margin: 0 auto; }
+    .ds-section-title { font-size: 1.875rem; font-weight: 700; color: #101828; margin-bottom: 0.5rem; }
+    .ds-section-desc { color: #6a7282; margin-bottom: 2rem; font-size: 0.95rem; }
+    .ds-divider { height: 1px; background: #e5e7eb; margin: 4rem 0; }
+    .ds-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .ds-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .ds-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .ds-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+    .ds-swatch { border-radius: 1rem; height: 80px; display: flex; align-items: flex-end; padding: 0.75rem; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .ds-type-row { display: flex; align-items: baseline; justify-content: space-between; padding: 1.5rem 0; border-bottom: 1px solid #f3f4f6; }
+    .ds-type-label { color: #6a7282; font-size: 0.75rem; font-weight: 700; min-width: 140px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ds-type-preview { flex: 1; text-align: center; }
+    .ds-type-spec { color: #99a1af; font-size: 0.75rem; font-weight: 500; text-align: right; white-space: nowrap; min-width: 200px; }
+    .ds-component-label { font-size: 0.75rem; font-weight: 700; color: #99a1af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+    .ds-states-row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
+    .ds-color-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; }
+    .ds-color-item { text-align: center; }
+    .ds-color-swatch { border-radius: 0.75rem; height: 60px; width: 60px; margin: 0 auto 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .ds-color-label { font-size: 0.7rem; font-weight: 600; color: #374151; }
+    .ds-color-value { font-size: 0.65rem; color: #9ca3af; margin-top: 0.25rem; }
+    .ds-component-demo { background: white; border-radius: 1rem; padding: 2rem; margin: 1.5rem 0; border: 1px solid #e5e7eb; }
+    .ds-component-row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid #f3f4f6; }
+    .ds-component-row:last-child { border-bottom: none; }
+    .ds-icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .ds-icon-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; }
+    .ds-icon-display { display: flex; gap: 0.5rem; align-items: center; }
+    .ds-icon-label { font-size: 0.7rem; font-weight: 600; color: #374151; text-align: center; }
+    .ds-layout-diagram { background: #f3f4f6; border-radius: 1rem; padding: 2rem; margin: 1.5rem 0; display: grid; grid-template-columns: 80px 1fr; gap: 1.5rem; align-items: stretch; }
+    .ds-layout-sidebar { background: #1a1a1a; border-radius: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 0.75rem; }
+    .ds-layout-sidebar-icon { width: 40px; height: 40px; background: #333; border-radius: 0.5rem; }
+    .ds-layout-main { background: white; border-radius: 0.75rem; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .ds-layout-header { height: 40px; background: #e5e7eb; border-radius: 0.5rem; }
+    .ds-layout-content { height: 80px; background: #f3f4f6; border-radius: 0.5rem; }
+    .ds-motion-demo { background: white; border-radius: 1rem; padding: 1.5rem; margin: 1.5rem 0; border: 1px solid #e5e7eb; }
+    .ds-motion-box { width: 100px; height: 100px; background: #c3f53c; border-radius: 0.75rem; }
+    .ds-motion-hover:hover .ds-motion-box { border: 2px solid #c3f53c; }
+    .ds-motion-zoom { overflow: hidden; }
+    .ds-motion-zoom img { transition: transform 0.3s; }
+    .ds-motion-zoom:hover img { transform: scale(1.1); }
+    .ds-table-demo { background: white; border-radius: 1rem; overflow: hidden; margin: 1.5rem 0; }
+    .ds-table-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 1rem 1.5rem; }
+    .ds-table-header-text { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #99a1af; letter-spacing: 0.05em; }
+    .ds-table-row { padding: 1rem 1.5rem; border-bottom: 1px solid #f3f4f6; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; }
+    .ds-table-row:hover { background: #f9fafb; }
+    .ds-table-row:last-child { border-bottom: none; }
+    .ds-table-cell { font-size: 0.875rem; color: #374151; }
+    .ds-spacing-row { display: flex; gap: 1.5rem; align-items: flex-end; padding: 1.5rem 0; border-bottom: 1px solid #f3f4f6; }
+    .ds-spacing-label { font-size: 0.75rem; font-weight: 700; color: #6a7282; text-transform: uppercase; min-width: 80px; }
+    .ds-spacing-box { background: #c3f53c; border-radius: 0.5rem; }
+    .ds-spacing-value { font-size: 0.7rem; font-weight: 600; color: #6a7282; text-align: center; }
+    @media (max-width: 768px) {
+      .ds-grid-2, .ds-grid-3, .ds-grid-4, .ds-grid-5 { grid-template-columns: 1fr; }
+      .ds-type-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .ds-type-label { min-width: auto; }
+      .ds-type-spec { min-width: auto; }
+      .ds-component-row { flex-direction: column; align-items: flex-start; }
+      .ds-layout-diagram { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="antialiased" style="scroll-behavior:smooth;">
+<nav class="ds-nav">
+  <a href="#hero" class="active">Home</a>
+  <a href="#typography">Typography</a>
+  <a href="#colors">Colors</a>
+  <a href="#components">Components</a>
+  <a href="#layouts">Layouts</a>
+  <a href="#motion">Motion</a>
+  <a href="#icons">Icons</a>
+</nav>
+
+<main class="inter_d30fc3d0-module__3-72tW__className">
+
+<!-- SECTION 0: HERO -->
+<section id="hero" class="ds-section">
+  <div style="display: grid; grid-template-columns: 1fr 300px; gap: 3rem; align-items: center; padding-bottom: 3rem;">
+    <div>
+      <h1 style="font-size: 3rem; font-weight: 700; color: #101828; margin-bottom: 1rem;">Stalisty Design System</h1>
+      <p style="font-size: 1.125rem; color: #6a7282; margin: 0;">A comprehensive guide to every visual element in the Stalisty dashboard. Design tokens, components, patterns, and motion guidelines.</p>
+    </div>
+    <div style="background: white; border-radius: 1rem; padding: 1.5rem; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+      <div style="text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: 700; color: #101828; margin-bottom: 0.25rem;">4</div>
+        <div style="font-size: 0.875rem; color: #6a7282;">Core Color Themes</div>
+      </div>
+      <div style="height: 1px; background: #e5e7eb; margin: 1rem 0;"></div>
+      <div style="text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: 700; color: #101828; margin-bottom: 0.25rem;">32</div>
+        <div style="font-size: 0.875rem; color: #6a7282;">UI Components</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Stat Cards Preview -->
+  <div class="ds-grid-4" style="margin-top: 2rem;">
+    <div style="background: white; border-radius: 1.875rem; padding: 1.5rem; border: 1px solid transparent; transition: all 0.3s;">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+        <div>
+          <div style="font-size: 2rem; font-weight: 700; color: #101828; margin-bottom: 0.5rem;">$2,427</div>
+          <div style="font-size: 0.875rem; color: #6a7282;">Total Revenue</div>
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: 0.875rem; background: #dbeafe; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 700;">$</div>
+      </div>
+      <div style="font-size: 0.75rem; color: #10b981; margin-top: 1rem; display: flex; align-items: center; gap: 0.25rem;">
+        <span>↑</span> 12.5% from last month
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 1.875rem; padding: 1.5rem; border: 1px solid transparent; transition: all 0.3s;">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+        <div>
+          <div style="font-size: 2rem; font-weight: 700; color: #101828; margin-bottom: 0.5rem;">1,265</div>
+          <div style="font-size: 0.875rem; color: #6a7282;">Total Orders</div>
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: 0.875rem; background: #f0fdf4; display: flex; align-items: center; justify-content: center; color: #16a34a; font-weight: 700;">📦</div>
+      </div>
+      <div style="font-size: 0.75rem; color: #10b981; margin-top: 1rem; display: flex; align-items: center; gap: 0.25rem;">
+        <span>↑</span> 8.2% from last month
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 1.875rem; padding: 1.5rem; border: 1px solid transparent; transition: all 0.3s;">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+        <div>
+          <div style="font-size: 2rem; font-weight: 700; color: #101828; margin-bottom: 0.5rem;">892</div>
+          <div style="font-size: 0.875rem; color: #6a7282;">Active Customers</div>
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: 0.875rem; background: #fef3c7; display: flex; align-items: center; justify-content: center; color: #d97706; font-weight: 700;">👥</div>
+      </div>
+      <div style="font-size: 0.75rem; color: #ef4444; margin-top: 1rem; display: flex; align-items: center; gap: 0.25rem;">
+        <span>↓</span> 2.1% from last month
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 1.875rem; padding: 1.5rem; border: 1px solid transparent; transition: all 0.3s;">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+        <div>
+          <div style="font-size: 2rem; font-weight: 700; color: #101828; margin-bottom: 0.5rem;">4.8/5</div>
+          <div style="font-size: 0.875rem; color: #6a7282;">Avg. Rating</div>
+        </div>
+        <div style="width: 48px; height: 48px; border-radius: 0.875rem; background: #ede9fe; display: flex; align-items: center; justify-content: center; color: #7c3aed; font-weight: 700;">⭐</div>
+      </div>
+      <div style="font-size: 0.75rem; color: #10b981; margin-top: 1rem; display: flex; align-items: center; gap: 0.25rem;">
+        <span>↑</span> 5.3% from last month
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-divider"></div>
+
+<!-- SECTION 1: TYPOGRAPHY -->
+<section id="typography" class="ds-section">
+  <h2 class="ds-section-title">Typography</h2>
+  <p class="ds-section-desc">All text uses the Inter font family. Here are the core text styles used throughout the Stalisty dashboard.</p>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Page Title</div>
+    <div class="ds-type-preview"><span style="font-size: 1.875rem; font-weight: 700; color: #101828;">Dashboard</span></div>
+    <div class="ds-type-spec">text-3xl font-bold</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Section Title</div>
+    <div class="ds-type-preview"><span style="font-size: 1.5rem; font-weight: 700; color: #101828;">Store Overview</span></div>
+    <div class="ds-type-spec">text-2xl font-bold</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Widget Title</div>
+    <div class="ds-type-preview"><span style="font-size: 1.125rem; font-weight: 700; color: #101828;">Sales Performance</span></div>
+    <div class="ds-type-spec">text-lg font-bold</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Card Title</div>
+    <div class="ds-type-preview"><span style="font-size: 1.25rem; font-weight: 700; color: #101828;">John Anderson</span></div>
+    <div class="ds-type-spec">text-xl font-bold</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Stat Value</div>
+    <div class="ds-type-preview"><span style="font-size: 1.5rem; font-weight: 700; color: #101828;">$2,427</span></div>
+    <div class="ds-type-spec">text-2xl font-bold</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Body Regular</div>
+    <div class="ds-type-preview"><span style="font-size: 0.875rem; color: #6a7282;">The quick brown fox jumps over the lazy dog.</span></div>
+    <div class="ds-type-spec">text-sm</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Body Medium</div>
+    <div class="ds-type-preview"><span style="font-size: 0.875rem; font-weight: 500; color: #6a7282;">The quick brown fox jumps over the lazy dog.</span></div>
+    <div class="ds-type-spec">text-sm font-medium</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Caption</div>
+    <div class="ds-type-preview"><span style="font-size: 0.75rem; color: #9ca3af;">Supporting text or small label</span></div>
+    <div class="ds-type-spec">text-xs</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Tiny</div>
+    <div class="ds-type-preview"><span style="font-size: 0.625rem; font-weight: 700; color: #101828;">IN STOCK</span></div>
+    <div class="ds-type-spec">text-[10px] font-bold</div>
+  </div>
+
+  <div class="ds-type-row">
+    <div class="ds-type-label">Table Header</div>
+    <div class="ds-type-preview"><span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #99a1af; letter-spacing: 0.05em;">Product Name</span></div>
+    <div class="ds-type-spec">text-xs uppercase tracking-wider font-bold</div>
+  </div>
+</section>
+
+<div class="ds-divider"></div>
+
+<!-- SECTION 2: COLORS & SURFACES -->
+<section id="colors" class="ds-section">
+  <h2 class="ds-section-title">Colors & Surfaces</h2>
+  <p class="ds-section-desc">The Stalisty color palette is designed for clarity, accessibility, and brand recognition.</p>
+
+  <h3 style="font-size: 1.125rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Primary Colors</h3>
+  <div class="ds-color-row">
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #c3f53c;"></div>
+      <div class="ds-color-label">Lime Green</div>
+      <div class="ds-color-value">#c3f53c</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #b2e032;"></div>
+      <div class="ds-color-label">Lime Hover</div>
+      <div class="ds-color-value">#b2e032</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #1a1a1a;"></div>
+      <div class="ds-color-label">Dark/Sidebar</div>
+      <div class="ds-color-value">#1a1a1a</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #000000; border: 1px solid #e5e7eb;"></div>
+      <div class="ds-color-label">Black</div>
+      <div class="ds-color-value">#000000</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #ffffff; border: 1px solid #e5e7eb;"></div>
+      <div class="ds-color-label">White</div>
+      <div class="ds-color-value">#ffffff</div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.125rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Grays</h3>
+  <div class="ds-color-row">
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #f9fafb; border: 1px solid #e5e7eb;"></div>
+      <div class="ds-color-label">Gray 50</div>
+      <div class="ds-color-value">#f9fafb</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #f3f4f6; border: 1px solid #e5e7eb;"></div>
+      <div class="ds-color-label">Gray 100</div>
+      <div class="ds-color-value">#f3f4f6</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #e5e7eb;"></div>
+      <div class="ds-color-label">Gray 200</div>
+      <div class="ds-color-value">#e5e7eb</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #d1d5db;"></div>
+      <div class="ds-color-label">Gray 300</div>
+      <div class="ds-color-value">#d1d5db</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #9ca3af;"></div>
+      <div class="ds-color-label">Gray 400</div>
+      <div class="ds-color-value">#9ca3af</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #6b7280;"></div>
+      <div class="ds-color-label">Gray 500</div>
+      <div class="ds-color-value">#6b7280</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #374151;"></div>
+      <div class="ds-color-label">Gray 700</div>
+      <div class="ds-color-value">#374151</div>
+    </div>
+    <div class="ds-color-item">
+      <div class="ds-color-swatch" style="background: #111827;"></div>
+      <div class="ds-color-label">Gray 900</div>
+      <div class="ds-color-value">#111827</div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.125rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Semantic Colors</h3>
+  <div class="ds-component-demo">
+    <div style="margin-bottom: 1.5rem;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 0.75rem;">Success / Active</div>
+      <div style="display: flex; gap: 1rem;">
+        <span style="background: #f0fdf4; color: #16a34a; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">bg-green-100 / text-green-700</span>
+      </div>
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 0.75rem;">Warning / Pending</div>
+      <div style="display: flex; gap: 1rem;">
+        <span style="background: #fef3c7; color: #d97706; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">bg-orange-100 / text-orange-700</span>
+      </div>
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 0.75rem;">Error / Danger</div>
+      <div style="display: flex; gap: 1rem;">
+        <span style="background: #fee2e2; color: #dc2626; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">bg-red-100 / text-red-700</span>
+      </div>
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 0.75rem;">Info / Blue</div>
+      <div style="display: flex; gap: 1rem;">
+        <span style="background: #dbeafe; color: #0369a1; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">bg-blue-100 / text-blue-600</span>
+      </div>
+    </div>
+    <div>
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 0.75rem;">Brand / Purple</div>
+      <div style="display: flex; gap: 1rem;">
+        <span style="background: #f3e8ff; color: #7c3aed; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">bg-purple-100 / text-purple-600</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.125rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Surface Backgrounds</h3>
+  <div class="ds-grid-2">
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Page Background</div>
+      <div style="background: #f9fafb; border-radius: 0.75rem; padding: 2rem; text-align: center; border: 1px dashed #e5e7eb;">
+        <div style="color: #6a7282; font-size: 0.875rem;">#f9fafb</div>
+      </div>
+    </div>
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Card/Surface</div>
+      <div style="background: white; border-radius: 0.75rem; padding: 2rem; text-align: center; border: 1px solid #e5e7eb;">
+        <div style="color: #6a7282; font-size: 0.875rem;">white + rounded-3xl</div>
+      </div>
+    </div>
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Product Image Area</div>
+      <div style="background: #f5f5f5; border-radius: 0.75rem; padding: 2rem; text-align: center; border: 1px dashed #e5e7eb;">
+        <div style="color: #6a7282; font-size: 0.875rem;">#f5f5f5</div>
+      </div>
+    </div>
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Info Row</div>
+      <div style="background: #f3f4f6; border-radius: 0.75rem; padding: 2rem; text-align: center; border: 1px dashed #e5e7eb;">
+        <div style="color: #6a7282; font-size: 0.875rem;">#f3f4f6 + rounded-xl</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.125rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Border Colors</h3>
+  <div class="ds-grid-3">
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Standard Border</div>
+      <div style="height: 60px; border: 1px solid #e5e7eb; border-radius: 0.75rem;"></div>
+      <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.75rem;">border-gray-200</div>
+    </div>
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Subtle Border</div>
+      <div style="height: 60px; border: 1px solid #f3f4f6; border-radius: 0.75rem;"></div>
+      <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.75rem;">border-gray-100</div>
+    </div>
+    <div class="ds-component-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Focus Border</div>
+      <div style="height: 60px; border: 2px solid #c3f53c; border-radius: 0.75rem;"></div>
+      <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.75rem;">border-[#c3f53c]</div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-divider"></div>
+
+<!-- SECTION 3: UI COMPONENTS -->
+<section id="components" class="ds-section">
+  <h2 class="ds-section-title">UI Components</h2>
+  <p class="ds-section-desc">Reusable components with states and variants used throughout the dashboard.</p>
+
+  <!-- BUTTONS -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Buttons</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Primary Lime</div>
+        <button style="background: #c3f53c; color: black; padding: 0.625rem 1.5rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.3s;">Get Started</button>
+      </div>
+      <div>
+        <div class="ds-component-label">Primary Lime (Hover)</div>
+        <button style="background: #b2e032; color: black; padding: 0.625rem 1.5rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.3s;">Get Started</button>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Primary Dark</div>
+        <button style="background: black; color: white; padding: 0.625rem 1.5rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.3s;">Save Changes</button>
+      </div>
+      <div>
+        <div class="ds-component-label">Primary Dark (Hover)</div>
+        <button style="background: #1f2937; color: white; padding: 0.625rem 1.5rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.3s;">Save Changes</button>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Outline/Secondary</div>
+        <button style="background: white; color: #374151; padding: 0.625rem 1.5rem; border-radius: 0.75rem; font-weight: 700; border: 1px solid #e5e7eb; cursor: pointer; transition: background 0.3s;">Cancel</button>
+      </div>
+      <div>
+        <div class="ds-component-label">Outline (Hover)</div>
+        <button style="background: #f3f4f6; color: #374151; padding: 0.625rem 1.5rem; border-radius: 0.75rem; font-weight: 700; border: 1px solid #e5e7eb; cursor: pointer; transition: background 0.3s;">Cancel</button>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Ghost</div>
+        <button style="background: transparent; color: #9ca3af; padding: 0.625rem 1rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: color 0.3s; font-size: 0.875rem;">View Details</button>
+      </div>
+      <div>
+        <div class="ds-component-label">Ghost (Hover)</div>
+        <button style="background: transparent; color: #101828; padding: 0.625rem 1rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: color 0.3s; font-size: 0.875rem;">View Details</button>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div style="width: 100%;">
+        <div class="ds-component-label">Full Width Dark</div>
+        <button style="width: 100%; background: black; color: white; padding: 1rem 1.5rem; border-radius: 1rem; font-weight: 700; border: none; cursor: pointer; font-size: 1.125rem; transition: background 0.3s;">Checkout Now</button>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Icon Button</div>
+        <button style="background: white; color: #374151; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e5e7eb; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.59 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 1.91 1.51 4.04 3 5.5"></path></svg>
+        </button>
+      </div>
+      <div>
+        <div class="ds-component-label">Icon Button (Hover)</div>
+        <button style="background: #f3f4f6; color: #374151; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e5e7eb; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.59 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 1.91 1.51 4.04 3 5.5"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Danger (Small)</div>
+        <button style="background: #fee2e2; color: #dc2626; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: none; cursor: pointer; font-size: 0.875rem; transition: background 0.3s;">Delete</button>
+      </div>
+      <div>
+        <div class="ds-component-label">Danger (Hover)</div>
+        <button style="background: #fecaca; color: #dc2626; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: none; cursor: pointer; font-size: 0.875rem; transition: background 0.3s;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BADGES -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Status Badges</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <span style="background: #f0fdf4; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">On Delivery</span>
+      <span style="background: #f0fdf4; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Active</span>
+      <span style="background: #f0fdf4; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Completed</span>
+      <span style="background: #fef3c7; color: #d97706; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Pending</span>
+      <span style="background: #fee2e2; color: #dc2626; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Removed</span>
+      <span style="background: #fee2e2; color: #dc2626; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Cancelled</span>
+      <span style="background: #f3f4f6; color: #4b5563; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Inactive</span>
+    </div>
+  </div>
+
+  <!-- TAB PILLS -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Tab Pills</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div>
+        <div style="background: #c3f53c; color: black; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">All <span style="background: black; color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-left: 0.25rem;">48</span></div>
+      </div>
+      <div>
+        <div style="background: white; color: #6a7282; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; border: 1px solid #e5e7eb; display: inline-flex; align-items: center; gap: 0.5rem;">Completed <span style="padding: 0 0.25rem;">12</span></div>
+      </div>
+      <div>
+        <div style="background: white; color: #6a7282; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; border: 1px solid #e5e7eb; display: inline-flex; align-items: center; gap: 0.5rem;">Pending <span style="padding: 0 0.25rem;">8</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGES -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Badges & Labels</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">Notification Badge</div>
+        <div style="background: #ef4444; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">3</div>
+      </div>
+      <div>
+        <div class="ds-component-label">Stock Badge</div>
+        <span style="background: #1a1a1a; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.625rem; font-weight: 700;">IN STOCK</span>
+      </div>
+      <div>
+        <div class="ds-component-label">Count Badge</div>
+        <span style="background: #1a1a1a; color: #c3f53c; padding: 0.125rem 0.375rem; border-radius: 50%; font-size: 0.625rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px;">5</span>
+      </div>
+      <div>
+        <div class="ds-component-label">Badge (Lime + Black)</div>
+        <span style="background: black; color: #c3f53c; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700;">New</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUTS -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Search Inputs</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div style="width: 100%;">
+        <div class="ds-component-label">Header Search (Default)</div>
+        <div style="position: relative; max-width: 300px;">
+          <svg style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #9ca3af;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          <input type="text" placeholder="Search..." style="padding-left: 2.5rem; padding-right: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 9999px; border: 1px solid #e5e7eb; width: 100%; font-size: 0.875rem;" />
+        </div>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div style="width: 100%;">
+        <div class="ds-component-label">Header Search (Focus)</div>
+        <div style="position: relative; max-width: 300px;">
+          <svg style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #c3f53c;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          <input type="text" placeholder="Search..." value="design" style="padding-left: 2.5rem; padding-right: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 9999px; border: 1px solid #c3f53c; width: 100%; font-size: 0.875rem;" />
+        </div>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div style="width: 100%;">
+        <div class="ds-component-label">Page Search (Default)</div>
+        <div style="position: relative; max-width: 100%;">
+          <svg style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #9ca3af;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          <input type="text" placeholder="Search transactions..." style="padding-left: 3rem; padding-right: 1rem; padding-top: 0.75rem; padding-bottom: 0.75rem; border-radius: 0.75rem; border: none; background: white; width: 100%; font-size: 0.875rem;" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Cards</h3>
+  <div class="ds-grid-3">
+    <!-- Stat Card -->
+    <div class="ds-component-demo" style="padding: 0;">
+      <div style="padding: 1.5rem; background: white; border-radius: 1.875rem; border: 1px solid transparent; transition: border 0.3s;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: #101828;">$2,427</div>
+            <div style="font-size: 0.875rem; color: #6a7282;">Total Revenue</div>
+          </div>
+          <div style="width: 48px; height: 48px; background: #dbeafe; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 700;">$</div>
+        </div>
+        <div style="font-size: 0.75rem; color: #10b981; display: flex; align-items: center; gap: 0.25rem;">↑ 12.5% from last month</div>
+      </div>
+    </div>
+
+    <!-- Product Card -->
+    <div class="ds-component-demo" style="padding: 0;">
+      <div style="background: white; border-radius: 1.875rem; border: 1px solid #e5e7eb; overflow: hidden; transition: all 0.3s;">
+        <div style="background: #f5f5f5; height: 180px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img src="assets/photo-1542291026-7eec264c27ff_0344afdb1c3a.avif" alt="Shoe" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" />
+        </div>
+        <div style="padding: 1rem;">
+          <div style="font-size: 1rem; font-weight: 700; color: #101828; margin-bottom: 0.5rem;">Premium Sneaker</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 1.125rem; font-weight: 700; color: #101828;">$89.99</div>
+            <span style="background: #1a1a1a; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.625rem; font-weight: 700;">IN STOCK</span>
+          </div>
+          <button style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; background: white; border-radius: 0.75rem; margin-top: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s;">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employee Card -->
+    <div class="ds-component-demo" style="padding: 0;">
+      <div style="background: white; border-radius: 1.875rem; border: 1px solid transparent; padding: 1.5rem; transition: border 0.3s;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="width: 96px; height: 96px; background: linear-gradient(135deg, #c3f53c, #b2e032); border-radius: 50%; margin: 0 auto 1rem; border: 2px dashed #e5e7eb;"></div>
+          <div style="font-size: 1.125rem; font-weight: 700; color: #101828;">John Anderson</div>
+          <div style="font-size: 0.875rem; color: #6a7282; margin-top: 0.25rem;">Sales Manager</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="background: #f3f4f6; border-radius: 0.75rem; padding: 0.75rem; font-size: 0.875rem;">
+            <div style="color: #6a7282; margin-bottom: 0.25rem;">Email</div>
+            <div style="color: #101828; font-weight: 600;">john@stalisty.com</div>
+          </div>
+          <div style="background: #f3f4f6; border-radius: 0.75rem; padding: 0.75rem; font-size: 0.875rem;">
+            <div style="color: #6a7282; margin-bottom: 0.25rem;">Performance</div>
+            <div style="color: #101828; font-weight: 600;">4.8/5.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Data Table</h3>
+  <div class="ds-table-demo">
+    <div class="ds-table-header">
+      <div class="ds-table-row" style="border-bottom: 1px solid #e5e7eb; padding: 1rem 1.5rem;">
+        <div class="ds-table-header-text">Product</div>
+        <div class="ds-table-header-text">Price</div>
+        <div class="ds-table-header-text">Stock</div>
+        <div class="ds-table-header-text">Action</div>
+      </div>
+    </div>
+    <div class="ds-table-row">
+      <div class="ds-table-cell">Premium Sneaker</div>
+      <div class="ds-table-cell">$89.99</div>
+      <div class="ds-table-cell"><span style="background: #f0fdf4; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">In Stock</span></div>
+      <div class="ds-table-cell"><button style="background: transparent; color: #9ca3af; border: none; cursor: pointer; padding: 0.5rem;">⋮</button></div>
+    </div>
+    <div class="ds-table-row">
+      <div class="ds-table-cell">Classic T-Shirt</div>
+      <div class="ds-table-cell">$34.99</div>
+      <div class="ds-table-cell"><span style="background: #f0fdf4; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">In Stock</span></div>
+      <div class="ds-table-cell"><button style="background: transparent; color: #9ca3af; border: none; cursor: pointer; padding: 0.5rem;">⋮</button></div>
+    </div>
+    <div class="ds-table-row">
+      <div class="ds-table-cell">Denim Jacket</div>
+      <div class="ds-table-cell">$129.99</div>
+      <div class="ds-table-cell"><span style="background: #fef3c7; color: #d97706; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">Low Stock</span></div>
+      <div class="ds-table-cell"><button style="background: transparent; color: #9ca3af; border: none; cursor: pointer; padding: 0.5rem;">⋮</button></div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGN CARD -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Campaign Card</h3>
+  <div class="ds-component-demo" style="max-width: 600px;">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+      <div>
+        <div style="font-size: 1.25rem; font-weight: 700; color: #101828;">Summer Campaign</div>
+        <div style="font-size: 0.875rem; color: #6a7282; margin-top: 0.25rem;">Promotion Period</div>
+      </div>
+      <span style="background: #c3f53c; color: black; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 700;">Active</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-top: 1px dashed #e5e7eb; padding-top: 1.5rem;">
+      <div style="border-right: 1px dashed #e5e7eb; padding-right: 1rem;">
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Reach</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #101828;">45.2K</div>
+      </div>
+      <div style="border-right: 1px dashed #e5e7eb; padding: 0 1rem;">
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Engagement</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #101828;">12.8%</div>
+      </div>
+      <div style="padding-left: 1rem;">
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase;">Conversions</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #101828;">2.4K</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMO SELECTOR -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Promo/Payment Selector</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #c3f53c; background: #f8fde4; display: flex; align-items: center; gap: 1rem; cursor: pointer; flex: 1;">
+        <div style="width: 24px; height: 24px; background: #c3f53c; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: 700;">✓</div>
+        <div>
+          <div style="font-weight: 700; color: #101828;">10% Summer Discount</div>
+          <div style="font-size: 0.875rem; color: #6a7282;">Save $24.99 on this order</div>
+        </div>
+      </div>
+    </div>
+    <div class="ds-component-row">
+      <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; background: white; display: flex; align-items: center; gap: 1rem; cursor: pointer; flex: 1; transition: all 0.3s;">
+        <div style="width: 24px; height: 24px; background: white; border-radius: 50%; border: 2px solid #d1d5db;"></div>
+        <div>
+          <div style="font-weight: 700; color: #101828;">Free Shipping</div>
+          <div style="font-size: 0.875rem; color: #6a7282;">Orders over $50</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DROPDOWN -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Dropdown Menu</h3>
+  <div class="ds-component-demo">
+    <div style="position: relative; display: inline-block;">
+      <button style="background: white; color: #374151; padding: 0.625rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+        Actions
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+      <div style="position: absolute; top: 100%; left: 0; background: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; min-width: 200px; margin-top: 0.5rem; z-index: 10;">
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6; transition: background 0.3s;">Edit Campaign</a>
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6; transition: background 0.3s;">Duplicate</a>
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6; transition: background 0.3s;">Analytics</a>
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #dc2626; text-decoration: none; font-size: 0.875rem; transition: background 0.3s;">Delete</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART ITEM -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Cart Item</h3>
+  <div class="ds-component-demo">
+    <div style="background: #f3f4f6; border-radius: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; transition: all 0.3s;">
+      <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 0.75rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+        <img src="assets/photo-1542291026-7eec264c27ff_0344afdb1c3a.avif" alt="Shoe" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0.75rem;" />
+      </div>
+      <div style="flex: 1;">
+        <div style="font-weight: 700; color: #101828; margin-bottom: 0.25rem;">Premium Sneaker</div>
+        <div style="font-size: 0.875rem; color: #6a7282; margin-bottom: 0.75rem;">Blue • Size M</div>
+        <div style="font-size: 1rem; font-weight: 700; color: #101828;">$89.99</div>
+      </div>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <button style="width: 32px; height: 32px; border-radius: 50%; background: #e5e7eb; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+        <div style="width: 32px; text-align: center; font-weight: 700;">2</div>
+        <button style="width: 32px; height: 32px; border-radius: 50%; background: #c3f53c; border: none; cursor: pointer; color: black; font-weight: 700; display: flex; align-items: center; justify-content: center;">+</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-divider"></div>
+
+<!-- SECTION 4: LAYOUT & SPACING -->
+<section id="layouts" class="ds-section">
+  <h2 class="ds-section-title">Layouts & Spacing</h2>
+  <p class="ds-section-desc">Core layout patterns and spacing tokens used throughout the dashboard.</p>
+
+  <!-- SIDEBAR + MAIN LAYOUT -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Sidebar + Main Layout</h3>
+  <div class="ds-component-demo">
+    <div class="ds-layout-diagram">
+      <div class="ds-layout-sidebar">
+        <div class="ds-layout-sidebar-icon"></div>
+        <div class="ds-layout-sidebar-icon"></div>
+        <div class="ds-layout-sidebar-icon"></div>
+        <div class="ds-layout-sidebar-icon"></div>
+      </div>
+      <div class="ds-layout-main">
+        <div class="ds-layout-header"></div>
+        <div class="ds-layout-content"></div>
+        <div class="ds-layout-content"></div>
+      </div>
+    </div>
+    <div style="padding: 1.5rem 0; border-top: 1px solid #e5e7eb; margin-top: 1.5rem;">
+      <div style="font-size: 0.875rem; color: #6a7282; margin-bottom: 0.75rem;"><strong>Sidebar:</strong> Fixed width (w-20 = 80px), bg-[#1a1a1a], rounded-r-3xl</div>
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Main:</strong> flex-1, ml-20 (responsive: ml-0 on mobile), p-4 xl:p-8</div>
+    </div>
+  </div>
+
+  <!-- STAT GRID -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Stat Grid (4 Columns)</h3>
+  <div class="ds-component-demo">
+    <div class="ds-grid-4">
+      <div style="height: 100px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+      <div style="height: 100px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+      <div style="height: 100px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+      <div style="height: 100px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+    </div>
+    <div style="padding: 1.5rem 0; border-top: 1px solid #e5e7eb; margin-top: 1.5rem;">
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Grid:</strong> grid-cols-1 md:grid-cols-2 lg:grid-cols-4</div>
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Gap:</strong> gap-6</div>
+    </div>
+  </div>
+
+  <!-- CONTENT SPLIT LAYOUT -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Content Split Layout (2/3 + 1/3)</h3>
+  <div class="ds-component-demo">
+    <div class="ds-grid-2">
+      <div style="height: 200px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+      <div style="height: 200px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+    </div>
+    <div style="padding: 1.5rem 0; border-top: 1px solid #e5e7eb; margin-top: 1.5rem;">
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Layout:</strong> grid-cols-1 lg:grid-cols-3</div>
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Pattern:</strong> [2/3 content] + [1/3 sidebar]</div>
+    </div>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Product Grid (3 Columns)</h3>
+  <div class="ds-component-demo">
+    <div class="ds-grid-3">
+      <div style="height: 200px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+      <div style="height: 200px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+      <div style="height: 200px; background: #f3f4f6; border-radius: 0.75rem; border: 1px dashed #d1d5db;"></div>
+    </div>
+    <div style="padding: 1.5rem 0; border-top: 1px solid #e5e7eb; margin-top: 1.5rem;">
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Grid:</strong> grid-cols-2 xl:grid-cols-3</div>
+      <div style="font-size: 0.875rem; color: #6a7282;"><strong>Gap:</strong> gap-4 md:gap-6</div>
+    </div>
+  </div>
+
+  <!-- SPACING TOKENS -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Spacing Tokens</h3>
+  <div class="ds-component-demo">
+    <div class="ds-spacing-row">
+      <div class="ds-spacing-label">gap-4</div>
+      <div class="ds-spacing-box" style="width: 40px;"></div>
+      <div class="ds-spacing-value">16px</div>
+    </div>
+    <div class="ds-spacing-row">
+      <div class="ds-spacing-label">gap-6</div>
+      <div class="ds-spacing-box" style="width: 60px;"></div>
+      <div class="ds-spacing-value">24px</div>
+    </div>
+    <div class="ds-spacing-row">
+      <div class="ds-spacing-label">gap-8</div>
+      <div class="ds-spacing-box" style="width: 80px;"></div>
+      <div class="ds-spacing-value">32px</div>
+    </div>
+    <div class="ds-spacing-row">
+      <div class="ds-spacing-label">p-4</div>
+      <div class="ds-spacing-box" style="width: 40px; height: 40px;"></div>
+      <div class="ds-spacing-value">16px padding</div>
+    </div>
+    <div class="ds-spacing-row">
+      <div class="ds-spacing-label">p-6</div>
+      <div class="ds-spacing-box" style="width: 60px; height: 60px;"></div>
+      <div class="ds-spacing-value">24px padding</div>
+    </div>
+    <div class="ds-spacing-row">
+      <div class="ds-spacing-label">p-8</div>
+      <div class="ds-spacing-box" style="width: 80px; height: 80px;"></div>
+      <div class="ds-spacing-value">32px padding</div>
+    </div>
+  </div>
+
+  <!-- BORDER RADIUS TOKENS -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Border Radius Tokens</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div>
+        <div class="ds-component-label">rounded-xl</div>
+        <div style="width: 60px; height: 60px; background: #c3f53c; border-radius: 0.75rem;"></div>
+        <div style="font-size: 0.75rem; color: #6a7282; margin-top: 0.5rem; text-align: center;">12px</div>
+      </div>
+      <div>
+        <div class="ds-component-label">rounded-2xl</div>
+        <div style="width: 60px; height: 60px; background: #c3f53c; border-radius: 1rem;"></div>
+        <div style="font-size: 0.75rem; color: #6a7282; margin-top: 0.5rem; text-align: center;">16px</div>
+      </div>
+      <div>
+        <div class="ds-component-label">rounded-3xl</div>
+        <div style="width: 60px; height: 60px; background: #c3f53c; border-radius: 1.5rem;"></div>
+        <div style="font-size: 0.75rem; color: #6a7282; margin-top: 0.5rem; text-align: center;">24px</div>
+      </div>
+      <div>
+        <div class="ds-component-label">rounded-full</div>
+        <div style="width: 60px; height: 60px; background: #c3f53c; border-radius: 9999px;"></div>
+        <div style="font-size: 0.75rem; color: #6a7282; margin-top: 0.5rem; text-align: center;">∞</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-divider"></div>
+
+<!-- SECTION 5: MOTION & INTERACTION -->
+<section id="motion" class="ds-section">
+  <h2 class="ds-section-title">Motion & Interaction</h2>
+  <p class="ds-section-desc">Animation and transition patterns that bring the UI to life.</p>
+
+  <!-- CARD HOVER -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Card Hover Border</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div class="ds-motion-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Default</div>
+      <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid transparent; transition: border 0.3s; height: 150px; display: flex; align-items: center; justify-content: center; color: #9ca3af;">Hover me →</div>
+    </div>
+    <div class="ds-motion-demo ds-motion-hover">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Hover</div>
+      <div class="ds-motion-box" style="width: 100%; height: 150px; background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid #e5e7eb; transition: border 0.3s; display: flex; align-items: center; justify-content: center; color: #101828; font-weight: 700;">Border appears!</div>
+    </div>
+  </div>
+
+  <!-- IMAGE ZOOM -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Image Zoom on Hover</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div class="ds-motion-demo">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Default</div>
+      <div style="background: #f5f5f5; border-radius: 0.75rem; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+        <img src="assets/photo-1542291026-7eec264c27ff_0344afdb1c3a.avif" alt="Shoe" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" />
+      </div>
+    </div>
+    <div class="ds-motion-demo ds-motion-zoom">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Hover (scale 110%)</div>
+      <div style="background: #f5f5f5; border-radius: 0.75rem; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+        <img src="assets/photo-1542291026-7eec264c27ff_0344afdb1c3a.avif" alt="Shoe" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTON HOVER COLOR -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Button Color Transition</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div class="ds-motion-demo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Default</div>
+      <button style="background: #c3f53c; color: black; padding: 0.75rem 2rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.3s;">Click me</button>
+    </div>
+    <div class="ds-motion-demo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Hover (darker lime)</div>
+      <button style="background: #b2e032; color: black; padding: 0.75rem 2rem; border-radius: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.3s;">Hovered</button>
+    </div>
+  </div>
+
+  <!-- ROW HOVER -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Row Highlight on Hover</h3>
+  <div class="ds-table-demo">
+    <div class="ds-table-row">
+      <div class="ds-table-header-text">Product</div>
+      <div class="ds-table-header-text">Price</div>
+      <div class="ds-table-header-text">Action</div>
+    </div>
+    <div class="ds-table-row">
+      <div class="ds-table-cell">Premium Sneaker</div>
+      <div class="ds-table-cell">$89.99</div>
+      <div class="ds-table-cell"><button style="background: transparent; color: #9ca3af; border: none; cursor: pointer; padding: 0.5rem;">⋮</button></div>
+    </div>
+    <div class="ds-table-row">
+      <div class="ds-table-cell">Classic T-Shirt (Hover this row)</div>
+      <div class="ds-table-cell">$34.99</div>
+      <div class="ds-table-cell"><button style="background: transparent; color: #9ca3af; border: none; cursor: pointer; padding: 0.5rem;">⋮</button></div>
+    </div>
+  </div>
+
+  <!-- AVATAR BORDER ANIMATION -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Avatar Border Animation</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div class="ds-motion-demo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Default</div>
+      <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-radius: 50%; border: 2px dashed #e5e7eb; transition: border 0.3s;"></div>
+    </div>
+    <div class="ds-motion-demo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Hover (lime border)</div>
+      <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-radius: 50%; border: 2px dashed #c3f53c; transition: border 0.3s;"></div>
+    </div>
+  </div>
+
+  <!-- DROPDOWN ANIMATION -->
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Dropdown Animation</h3>
+  <div class="ds-motion-demo">
+    <div style="font-size: 0.875rem; font-weight: 600; color: #6a7282; margin-bottom: 1rem;">Opacity & Scale Transition</div>
+    <div style="position: relative; display: inline-block; width: 100%;">
+      <button style="background: white; color: #374151; padding: 0.625rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; cursor: pointer; font-weight: 700; width: 100%;">
+        Click to see animation
+      </button>
+      <div style="position: absolute; top: 100%; left: 0; background: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; min-width: 100%; margin-top: 0.5rem; opacity: 1; transform: scale(1); transform-origin: top left; transition: opacity 0.3s, transform 0.3s;">
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6;">Item 1</a>
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6;">Item 2</a>
+        <a href="#" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem;">Item 3</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-divider"></div>
+
+<!-- SECTION 6: ICONS -->
+<section id="icons" class="ds-section">
+  <h2 class="ds-section-title">Icon System</h2>
+  <p class="ds-section-desc">Feather icons used throughout Stalisty. All icons use stroke-based rendering with consistent styling.</p>
+
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Icon Sizes</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-row">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="color: #6a7282; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Small (16px)</div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="color: #6a7282; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Regular (20px)</div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="color: #6a7282; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Large (24px)</div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Icon Set</h3>
+  <div class="ds-icon-grid">
+    <!-- Home -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <div class="ds-icon-label">Home</div>
+    </div>
+    <!-- File -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+      <div class="ds-icon-label">File</div>
+    </div>
+    <!-- Package -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      <div class="ds-icon-label">Package</div>
+    </div>
+    <!-- Briefcase -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 7v-2a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
+      <div class="ds-icon-label">Briefcase</div>
+    </div>
+    <!-- ShoppingBag -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <div class="ds-icon-label">ShoppingBag</div>
+    </div>
+    <!-- Clock -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <div class="ds-icon-label">Clock</div>
+    </div>
+    <!-- User -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <div class="ds-icon-label">User</div>
+    </div>
+    <!-- Link -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+      <div class="ds-icon-label">Link</div>
+    </div>
+    <!-- Smartphone -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+      <div class="ds-icon-label">Smartphone</div>
+    </div>
+    <!-- Search -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+      <div class="ds-icon-label">Search</div>
+    </div>
+    <!-- Bell -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+      <div class="ds-icon-label">Bell</div>
+    </div>
+    <!-- ChevronDown -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      <div class="ds-icon-label">ChevronDown</div>
+    </div>
+    <!-- Settings -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m6.08 0l4.24-4.24M1 12h6m6 0h6m-1.78 7.78l-4.24-4.24m-6.08 0l-4.24 4.24"></path></svg>
+      <div class="ds-icon-label">Settings</div>
+    </div>
+    <!-- HelpCircle -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+      <div class="ds-icon-label">HelpCircle</div>
+    </div>
+    <!-- LogOut -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 8 20 12 16 16"></polyline><line x1="9" y1="12" x2="20" y2="12"></line></svg>
+      <div class="ds-icon-label">LogOut</div>
+    </div>
+    <!-- Plus -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <div class="ds-icon-label">Plus</div>
+    </div>
+    <!-- Minus -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <div class="ds-icon-label">Minus</div>
+    </div>
+    <!-- Trash -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+      <div class="ds-icon-label">Trash</div>
+    </div>
+    <!-- Filter -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      <div class="ds-icon-label">Filter</div>
+    </div>
+    <!-- MoreHorizontal -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+      <div class="ds-icon-label">MoreHorizontal</div>
+    </div>
+    <!-- Eye -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <div class="ds-icon-label">Eye</div>
+    </div>
+    <!-- Download -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <div class="ds-icon-label">Download</div>
+    </div>
+    <!-- DollarSign -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      <div class="ds-icon-label">DollarSign</div>
+    </div>
+    <!-- CreditCard -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+      <div class="ds-icon-label">CreditCard</div>
+    </div>
+    <!-- Activity -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+      <div class="ds-icon-label">Activity</div>
+    </div>
+    <!-- ArrowUp -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+      <div class="ds-icon-label">ArrowUp</div>
+    </div>
+    <!-- ArrowDown -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+      <div class="ds-icon-label">ArrowDown</div>
+    </div>
+    <!-- Check -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <div class="ds-icon-label">Check</div>
+    </div>
+    <!-- X -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      <div class="ds-icon-label">X</div>
+    </div>
+    <!-- Menu -->
+    <div class="ds-icon-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <div class="ds-icon-label">Menu</div>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #101828; margin: 2rem 0 1rem;">Icon in Context</h3>
+  <div class="ds-component-demo">
+    <div class="ds-component-label">Status Icons (Colored Backgrounds)</div>
+    <div class="ds-component-row">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; background: #dbeafe; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: #0369a1;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+        </div>
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 600;">Up (Blue)</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; background: #f0fdf4; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: #16a34a;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 600;">Check (Green)</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; background: #fee2e2; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: #dc2626;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 600;">Close (Red)</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; background: #f3e8ff; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: #7c3aed;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        </div>
+        <div style="font-size: 0.75rem; color: #6a7282; font-weight: 600;">Activity (Purple)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+</body>
+</html>
