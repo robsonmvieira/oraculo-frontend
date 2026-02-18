@@ -9,6 +9,8 @@ import { audiences } from '@/data/audiences'
 type SortOption = 'growth' | 'members' | 'subreddits' | 'name'
 type ViewMode = 'grid' | 'list'
 
+import { useFetchDefaultAudiences } from '@/modules/audience/application/hooks'
+
 export function Audiences() {
   const gridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -16,6 +18,20 @@ export function Audiences() {
   const [sortBy, setSortBy] = useState<SortOption>('growth')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { data: templates, isLoading, error } = useFetchDefaultAudiences()
+  
+  useEffect(() => {
+    if (templates) {
+      console.log(templates)
+    }
+    if (error) {
+      console.error(error)
+    }
+    if (isLoading) {
+      console.log('Loading...')
+    }
+  }, [templates, error, isLoading])
 
   const filteredAudiences = audiences
     .filter((audience) =>
