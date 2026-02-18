@@ -4,6 +4,7 @@ import { MainLayout } from '@/components/layout'
 
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Audiences = lazy(() => import('@/pages/Audiences'))
+const AudienceDetail = lazy(() => import('@/pages/AudienceDetail'))
 const Placeholder = lazy(() => import('@/pages/Placeholder'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Audiences />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'audiences/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AudienceDetail />
           </Suspense>
         ),
       },

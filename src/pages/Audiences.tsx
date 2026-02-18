@@ -3,6 +3,7 @@ import { Search, LayoutGrid, List } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from '@/components/audiences'
+import { SelectAudienceModal } from '@/components/shared'
 import { audiences } from '@/data/audiences'
 
 type SortOption = 'growth' | 'members' | 'subreddits' | 'name'
@@ -14,6 +15,7 @@ export function Audiences() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('growth')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const filteredAudiences = audiences
     .filter((audience) =>
@@ -152,7 +154,7 @@ export function Audiences() {
             onShareClick={handleShareClick}
           />
         ))}
-        <AddAudienceCard onClick={() => console.log('Add new audience clicked')} />
+        <AddAudienceCard onClick={() => setIsModalOpen(true)} />
       </div>
 
       {filteredAudiences.length === 0 && (
@@ -162,6 +164,16 @@ export function Audiences() {
           </p>
         </div>
       )}
+
+      <SelectAudienceModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        audiences={audiences}
+        onCreateAudience={(name, selectedAudiences) => {
+          console.log('Creating audience:', name, selectedAudiences)
+          setIsModalOpen(false)
+        }}
+      />
     </div>
   )
 }

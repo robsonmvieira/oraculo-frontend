@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
-import { Users, TrendingUp, Waypoints, Tag, Link2, Unplug } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Users, TrendingUp, Waypoints, Tag, Unplug } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks'
@@ -17,7 +18,7 @@ export interface AudienceCardProps {
   subredditCount: number
   totalMembers: number
   weeklyGrowth: number
-  subreddits: Subreddit[]
+  subreddits: readonly Subreddit[]
   onSaveClick?: (id: string) => void
   onShareClick?: (id: string) => void
 }
@@ -36,11 +37,11 @@ export interface AddAudienceCardProps {
   onClick?: () => void
 }
 
-export function AddAudienceCard({ onClick }: AddAudienceCardProps) {
+export function AddAudienceCard({ onClick }: Readonly<AddAudienceCardProps>) {
   return (
     <button
       onClick={onClick}
-      className="cursor-pointer bg-transparent rounded-[1.875rem] p-6 border-2 border-dashed border-gray-300 dark:border-zinc-700 transition-all duration-300 hover:border-lime dark:hover:border-lime flex items-center justify-center min-h-[140px]"
+      className="cursor-pointer bg-transparent rounded-2xl p-6 border-2 border-dashed border-gray-300 dark:border-zinc-700 transition-all duration-300 hover:border-lime dark:hover:border-lime flex items-center justify-center min-h-[140px]"
     >
       <span className="text-lg font-bold text-gray-400 dark:text-zinc-500">Add new Audience</span>
     </button>
@@ -56,7 +57,8 @@ export function AudienceCard({
   subreddits,
   onSaveClick,
   onShareClick,
-}: AudienceCardProps) {
+}: Readonly<AudienceCardProps>) {
+  const navigate = useNavigate()
   const cardRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -96,10 +98,16 @@ export function AudienceCard({
   return (
     <div
       ref={cardRef}
-      className="bg-white dark:bg-zinc-900 rounded-[1.875rem] p-6 border border-transparent transition-all duration-300 hover:border-gray-200 dark:hover:border-zinc-700 flex flex-col"
+      className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-transparent transition-all duration-300 hover:border-gray-200 dark:hover:border-zinc-700 flex flex-col"
     >
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{name}</h3>
+        <button
+          type="button"
+          onClick={() => navigate(`/audiences/${id}`)}
+          className="text-lg font-bold text-gray-900 dark:text-white cursor-pointer hover:text-lime transition-colors text-left"
+        >
+          {name}
+        </button>
         <div className="flex items-center gap-2">
           <button
             onClick={() => onSaveClick?.(id)}
