@@ -8,11 +8,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { useBrowseCommunities } from '@/modules/community/application/hooks'
+import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import type { Community } from '@/modules/community/domain/entities/Community.entity'
 
 export interface SelectAudienceModalProps {
-  isOpen: boolean
-  onClose: () => void
   onCreateAudience: (name: string, selectedCommunityNames: string[]) => void
   isLoading?: boolean
 }
@@ -30,7 +29,7 @@ function formatNumber(num: number): string {
 interface CommunitySelectCardProps {
   community: Community
   isSelected: boolean
-  onToggle: (name: string) => void
+  onToggle: (community: Community) => void
   index: number
 }
 
@@ -80,7 +79,7 @@ function CommunitySelectCard({
   return (
     <div
       ref={cardRef}
-      onClick={() => onToggle(community.getName())}
+      onClick={() => onToggle(community)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
@@ -139,14 +138,20 @@ function CommunitySelectCard({
 }
 
 export function SelectAudienceModal({
-  isOpen,
-  onClose,
   onCreateAudience,
   isLoading = false,
 }: Readonly<SelectAudienceModalProps>) {
-  const [audienceName, setAudienceName] = useState('')
+  const {
+    audienceName,
+    selectedCommunities,
+    isModalOpen,
+    setAudienceName,
+    toggleCommunity,
+    closeModal,
+    getSelectedNames,
+  } = useCreateAudienceStore()
+
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCommunities, setSelectedCommunities] = useState<string[]>([])
 
   const {
     data,
@@ -158,35 +163,33 @@ export function SelectAudienceModal({
 
   const allCommunities = data?.pages.flatMap((page) => page.communities) ?? []
 
-  const filteredCommunities = allCommunities.filter(
-    (community) =>
-      community.getTitle().toLowerCase().includes(searchQuery.toLowerCase()) ||
-      community.getName().toLowerCase().includes(searchQuery.toLowerCase()) ||
-      community.getCategory().toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredCommunities = allCommunities.filter((community) => {
+    const query = searchQuery.toLowerCase()
+    return (
+      community.getTitle().toLowerCase().includes(query) ||
+      community.getName().toLowerCase().includes(query) ||
+      (community.getCategory()?.toLowerCase().includes(query) ?? false)
+    )
+  })
 
   const handleClose = () => {
-    setAudienceName('')
     setSearchQuery('')
-    setSelectedCommunities([])
-    onClose()
+    closeModal()
   }
 
-  const handleToggleCommunity = (name: string) => {
-    setSelectedCommunities((prev) =>
-      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
-    )
+  const handleToggleCommunity = (community: Community) => {
+    toggleCommunity(community)
   }
 
   const handleSubmit = () => {
     if (audienceName.trim()) {
-      onCreateAudience(audienceName.trim(), selectedCommunities)
+      onCreateAudience(audienceName.trim(), getSelectedNames())
     }
   }
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={isModalOpen}
       onClose={handleClose}
       title="New Audience - Select Communities"
       icon={<Globe className="w-5 h-5" />}
@@ -241,8 +244,8 @@ export function SelectAudienceModal({
                 <CommunitySelectCard
                   key={community.getName()}
                   community={community}
-                  isSelected={selectedCommunities.includes(
-                    community.getName()
+                  isSelected={selectedCommunities.some(
+                    (c) => c.getName() === community.getName()
                   )}
                   onToggle={handleToggleCommunity}
                   index={index}
