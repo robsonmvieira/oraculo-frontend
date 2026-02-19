@@ -74,4 +74,13 @@ export class AudienceRepository implements IAudienceRepository {
       return null
     }
   }
+
+  async getAudienceTemplateById(id: string): Promise<AudienceTemplate | null> {
+    try {
+      const response = await this.httpClient.get<AudienceTemplateResponse>(`audience-templates/${id}`)
+      return new AudienceTemplate(response)
+    } catch {
+      return null
+    }
+  }
 }

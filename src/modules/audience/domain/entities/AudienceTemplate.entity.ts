@@ -1,3 +1,12 @@
+export interface CommunityData {
+  name: string
+  title: string
+  subscribers: number
+  icon_url: string
+  growth_week: number | null
+  growth_month: number | null
+}
+
 interface AudienceTemplateProps {
   id: string
   name: string
@@ -6,7 +15,7 @@ interface AudienceTemplateProps {
   icon: string
   category: string
   display_order: number
-  communities: string[]
+  communities: CommunityData[] | string[]
   communities_count: number
 }
 
@@ -18,7 +27,7 @@ export class AudienceTemplate {
   private readonly icon: string
   private readonly category: string
   private readonly displayOrder: number
-  private readonly communities: string[]
+  private readonly communities: CommunityData[]
   private readonly communitiesCount: number
 
   constructor({
@@ -39,8 +48,26 @@ export class AudienceTemplate {
     this.icon = icon
     this.category = category
     this.displayOrder = display_order
-    this.communities = communities
+    this.communities = this.normalizeCommunities(communities)
     this.communitiesCount = communities_count
+  }
+
+  private normalizeCommunities(communities: CommunityData[] | string[]): CommunityData[] {
+    if (communities.length === 0) return []
+
+    // Check if first element is a string (old format) or object (new format)
+    if (typeof communities[0] === 'string') {
+      return (communities as string[]).map((name) => ({
+        name,
+        title: name,
+        subscribers: 0,
+        icon_url: '',
+        growth_week: null,
+        growth_month: null,
+      }))
+    }
+
+    return communities as CommunityData[]
   }
 
   getId(): string {
@@ -71,7 +98,7 @@ export class AudienceTemplate {
     return this.displayOrder
   }
 
-  getCommunities(): string[] {
+  getCommunities(): CommunityData[] {
     return this.communities
   }
 
