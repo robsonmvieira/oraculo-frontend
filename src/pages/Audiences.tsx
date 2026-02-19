@@ -24,8 +24,9 @@ export function Audiences() {
     id: template.getId(),
     name: template.getName(),
     subredditCount: template.getCommunitiesCount(),
-    totalMembers: template.getCommunities().reduce((sum, c) => sum + c.subscribers, 0),
+    totalMembers: template.getTotalSubscribers() ?? 0,
     weeklyGrowth: 0,
+    total_subscribers: template.getTotalSubscribers(),
     subreddits: template.getCommunities().map((community, index) => ({
       id: `${template.getId()}-${index}`,
       name: `r/${community.name}`,
@@ -156,7 +157,7 @@ export function Audiences() {
             id={audience.id}
             name={audience.name}
             subredditCount={audience.subredditCount}
-            totalMembers={audience.totalMembers}
+            totalMembers={audience.total_subscribers}
             weeklyGrowth={audience.weeklyGrowth}
             subreddits={audience.subreddits}
             onSaveClick={handleSaveClick}
@@ -177,9 +178,8 @@ export function Audiences() {
       <SelectAudienceModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        audiences={audiences}
-        onCreateAudience={(name, selectedAudiences) => {
-          console.log('Creating audience:', name, selectedAudiences)
+        onCreateAudience={(name, selectedCommunityNames) => {
+          console.log('Creating audience:', name, 'with communities:', selectedCommunityNames)
           setIsModalOpen(false)
         }}
       />
