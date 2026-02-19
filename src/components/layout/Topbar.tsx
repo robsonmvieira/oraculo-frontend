@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { Bell, Sun, Moon, Plus, ChevronDown } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { Button, Input, Avatar } from '@/components/ui'
-import { useTheme } from '@/contexts/ThemeContext'
+import { useThemeStore } from '@/modules/shared'
 import { useReducedMotion } from '@/hooks'
 
 const pageNames: Record<string, string> = {
@@ -25,7 +25,7 @@ export function Topbar() {
   const themeIconRef = useRef<HTMLButtonElement>(null)
   const bellRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme } = useThemeStore()
   const prefersReducedMotion = useReducedMotion()
 
   const pageName = pageNames[location.pathname] || 'Dashboard'
