@@ -17,6 +17,8 @@ interface AudienceTemplateProps {
   display_order: number
   communities: CommunityData[] | string[]
   communities_count: number
+  total_subscribers: number
+  subscribers_loaded: number
 }
 
 export class AudienceTemplate {
@@ -29,7 +31,8 @@ export class AudienceTemplate {
   private readonly displayOrder: number
   private readonly communities: CommunityData[]
   private readonly communitiesCount: number
-
+  private readonly total_subscribers: number
+  private readonly subscribers_loaded: number
   constructor({
     id,
     name,
@@ -40,6 +43,8 @@ export class AudienceTemplate {
     display_order,
     communities,
     communities_count,
+    total_subscribers,
+    subscribers_loaded,
   }: AudienceTemplateProps) {
     this.id = id
     this.name = name
@@ -50,6 +55,8 @@ export class AudienceTemplate {
     this.displayOrder = display_order
     this.communities = this.normalizeCommunities(communities)
     this.communitiesCount = communities_count
+    this.total_subscribers = total_subscribers
+    this.subscribers_loaded = subscribers_loaded
   }
 
   private normalizeCommunities(communities: CommunityData[] | string[]): CommunityData[] {
@@ -106,6 +113,14 @@ export class AudienceTemplate {
     return this.communitiesCount
   }
 
+  getTotalSubscribers(): number {
+    return this.total_subscribers
+  }
+
+  getSubscribersLoaded(): number {
+    return this.subscribers_loaded
+  }
+
   toJSON(): object {
     return {
       id: this.id,
@@ -117,6 +132,8 @@ export class AudienceTemplate {
       displayOrder: this.displayOrder,
       communities: this.communities,
       communitiesCount: this.communitiesCount,
+      total_subscribers: this.total_subscribers,
+      subscribers_loaded: this.subscribers_loaded,
     }
   }
 }
