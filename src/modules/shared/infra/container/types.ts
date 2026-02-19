@@ -3,4 +3,5 @@ export const TYPES = {
   AudienceRepository: Symbol.for('AudienceRepository'),
   ListGenericAudiencesUseCase: Symbol.for('ListGenericAudiencesUseCase'),
   FetchDefaultAudiencesUseCase: Symbol.for('FetchDefaultAudiencesUseCase'),
+  GetAudienceTemplateByIdUseCase: Symbol.for('GetAudienceTemplateByIdUseCase'),
 } as const

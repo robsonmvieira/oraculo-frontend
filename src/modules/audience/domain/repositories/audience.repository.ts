@@ -5,4 +5,5 @@ export interface IAudienceRepository {
   listGenericAudiences(): Promise<Audience[]>
   getAudienceById(id: string): Promise<Audience | null>
   fetchDefaultAudiences(): Promise<AudienceTemplate[]>
+  getAudienceTemplateById(id: string): Promise<AudienceTemplate | null>
 }

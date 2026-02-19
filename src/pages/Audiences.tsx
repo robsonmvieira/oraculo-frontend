@@ -4,9 +4,8 @@ import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from '@/components/audiences'
 import { SelectAudienceModal } from '@/components/shared'
-import { audiences } from '@/data/audiences'
 
-type SortOption = 'growth' | 'members' | 'subreddits' | 'name'
+type SortOption = 'subreddits' | 'name'
 type ViewMode = 'grid' | 'list'
 
 import { useFetchDefaultAudiences } from '@/modules/audience/application/hooks'
@@ -15,23 +14,23 @@ export function Audiences() {
   const gridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<SortOption>('growth')
+  const [sortBy, setSortBy] = useState<SortOption>('name')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { data: templates, isLoading, error } = useFetchDefaultAudiences()
+  const { data: templates } = useFetchDefaultAudiences()
   
-  useEffect(() => {
-    if (templates) {
-      console.log(templates)
-    }
-    if (error) {
-      console.error(error)
-    }
-    if (isLoading) {
-      console.log('Loading...')
-    }
-  }, [templates, error, isLoading])
+  const audiences = (templates ?? []).map((template) => ({
+    id: template.getId(),
+    name: template.getName(),
+    subredditCount: template.getCommunitiesCount(),
+    totalMembers: template.getCommunities().reduce((sum, c) => sum + c.subscribers, 0),
+    weeklyGrowth: 0,
+    subreddits: template.getCommunities().map((community, index) => ({
+      id: `${template.getId()}-${index}`,
+      name: `r/${community.name}`,
+    })),
+  }))
 
   const filteredAudiences = audiences
     .filter((audience) =>
@@ -39,10 +38,6 @@ export function Audiences() {
     )
     .sort((a, b) => {
       switch (sortBy) {
-        case 'growth':
-          return b.weeklyGrowth - a.weeklyGrowth
-        case 'members':
-          return b.totalMembers - a.totalMembers
         case 'subreddits':
           return b.subredditCount - a.subredditCount
         case 'name':
@@ -85,7 +80,7 @@ export function Audiences() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-2">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Your Saved Audiences
+            Find Audiences
           </h2>
           <span className="text-lg text-gray-500 dark:text-zinc-400">
             {filteredAudiences.length}
@@ -100,10 +95,8 @@ export function Audiences() {
               onChange={(e) => setSortBy(e.target.value as SortOption)}
               className="bg-transparent border-none text-gray-900 dark:text-white font-medium cursor-pointer focus:ring-0 focus:outline-none"
             >
-              <option value="growth">Growth</option>
-              <option value="members">Members</option>
-              <option value="subreddits">Subreddits</option>
               <option value="name">Name</option>
+              <option value="subreddits">Subreddits</option>
             </select>
           </div>
 

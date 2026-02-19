@@ -27,9 +27,13 @@ import {
   ThemesGrid,
   ThemeDetailPanel,
 } from '@/components/audiences/detail'
-import type { TopicTableItem, TopicDetail, ThemeGridItem, ThemeDetail } from '@/components/audiences/detail'
-import { audiences } from '@/data/audiences'
-import { getAudienceDetails } from '@/data/audienceDetails'
+import type {
+  TopicTableItem,
+  TopicDetail,
+  ThemeGridItem,
+  ThemeDetail,
+} from '@/components/audiences/detail'
+import { useGetAudienceTemplateById } from '@/modules/audience/application/hooks'
 
 // Theme data for the themes tab
 const themesGridData: ThemeGridItem[] = [
@@ -223,10 +227,7 @@ export function AudienceDetail() {
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
 
-  const audience = audiences.find((a) => a.id === id)
-  const audienceDetails = audience
-    ? getAudienceDetails(audience.id, audience.name)
-    : null
+  const { data: audienceTemplate, isLoading, error } = useGetAudienceTemplateById(id ?? '')
 
   useEffect(() => {
     if (!headerRef.current || !contentRef.current || prefersReducedMotion) return
@@ -251,7 +252,15 @@ export function AudienceDetail() {
     )
   }, [prefersReducedMotion, id])
 
-  if (!audience || !audienceDetails) {
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-8 h-8 border-4 border-lime border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  if (error || !audienceTemplate) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <p className="text-gray-500 dark:text-zinc-400">Audience not found</p>
@@ -261,6 +270,14 @@ export function AudienceDetail() {
       </div>
     )
   }
+
+  const communities = audienceTemplate.getCommunities()
+  const subredditsData = communities.map((community, index) => ({
+    id: `${audienceTemplate.getId()}-${index}`,
+    name: `r/${community.name}`,
+    members: community.subscribers,
+    monthlyGrowth: community.growth_month ?? 0,
+  }))
 
   const suggestedTags = ['Search Tips', 'health issues', 'choice', 'I hate', 'Looking for']
 
@@ -276,7 +293,7 @@ export function AudienceDetail() {
               <ChevronLeft className="w-5 h-5" />
             </button>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {audience.name}
+              {audienceTemplate.getName()}
             </h1>
           </div>
 
@@ -306,7 +323,7 @@ export function AudienceDetail() {
               <Search className="w-4 h-4" />
               Search
             </TabsTrigger>
-            <TabsTrigger value="subreddits" count={audienceDetails.subreddits.length}>
+            <TabsTrigger value="subreddits" count={audienceTemplate.getCommunitiesCount()}>
               Subreddits
             </TabsTrigger>
             <TabsTrigger value="topics" count={200}>
@@ -370,7 +387,7 @@ export function AudienceDetail() {
                         Subreddits
                       </h3>
                       <span className="text-sm text-gray-500 dark:text-zinc-400">
-                        {audience.subredditCount}
+                        {audienceTemplate.getCommunitiesCount()}
                       </span>
                     </div>
                     <button className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 dark:text-zinc-400 hover:text-lime transition-colors">
@@ -379,8 +396,8 @@ export function AudienceDetail() {
                     </button>
                   </div>
                   <SubredditsList
-                    subreddits={audienceDetails.subreddits}
-                    totalCount={audience.subredditCount}
+                    subreddits={subredditsData}
+                    totalCount={audienceTemplate.getCommunitiesCount()}
                     showHeader={false}
                   />
                 </div>
@@ -390,12 +407,12 @@ export function AudienceDetail() {
                       Themes
                     </h3>
                     <span className="text-sm text-gray-500 dark:text-zinc-400">
-                      {audienceDetails.themes.length}
+                      0
                     </span>
                   </div>
                   <ThemesList
-                    themes={audienceDetails.themes}
-                    totalCount={audienceDetails.themes.length}
+                    themes={[]}
+                    totalCount={0}
                     showHeader={false}
                   />
                 </div>
@@ -409,8 +426,8 @@ export function AudienceDetail() {
                     </span>
                   </div>
                   <TopicsList
-                    topics={audienceDetails.topics}
-                    totalCount={200}
+                    topics={[]}
+                    totalCount={0}
                     showHeader={false}
                   />
                 </div>
@@ -422,8 +439,8 @@ export function AudienceDetail() {
             <div className="space-y-8">
               <div className="flex gap-6">
                 <SubredditsGrid
-                  subreddits={audienceDetails.subreddits}
-                  totalCount={audience.subredditCount}
+                  subreddits={subredditsData}
+                  totalCount={audienceTemplate.getCommunitiesCount()}
                 />
                 <div className="w-[280px] shrink-0">
                   <AboutAudiencePanel
@@ -439,7 +456,7 @@ export function AudienceDetail() {
                       activity: 75,
                       growth: 60,
                     }}
-                    audienceName={audience.name}
+                    audienceName={audienceTemplate.getName()}
                     comparisonName="r/parrots"
                   />
                 </div>
