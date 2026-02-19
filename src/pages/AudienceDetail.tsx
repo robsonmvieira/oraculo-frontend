@@ -275,7 +275,7 @@ export function AudienceDetail() {
   const subredditsData = communities.map((community, index) => ({
     id: `${audienceTemplate.getId()}-${index}`,
     name: `r/${community.name}`,
-    members: community.subscribers,
+    members: community.subscribers ?? 0,
     monthlyGrowth: community.growth_month ?? 0,
   }))
 

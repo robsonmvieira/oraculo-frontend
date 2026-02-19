@@ -13,6 +13,8 @@ interface AudienceTemplateResponse {
   display_order: number
   communities: string[]
   communities_count: number
+  total_subscribers: number
+  subscribers_loaded: number
 }
 
 interface AudienceTemplatesApiResponse {
