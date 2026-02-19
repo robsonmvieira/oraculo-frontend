@@ -4,11 +4,11 @@ import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from '@/components/audiences'
 import { SelectAudienceModal } from '@/components/shared'
+import { useFetchDefaultAudiences } from '@/modules/audience/application/hooks'
+import { useCreateAudienceStore } from '@/modules/audience/application/store'
 
 type SortOption = 'subreddits' | 'name'
 type ViewMode = 'grid' | 'list'
-
-import { useFetchDefaultAudiences } from '@/modules/audience/application/hooks'
 
 export function Audiences() {
   const gridRef = useRef<HTMLDivElement>(null)
@@ -16,7 +16,7 @@ export function Audiences() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { openModal, closeModal } = useCreateAudienceStore()
 
   const { data: templates } = useFetchDefaultAudiences()
   
@@ -164,7 +164,7 @@ export function Audiences() {
             onShareClick={handleShareClick}
           />
         ))}
-        <AddAudienceCard onClick={() => setIsModalOpen(true)} />
+        <AddAudienceCard onClick={openModal} />
       </div>
 
       {filteredAudiences.length === 0 && (
@@ -176,11 +176,9 @@ export function Audiences() {
       )}
 
       <SelectAudienceModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
         onCreateAudience={(name, selectedCommunityNames) => {
           console.log('Creating audience:', name, 'with communities:', selectedCommunityNames)
-          setIsModalOpen(false)
+          closeModal()
         }}
       />
     </div>
