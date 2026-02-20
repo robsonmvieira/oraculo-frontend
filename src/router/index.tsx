@@ -8,6 +8,7 @@ const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Audiences = lazy(() => import('@/pages/Audiences'))
 const AudienceDetail = lazy(() => import('@/pages/AudienceDetail'))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const Placeholder = lazy(() => import('@/pages/Placeholder'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -148,6 +149,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Placeholder />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'profile',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ProfilePage />
           </Suspense>
         ),
       },
