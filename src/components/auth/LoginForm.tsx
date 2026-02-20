@@ -1,11 +1,18 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useGsapEntrance } from '@/hooks'
+import { useLogin } from '@/modules/auth'
 
 const FONT_DISPLAY = { fontFamily: "'Space Grotesk', sans-serif" }
 
 export function LoginForm() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
+
+  const { mutate: login, isPending, error } = useLogin()
 
   const ref = useGsapEntrance<HTMLDivElement>({
     y: 30,
@@ -14,6 +21,20 @@ export function LoginForm() {
     delay: 0.3,
     ease: 'power3.out',
   })
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    login(
+      { email, password },
+      { onSuccess: () => navigate('/dashboard', { replace: true }) }
+    )
+  }
+
+  const errorMessage = error
+    ? (error as { response?: { status?: number } }).response?.status === 401
+      ? 'Email ou senha inválidos'
+      : 'Erro ao fazer login. Tente novamente.'
+    : null
 
   return (
     <div
@@ -49,10 +70,18 @@ export function LoginForm() {
         </p>
       </div>
 
+      {/* Error */}
+      {errorMessage && (
+        <div className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <Icon icon="solar:danger-triangle-linear" className="text-lg text-red-400" />
+          <span className="text-sm text-red-300">{errorMessage}</span>
+        </div>
+      )}
+
       {/* Form */}
       <form
         className="flex flex-col gap-5"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
         {/* Email */}
         <div className="flex flex-col gap-1.5">
@@ -60,7 +89,11 @@ export function LoginForm() {
           <input
             type="email"
             placeholder="your@email.com"
-            className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white placeholder:text-white/30 transition-colors duration-300 focus:border-purple-500 focus:outline-none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={isPending}
+            className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white placeholder:text-white/30 transition-colors duration-300 focus:border-purple-500 focus:outline-none disabled:opacity-50"
           />
         </div>
 
@@ -71,7 +104,11 @@ export function LoginForm() {
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter your password"
-              className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 pr-11 text-sm text-white placeholder:text-white/30 transition-colors duration-300 focus:border-purple-500 focus:outline-none"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isPending}
+              className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 pr-11 text-sm text-white placeholder:text-white/30 transition-colors duration-300 focus:border-purple-500 focus:outline-none disabled:opacity-50"
             />
             <button
               type="button"
@@ -110,15 +147,22 @@ export function LoginForm() {
         {/* Sign in button */}
         <button
           type="submit"
-          className="group relative flex h-12 w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-white text-black transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          disabled={isPending}
+          className="group relative flex h-12 w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-white text-black transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
         >
-          <span className="relative z-10 text-sm font-semibold tracking-tight">
-            Sign in
-          </span>
-          <Icon
-            icon="solar:arrow-right-up-linear"
-            className="relative z-10 text-lg transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-          />
+          {isPending ? (
+            <div className="relative z-10 h-5 w-5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+          ) : (
+            <>
+              <span className="relative z-10 text-sm font-semibold tracking-tight">
+                Sign in
+              </span>
+              <Icon
+                icon="solar:arrow-right-up-linear"
+                className="relative z-10 text-lg transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </>
+          )}
           <div className="absolute inset-0 bg-linear-to-r from-purple-200 to-purple-400 opacity-0 transition-opacity group-hover:opacity-100" />
         </button>
       </form>

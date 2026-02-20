@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/components/layout'
+import { useAuthStore } from '@/modules/auth'
 
 const LandingPage = lazy(() => import('@/pages/LandingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
@@ -19,7 +20,11 @@ function PageLoader() {
 }
 
 function AuthRedirect() {
-  const isAuthenticated = Boolean(localStorage.getItem('access_token'))
+  const { isAuthenticated, isHydrated } = useAuthStore()
+
+  if (!isHydrated) {
+    return <PageLoader />
+  }
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />
@@ -33,10 +38,14 @@ function AuthRedirect() {
 }
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const isAuthenticated = Boolean(localStorage.getItem('access_token'))
+  const { isAuthenticated, isHydrated } = useAuthStore()
+
+  if (!isHydrated) {
+    return <PageLoader />
+  }
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/login" replace />
   }
 
   return <>{children}</>

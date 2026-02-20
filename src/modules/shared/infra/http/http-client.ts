@@ -8,12 +8,51 @@ export interface HttpClient {
   delete<T>(url: string, options?: Options): Promise<T>
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+let isRefreshing = false
+let pendingRequests: Array<{
+  resolve: (token: string) => void
+  reject: (error: unknown) => void
+}> = []
+
+function processPendingRequests(token: string | null, error: unknown = null) {
+  pendingRequests.forEach(({ resolve, reject }) => {
+    if (token) {
+      resolve(token)
+    } else {
+      reject(error)
+    }
+  })
+  pendingRequests = []
+}
+
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = localStorage.getItem('refresh_token')
+  if (!refreshToken) return null
+
+  try {
+    const response = await ky.post('auth/refresh', {
+      prefixUrl: API_BASE_URL,
+      json: { refresh_token: refreshToken },
+    }).json<{ access_token: string; refresh_token: string; token_type: string }>()
+
+    localStorage.setItem('access_token', response.access_token)
+    localStorage.setItem('refresh_token', response.refresh_token)
+    return response.access_token
+  } catch {
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    return null
+  }
+}
+
 export class KyHttpClient implements HttpClient {
   private readonly client: KyInstance
 
   constructor() {
     this.client = ky.create({
-      prefixUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+      prefixUrl: API_BASE_URL,
       timeout: 30000,
       retry: {
         limit: 2,
@@ -30,11 +69,39 @@ export class KyHttpClient implements HttpClient {
           },
         ],
         afterResponse: [
-          async (_request, _options, response) => {
-            if (response.status === 401) {
-              localStorage.removeItem('access_token')
-              window.location.href = '/'
+          async (request, options, response) => {
+            if (response.status !== 401) return response
+
+            const url = new URL(request.url)
+            if (url.pathname.includes('/auth/')) return response
+
+            if (isRefreshing) {
+              return new Promise<Response>((resolve, reject) => {
+                pendingRequests.push({
+                  resolve: (token: string) => {
+                    request.headers.set('Authorization', `Bearer ${token}`)
+                    resolve(ky(request, options))
+                  },
+                  reject,
+                })
+              })
             }
+
+            isRefreshing = true
+
+            const newToken = await refreshAccessToken()
+
+            if (newToken) {
+              processPendingRequests(newToken)
+              isRefreshing = false
+
+              request.headers.set('Authorization', `Bearer ${newToken}`)
+              return ky(request, options)
+            }
+
+            processPendingRequests(null, new Error('Refresh token expired'))
+            isRefreshing = false
+            window.location.href = '/login'
             return response
           },
         ],

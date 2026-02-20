@@ -25,7 +25,7 @@ interface CommunityCardDisplay {
 }
 
 
-interface RelatedCommunity {
+export interface RelatedCommunity {
   name: string;
   title: string;
   description: string;

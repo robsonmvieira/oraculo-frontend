@@ -9,6 +9,10 @@ import { CommunityRepository } from '@/modules/community/infra/repositories'
 import type { ICommunityRepository } from '@/modules/community/domain/repositories'
 import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-cases'
 import type { IBrowseCommunitiesUseCase } from '@/modules/community/domain/use-cases'
+import { AuthRepository } from '@/modules/auth/infra/repositories'
+import type { IAuthRepository } from '@/modules/auth/domain/repositories'
+import { LoginUseCase, RegisterUseCase, RefreshTokenUseCase, GetMeUseCase } from '@/modules/auth/application/use-cases'
+import type { ILoginUseCase, IRegisterUseCase, IRefreshTokenUseCase, IGetMeUseCase } from '@/modules/auth/domain/use-cases'
 
 const container = new Container()
 
@@ -42,6 +46,31 @@ container.bind<ICommunityRepository>(TYPES.CommunityRepository).toDynamicValue((
 container.bind<IBrowseCommunitiesUseCase>(TYPES.BrowseCommunitiesUseCase).toDynamicValue(() => {
   const communityRepository = container.get<ICommunityRepository>(TYPES.CommunityRepository)
   return new BrowseCommunitiesUseCase(communityRepository)
+}).inSingletonScope()
+
+container.bind<IAuthRepository>(TYPES.AuthRepository).toDynamicValue(() => {
+  const httpClient = container.get<HttpClient>(TYPES.HttpClient)
+  return new AuthRepository(httpClient)
+}).inSingletonScope()
+
+container.bind<ILoginUseCase>(TYPES.LoginUseCase).toDynamicValue(() => {
+  const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
+  return new LoginUseCase(authRepository)
+}).inSingletonScope()
+
+container.bind<IRegisterUseCase>(TYPES.RegisterUseCase).toDynamicValue(() => {
+  const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
+  return new RegisterUseCase(authRepository)
+}).inSingletonScope()
+
+container.bind<IRefreshTokenUseCase>(TYPES.RefreshTokenUseCase).toDynamicValue(() => {
+  const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
+  return new RefreshTokenUseCase(authRepository)
+}).inSingletonScope()
+
+container.bind<IGetMeUseCase>(TYPES.GetMeUseCase).toDynamicValue(() => {
+  const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
+  return new GetMeUseCase(authRepository)
 }).inSingletonScope()
 
 export { container }
