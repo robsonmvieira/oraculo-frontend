@@ -5,7 +5,7 @@ import type { IBrowseCommunitiesUseCase } from '@/modules/community/domain/use-c
 export class BrowseCommunitiesUseCase implements IBrowseCommunitiesUseCase {
   constructor(private readonly communityRepository: ICommunityRepository) {}
 
-  async execute(params: { offset: number; limit: number }): Promise<BrowseCommunitiesResponse> {
+  async execute(params: { offset: number; limit: number; search?: string }): Promise<BrowseCommunitiesResponse> {
     return this.communityRepository.browseCommunities(params)
   }
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Users, TrendingUp, Globe, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { cn } from '@/lib/utils'
-import { useReducedMotion } from '@/hooks'
+import { useReducedMotion, useDebounce } from '@/hooks'
 import { Modal } from './Modal'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -39,7 +39,7 @@ function CommunitySelectCard({
   onToggle,
   index,
 }: Readonly<CommunitySelectCardProps>) {
-  const cardRef = useRef<HTMLDivElement>(null)
+  const cardRef = useRef<HTMLButtonElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
@@ -77,13 +77,14 @@ function CommunitySelectCard({
   }
 
   return (
-    <div
+    <button
+      type="button"
       ref={cardRef}
       onClick={() => onToggle(community)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        'cursor-pointer rounded-xl p-4 border-2 transition-colors duration-200',
+        'cursor-pointer rounded-xl p-4 border-2 transition-colors duration-200 text-left w-full',
         'bg-gray-50 dark:bg-zinc-800/50',
         isSelected
           ? 'border-lime bg-lime/5 dark:bg-lime/10'
@@ -133,7 +134,7 @@ function CommunitySelectCard({
           </div>
         )}
       </div>
-    </div>
+    </button>
   )
 }
 
@@ -152,6 +153,7 @@ export function SelectAudienceModal({
   } = useCreateAudienceStore()
 
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearch = useDebounce(searchQuery, 300)
 
   const {
     data,
@@ -159,18 +161,30 @@ export function SelectAudienceModal({
     hasNextPage,
     isFetchingNextPage,
     isLoading: isLoadingCommunities,
-  } = useBrowseCommunities()
+  } = useBrowseCommunities(debouncedSearch || undefined)
 
-  const allCommunities = data?.pages.flatMap((page) => page.communities) ?? []
+  const communities = data?.pages.flatMap((page) => page.communities) ?? []
 
-  const filteredCommunities = allCommunities.filter((community) => {
-    const query = searchQuery.toLowerCase()
-    return (
-      community.getTitle().toLowerCase().includes(query) ||
-      community.getName().toLowerCase().includes(query) ||
-      (community.getCategory()?.toLowerCase().includes(query) ?? false)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    const root = scrollContainerRef.current
+    if (!sentinel || !root) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { root, threshold: 0.1 }
     )
-  })
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const handleClose = () => {
     setSearchQuery('')
@@ -197,11 +211,12 @@ export function SelectAudienceModal({
     >
       <div className="p-6">
         <div className="mb-6">
-          <label className="block text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wide mb-2">
+          <label htmlFor="audienceName" className="block text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wide mb-2">
             Name your custom audience
           </label>
           <div className="flex gap-3">
             <Input
+              id="audienceName"
               value={audienceName}
               onChange={(e) => setAudienceName(e.target.value)}
               placeholder='Pick a short name, like "Digital Marketers" or "Movie-Goers"'
@@ -233,14 +248,14 @@ export function SelectAudienceModal({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2">
+        <div ref={scrollContainerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2">
           {isLoadingCommunities ? (
             <div className="col-span-full flex justify-center py-12">
               <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
             </div>
           ) : (
             <>
-              {filteredCommunities.map((community, index) => (
+              {communities.map((community, index) => (
                 <CommunitySelectCard
                   key={community.getName()}
                   community={community}
@@ -251,27 +266,21 @@ export function SelectAudienceModal({
                   index={index}
                 />
               ))}
-              {filteredCommunities.length === 0 && (
+              {communities.length === 0 && !isFetchingNextPage && (
                 <div className="col-span-full text-center py-12 text-gray-500 dark:text-zinc-400">
                   No communities found matching "{searchQuery}"
                 </div>
               )}
+              <div ref={sentinelRef} className="col-span-full">
+                {isFetchingNextPage && (
+                  <div className="flex justify-center py-4">
+                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
-
-        {hasNextPage && !searchQuery && (
-          <div className="mt-4 flex justify-center">
-            <Button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-              variant="outline"
-              size="sm"
-            >
-              {isFetchingNextPage ? 'Loading...' : 'Load More Communities'}
-            </Button>
-          </div>
-        )}
 
         {selectedCommunities.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-800">
