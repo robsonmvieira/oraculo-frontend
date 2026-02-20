@@ -33,7 +33,7 @@ export class KyHttpClient implements HttpClient {
           async (_request, _options, response) => {
             if (response.status === 401) {
               localStorage.removeItem('access_token')
-              window.location.href = '/login'
+              window.location.href = '/'
             }
             return response
           },

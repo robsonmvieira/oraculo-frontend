@@ -7,7 +7,7 @@ import { useThemeStore } from '@/modules/shared'
 import { useReducedMotion } from '@/hooks'
 
 const pageNames: Record<string, string> = {
-  '/': 'Dashboard',
+  '/dashboard': 'Dashboard',
   '/orders': 'Orders',
   '/audiences': 'Audiences',
   '/campaigns': 'Campaigns',
