@@ -1,7 +1,7 @@
 export const TYPES = {
   HttpClient: Symbol.for('HttpClient'),
   AudienceRepository: Symbol.for('AudienceRepository'),
-  ListGenericAudiencesUseCase: Symbol.for('ListGenericAudiencesUseCase'),
+  ListUserAudiencesUseCase: Symbol.for('ListUserAudiencesUseCase'),
   FetchDefaultAudiencesUseCase: Symbol.for('FetchDefaultAudiencesUseCase'),
   GetAudienceTemplateByIdUseCase: Symbol.for('GetAudienceTemplateByIdUseCase'),
   CreateAudienceUseCase: Symbol.for('CreateAudienceUseCase'),

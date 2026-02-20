@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { container, TYPES } from '@/modules/shared'
 import type { ICreateAudienceUseCase, CreateAudienceParams } from '@/modules/audience/domain/use-cases'
-import { AUDIENCES_QUERY_KEY } from './useListGenericAudiences'
+import { AUDIENCES_QUERY_KEY } from './useListUserAudiences'
 
 const createAudienceUseCase = container.get<ICreateAudienceUseCase>(TYPES.CreateAudienceUseCase)
 

@@ -96,6 +96,22 @@ export class Audience {
     return this.description
   }
 
+  getTotalSubs(): number {
+    return this.total_subs
+  }
+
+  getTotalMembers(): number {
+    return this.total_members
+  }
+
+  getCommunities(): readonly CommunityProps[] {
+    return this.communities
+  }
+
+  getGrowthWeek(): number | null {
+    return this.growth_week
+  }
+
   toJSON(): object {
     return {
       id: this.id,
