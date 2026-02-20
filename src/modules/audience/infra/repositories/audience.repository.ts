@@ -2,6 +2,7 @@ import type { HttpClient } from '@/modules/shared'
 import { Audience } from '../../domain/entities/Audience.entity'
 import { AudienceTemplate } from '../../domain/entities/AudienceTemplate.entity'
 import type { IAudienceRepository } from '../../domain/repositories/audience.repository'
+import type { CreateAudienceParams, CreateAudienceResult } from '../../domain/use-cases/create-audience.use-case'
 
 interface AudienceTemplateResponse {
   id: string
@@ -84,5 +85,9 @@ export class AudienceRepository implements IAudienceRepository {
     } catch {
       return null
     }
+  }
+
+  async createAudience(params: CreateAudienceParams): Promise<CreateAudienceResult> {
+    return this.httpClient.post<CreateAudienceResult>('audiences', params)
   }
 }

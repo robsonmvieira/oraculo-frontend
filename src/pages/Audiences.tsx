@@ -4,7 +4,7 @@ import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from '@/components/audiences'
 import { SelectAudienceModal } from '@/components/shared'
-import { useFetchDefaultAudiences } from '@/modules/audience/application/hooks'
+import { useFetchDefaultAudiences, useCreateAudience } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 
 type SortOption = 'subreddits' | 'name'
@@ -17,6 +17,7 @@ export function Audiences() {
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const { openModal, closeModal } = useCreateAudienceStore()
+  const createAudienceMutation = useCreateAudience()
 
   const { data: templates } = useFetchDefaultAudiences()
   
@@ -177,9 +178,20 @@ export function Audiences() {
 
       <SelectAudienceModal
         onCreateAudience={(name, selectedCommunityNames) => {
-          console.log('Creating audience:', name, 'with communities:', selectedCommunityNames)
-          closeModal()
+          createAudienceMutation.mutate(
+            {
+              name,
+              description: '',
+              subreddit_names: selectedCommunityNames,
+            },
+            {
+              onSuccess: () => {
+                closeModal()
+              },
+            }
+          )
         }}
+        isLoading={createAudienceMutation.isPending}
       />
     </div>
   )
