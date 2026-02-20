@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react'
+import { Link } from 'react-router-dom'
 import { useGsapEntrance } from '@/hooks'
 
 const FONT_DISPLAY = { fontFamily: "'Space Grotesk', sans-serif" }
@@ -35,7 +36,7 @@ export function LandingHero() {
       </p>
 
       <div className="pointer-events-auto flex items-center gap-4">
-        <button className="cursor-pointer group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black transition-transform hover:scale-105 active:scale-95">
+        <Link to="/login" className="cursor-pointer group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black transition-transform hover:scale-105 active:scale-95">
           <span className="relative z-10 text-sm font-semibold tracking-tight">
            Login Now
           </span>
@@ -44,7 +45,7 @@ export function LandingHero() {
             className="relative z-10 text-lg transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
           />
           <div className="absolute inset-0 bg-linear-to-r from-purple-200 to-purple-400 opacity-0 transition-opacity group-hover:opacity-100" />
-        </button>
+        </Link>
 
         <button className="cursor-pointer group flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-purple-500/30 hover:bg-white/10">
           <Icon

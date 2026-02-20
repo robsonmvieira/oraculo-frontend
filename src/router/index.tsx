@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/components/layout'
 
 const LandingPage = lazy(() => import('@/pages/LandingPage'))
+const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Audiences = lazy(() => import('@/pages/Audiences'))
 const AudienceDetail = lazy(() => import('@/pages/AudienceDetail'))
@@ -45,6 +46,14 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <AuthRedirect />,
+  },
+  {
+    path: '/login',
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <LoginPage />
+      </Suspense>
+    ),
   },
   {
     element: (
