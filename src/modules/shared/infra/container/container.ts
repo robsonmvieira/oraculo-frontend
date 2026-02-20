@@ -3,8 +3,8 @@ import { TYPES } from './types'
 import { KyHttpClient, type HttpClient } from '../http'
 import { AudienceRepository } from '@/modules/audience/infra/repositories'
 import type { IAudienceRepository } from '@/modules/audience/domain/repositories'
-import { ListGenericAudiencesUseCases, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase } from '@/modules/audience/application/use-cases'
-import type { IListGenericAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase } from '@/modules/audience/domain/use-cases'
+import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase } from '@/modules/audience/application/use-cases'
+import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase } from '@/modules/audience/domain/use-cases'
 import { CommunityRepository } from '@/modules/community/infra/repositories'
 import type { ICommunityRepository } from '@/modules/community/domain/repositories'
 import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-cases'
@@ -23,9 +23,9 @@ container.bind<IAudienceRepository>(TYPES.AudienceRepository).toDynamicValue(() 
   return new AudienceRepository(httpClient)
 }).inSingletonScope()
 
-container.bind<IListGenericAudiencesUseCase>(TYPES.ListGenericAudiencesUseCase).toDynamicValue(() => {
+container.bind<IListUserAudiencesUseCase>(TYPES.ListUserAudiencesUseCase).toDynamicValue(() => {
   const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
-  return new ListGenericAudiencesUseCases(audienceRepository)
+  return new ListUserAudiencesUseCase(audienceRepository)
 }).inSingletonScope()
 
 container.bind<IFetchDefaultAudiencesUseCase>(TYPES.FetchDefaultAudiencesUseCase).toDynamicValue(() => {

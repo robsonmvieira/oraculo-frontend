@@ -1,11 +1,11 @@
 import type { Audience } from "@/modules/audience/domain/entities/Audience.entity";
 import type { IAudienceRepository } from "@/modules/audience/domain/repositories";
-import type { IListGenericAudiencesUseCase } from "@/modules/audience/domain/use-cases";
+import type { IListUserAudiencesUseCase } from "@/modules/audience/domain/use-cases";
 
-export class ListGenericAudiencesUseCases implements IListGenericAudiencesUseCase {
+export class ListUserAudiencesUseCase implements IListUserAudiencesUseCase {
   constructor(private readonly audienceRepository: IAudienceRepository) {}
 
   async execute(): Promise<Audience[]> {
-    return this.audienceRepository.listGenericAudiences()
+    return this.audienceRepository.listUserAudiences()
   }
 }

@@ -22,6 +22,21 @@ interface AudienceTemplatesApiResponse {
   templates: AudienceTemplateResponse[]
 }
 
+interface UserAudienceListResponse {
+  audience_id: string
+  name: string
+  description: string
+  total_subs: number
+  total_members: number
+  growth_week: number | null
+  growth_month?: number | null
+  communities: Array<{
+    subreddit_name: string
+    icon_url: string
+    subscribers: number
+  }>
+}
+
 interface AudienceResponse {
   id: string
   name: string
@@ -64,9 +79,35 @@ export class AudienceRepository implements IAudienceRepository {
     return response.templates.map((data) => new AudienceTemplate(data))
   }
 
-  async listGenericAudiences(): Promise<Audience[]> {
-    const response = await this.httpClient.get<AudienceResponse[]>('audiences')
-    return response.map((data) => new Audience(data))
+  async listUserAudiences(): Promise<Audience[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await this.httpClient.get<any>('audiences')
+    const items: UserAudienceListResponse[] = Array.isArray(response) ? response : response.audiences ?? []
+    return items.map((data) => new Audience({
+      id: data.audience_id,
+      name: data.name,
+      description: data.description,
+      total_subs: data.total_subs,
+      total_members: data.total_members,
+      growth_week: data.growth_week,
+      growth_month: data.growth_month,
+      communities: data.communities.map((c) => ({
+        id: c.subreddit_name,
+        display: {
+          display_name: c.subreddit_name,
+          subscribers: c.subscribers,
+          community_icon: c.icon_url,
+          public_description: '',
+          primary_color: '',
+          over18: false,
+        },
+        related_terms: [],
+        related_communities: [],
+        related_communities_status: 'ready' as const,
+        growth_week: null,
+        growth_month: null,
+      })),
+    }))
   }
 
   async getAudienceById(id: string): Promise<Audience | null> {

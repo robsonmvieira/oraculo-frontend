@@ -4,14 +4,22 @@ import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from '@/components/audiences'
 import { SelectAudienceModal } from '@/components/shared'
-import { useFetchDefaultAudiences, useCreateAudience } from '@/modules/audience/application/hooks'
+import { useFetchDefaultAudiences, useCreateAudience, useListUserAudiences } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 
 type SortOption = 'subreddits' | 'name'
 type ViewMode = 'grid' | 'list'
 
+const gridClassName = (viewMode: ViewMode) =>
+  `grid gap-4 ${
+    viewMode === 'grid'
+      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+      : 'grid-cols-1'
+  }`
+
 export function Audiences() {
-  const gridRef = useRef<HTMLDivElement>(null)
+  const userGridRef = useRef<HTMLDivElement>(null)
+  const templatesGridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('name')
@@ -19,22 +27,35 @@ export function Audiences() {
   const { openModal, closeModal } = useCreateAudienceStore()
   const createAudienceMutation = useCreateAudience()
 
+  const { data: userAudiencesData } = useListUserAudiences()
   const { data: templates } = useFetchDefaultAudiences()
-  
-  const audiences = (templates ?? []).map((template) => ({
+
+  const userAudiences = (userAudiencesData ?? []).map((audience) => ({
+    id: audience.getId(),
+    name: audience.getName(),
+    subredditCount: audience.getTotalSubs(),
+    totalMembers: audience.getTotalMembers(),
+    weeklyGrowth: audience.getGrowthWeek() ?? 0,
+    subreddits: audience.getCommunities().map((c) => ({
+      id: c.id,
+      name: `r/${c.display.display_name}`,
+      icon: c.display.community_icon,
+    })),
+  }))
+
+  const templateAudiences = (templates ?? []).map((template) => ({
     id: template.getId(),
     name: template.getName(),
     subredditCount: template.getCommunitiesCount(),
     totalMembers: template.getTotalSubscribers() ?? 0,
     weeklyGrowth: 0,
-    total_subscribers: template.getTotalSubscribers(),
     subreddits: template.getCommunities().map((community, index) => ({
       id: `${template.getId()}-${index}`,
       name: `r/${community.name}`,
     })),
   }))
 
-  const filteredAudiences = audiences
+  const filteredTemplates = templateAudiences
     .filter((audience) =>
       audience.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
@@ -50,24 +71,27 @@ export function Audiences() {
     })
 
   useEffect(() => {
-    const grid = gridRef.current
-    if (!grid || prefersReducedMotion) return
+    if (prefersReducedMotion) return
 
-    const children = Array.from(grid.children)
+    const animate = (grid: HTMLDivElement | null) => {
+      if (!grid) return
+      gsap.fromTo(
+        Array.from(grid.children),
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out',
+          clearProps: 'all',
+        }
+      )
+    }
 
-    gsap.fromTo(
-      children,
-      { y: 30, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.05,
-        ease: 'power2.out',
-        clearProps: 'all',
-      }
-    )
-  }, [prefersReducedMotion, filteredAudiences])
+    animate(userGridRef.current)
+    animate(templatesGridRef.current)
+  }, [prefersReducedMotion, userAudiences, filteredTemplates])
 
   const handleSaveClick = (id: string) => {
     console.log('Save clicked for audience:', id)
@@ -79,16 +103,8 @@ export function Audiences() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Find Audiences
-          </h2>
-          <span className="text-lg text-gray-500 dark:text-zinc-400">
-            {filteredAudiences.length}
-          </span>
-        </div>
-
+      {/* Global Controls */}
+      <div className="flex justify-end">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-zinc-400">
             <span>Sort</span>
@@ -144,37 +160,76 @@ export function Audiences() {
         </div>
       </div>
 
-      <div
-        ref={gridRef}
-        className={`grid gap-4 ${
-          viewMode === 'grid'
-            ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-            : 'grid-cols-1'
-        }`}
-      >
-        {filteredAudiences.map((audience) => (
-          <AudienceCard
-            key={audience.id}
-            id={audience.id}
-            name={audience.name}
-            subredditCount={audience.subredditCount}
-            totalMembers={audience.total_subscribers}
-            weeklyGrowth={audience.weeklyGrowth}
-            subreddits={audience.subreddits}
-            onSaveClick={handleSaveClick}
-            onShareClick={handleShareClick}
-          />
-        ))}
-        <AddAudienceCard onClick={openModal} />
-      </div>
-
-      {filteredAudiences.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-zinc-400">
-            No audiences found matching "{searchQuery}"
-          </p>
+      {/* Your Audiences Section */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Your Audiences
+          </h2>
+          <span className="text-lg text-gray-500 dark:text-zinc-400">
+            {userAudiences.length}
+          </span>
         </div>
-      )}
+
+        <div ref={userGridRef} className={gridClassName(viewMode)}>
+          {userAudiences.map((audience) => (
+            <AudienceCard
+              key={audience.id}
+              id={audience.id}
+              name={audience.name}
+              subredditCount={audience.subredditCount}
+              totalMembers={audience.totalMembers}
+              weeklyGrowth={audience.weeklyGrowth}
+              subreddits={audience.subreddits}
+              onSaveClick={handleSaveClick}
+              onShareClick={handleShareClick}
+            />
+          ))}
+          <AddAudienceCard onClick={openModal} />
+        </div>
+
+        {userAudiences.length === 0 && (
+          <p className="text-gray-500 dark:text-zinc-400 text-sm">
+            You haven't created any audiences yet. Start by creating your first one!
+          </p>
+        )}
+      </section>
+
+      {/* Find Audiences (Templates) Section */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Find Audiences
+          </h2>
+          <span className="text-lg text-gray-500 dark:text-zinc-400">
+            {filteredTemplates.length}
+          </span>
+        </div>
+
+        <div ref={templatesGridRef} className={gridClassName(viewMode)}>
+          {filteredTemplates.map((audience) => (
+            <AudienceCard
+              key={audience.id}
+              id={audience.id}
+              name={audience.name}
+              subredditCount={audience.subredditCount}
+              totalMembers={audience.totalMembers}
+              weeklyGrowth={audience.weeklyGrowth}
+              subreddits={audience.subreddits}
+              onSaveClick={handleSaveClick}
+              onShareClick={handleShareClick}
+            />
+          ))}
+        </div>
+
+        {filteredTemplates.length === 0 && searchQuery && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-zinc-400">
+              No audiences found matching "{searchQuery}"
+            </p>
+          </div>
+        )}
+      </section>
 
       <SelectAudienceModal
         onCreateAudience={(name, selectedCommunityNames) => {
