@@ -1,5 +1,5 @@
 import type { BrowseCommunitiesResponse } from '../entities/BrowseCommunitiesResponse'
 
 export interface ICommunityRepository {
-  browseCommunities(params: { offset: number; limit: number }): Promise<BrowseCommunitiesResponse>
+  browseCommunities(params: { offset: number; limit: number; search?: string }): Promise<BrowseCommunitiesResponse>
 }

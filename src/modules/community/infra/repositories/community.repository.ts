@@ -23,10 +23,18 @@ interface BrowseCommunitiesApiResponse {
 export class CommunityRepository implements ICommunityRepository {
   constructor(private readonly httpClient: HttpClient) {}
 
-  async browseCommunities(params: { offset: number; limit: number }): Promise<BrowseCommunitiesResponse> {
+  async browseCommunities(params: { offset: number; limit: number; search?: string }): Promise<BrowseCommunitiesResponse> {
+    const searchParams: Record<string, string | number> = {
+      offset: params.offset,
+      limit: params.limit,
+    }
+    if (params.search) {
+      searchParams.search = params.search
+    }
+
     const response = await this.httpClient.get<BrowseCommunitiesApiResponse>(
       'communities/browse',
-      { searchParams: { offset: params.offset, limit: params.limit } }
+      { searchParams }
     )
     return {
       communities: response.communities.map((data) => new Community(data)),

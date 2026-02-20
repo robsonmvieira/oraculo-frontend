@@ -9,11 +9,15 @@ const PAGE_SIZE = 20
 
 export const BROWSE_COMMUNITIES_QUERY_KEY = ['browse-communities'] as const
 
-export function useBrowseCommunities() {
+export function useBrowseCommunities(search?: string) {
   return useInfiniteQuery<BrowseCommunitiesResponse, Error>({
-    queryKey: BROWSE_COMMUNITIES_QUERY_KEY,
+    queryKey: [...BROWSE_COMMUNITIES_QUERY_KEY, search],
     queryFn: ({ pageParam = 0 }) =>
-      browseCommunitiesUseCase.execute({ offset: pageParam as number, limit: PAGE_SIZE }),
+      browseCommunitiesUseCase.execute({
+        offset: pageParam as number,
+        limit: search ? 10 : PAGE_SIZE,
+        search,
+      }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) =>
       lastPage.hasMore ? lastPage.offset + lastPage.limit : undefined,
