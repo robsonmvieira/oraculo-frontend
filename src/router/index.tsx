@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/components/layout'
 
+const LandingPage = lazy(() => import('@/pages/LandingPage'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Audiences = lazy(() => import('@/pages/Audiences'))
 const AudienceDetail = lazy(() => import('@/pages/AudienceDetail'))
@@ -16,13 +17,44 @@ function PageLoader() {
   )
 }
 
+function AuthRedirect() {
+  const isAuthenticated = Boolean(localStorage.getItem('access_token'))
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <LandingPage />
+    </Suspense>
+  )
+}
+
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = Boolean(localStorage.getItem('access_token'))
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
+
+  return <>{children}</>
+}
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: <AuthRedirect />,
+  },
+  {
+    element: (
+      <RequireAuth>
+        <MainLayout />
+      </RequireAuth>
+    ),
     children: [
       {
-        index: true,
+        path: 'dashboard',
         element: (
           <Suspense fallback={<PageLoader />}>
             <Dashboard />
