@@ -1,3 +1,4 @@
+import type { RelatedCommunity } from './Audience.entity'
 
 interface SubredditProps {
   display_name: string;
