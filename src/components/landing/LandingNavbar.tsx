@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react'
+import { Link } from 'react-router-dom'
 
 const FONT_DISPLAY = { fontFamily: "'Space Grotesk', sans-serif" }
 
@@ -21,26 +22,23 @@ export function LandingNavbar() {
       </div>
 
       <div className="hidden items-center gap-8 md:flex">
-        <a
+        <Link
           className="cursor-pointer text-xs font-medium text-white/60 transition-colors hover:text-white"
-          href="#"
+          to="/login"
         >
           Register
-        </a>
-        {/* <a
-          className="text-xs font-medium text-white/60 transition-colors hover:text-white"
-          href="#"
+        </Link>
+        <Link
+          to="/login"
+          className="cursor-pointer rounded-full border border-white/5 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-md transition-colors hover:bg-white/20"
         >
-          STUDIO
-        </a> */}
-        <button className="cursor-pointer rounded-full border border-white/5 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-md transition-colors hover:bg-white/20">
           Login
-        </button>
+        </Link>
       </div>
 
-      <button className="text-2xl text-white/80 md:hidden">
+      <Link to="/login" className="text-2xl text-white/80 md:hidden">
         <Icon icon="solar:hamburger-menu-linear" />
-      </button>
+      </Link>
     </nav>
   )
 }
