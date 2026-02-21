@@ -35,6 +35,7 @@ import type {
 } from '@/components/audiences/detail'
 import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
+import { toast } from '@/hooks'
 import { SelectAudienceModal } from '@/components/shared'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
 
@@ -751,6 +752,18 @@ export function AudienceDetail() {
             {
               onSuccess: () => {
                 closeModal()
+                toast({
+                  title: 'Audience updated',
+                  description: 'Your audience has been updated successfully.',
+                  variant: 'success',
+                })
+              },
+              onError: () => {
+                toast({
+                  title: 'Failed to update audience',
+                  description: 'Something went wrong. Please try again.',
+                  variant: 'destructive',
+                })
               },
             }
           )

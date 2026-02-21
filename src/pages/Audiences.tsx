@@ -6,6 +6,7 @@ import type { SortOption, ViewMode } from '@/components/audiences'
 import { SelectAudienceModal } from '@/components/shared'
 import { useFetchDefaultAudiences, useCreateAudience, useListUserAudiences } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
+import { toast } from '@/hooks'
 
 export function Audiences() {
   const userGridRef = useRef<HTMLDivElement>(null)
@@ -131,6 +132,18 @@ export function Audiences() {
             {
               onSuccess: () => {
                 closeModal()
+                toast({
+                  title: 'Audience created',
+                  description: 'Your audience has been created successfully.',
+                  variant: 'success',
+                })
+              },
+              onError: () => {
+                toast({
+                  title: 'Failed to create audience',
+                  description: 'Something went wrong. Please try again.',
+                  variant: 'destructive',
+                })
               },
             }
           )
