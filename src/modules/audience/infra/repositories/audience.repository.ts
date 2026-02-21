@@ -3,6 +3,9 @@ import { Audience } from '../../domain/entities/Audience.entity'
 import { AudienceTemplate } from '../../domain/entities/AudienceTemplate.entity'
 import type { IAudienceRepository } from '../../domain/repositories/audience.repository'
 import type { CreateAudienceParams, CreateAudienceResult } from '../../domain/use-cases/create-audience.use-case'
+import type { UpdateAudienceParams, UpdateAudienceResult } from '../../domain/use-cases/update-audience.use-case'
+import type { AddCommunityToAudienceParams } from '../../domain/use-cases/add-community-to-audience.use-case'
+import type { RemoveCommunityFromAudienceParams } from '../../domain/use-cases/remove-community-from-audience.use-case'
 
 interface AudienceTemplateResponse {
   id: string
@@ -121,5 +124,20 @@ export class AudienceRepository implements IAudienceRepository {
 
   async createAudience(params: CreateAudienceParams): Promise<CreateAudienceResult> {
     return this.httpClient.post<CreateAudienceResult>('audiences', params)
+  }
+
+  async updateAudience(params: UpdateAudienceParams): Promise<UpdateAudienceResult> {
+    const { audienceId, ...body } = params
+    return this.httpClient.put<UpdateAudienceResult>(`audiences/${audienceId}`, body)
+  }
+
+  async addCommunityToAudience(params: AddCommunityToAudienceParams): Promise<void> {
+    await this.httpClient.post(`audiences/${params.audienceId}/communities`, {
+      subreddit_name: params.subreddit_name,
+    })
+  }
+
+  async removeCommunityFromAudience(params: RemoveCommunityFromAudienceParams): Promise<void> {
+    await this.httpClient.delete(`audiences/${params.audienceId}/communities/${params.subreddit_name}`)
   }
 }

@@ -3,3 +3,6 @@ export { useFetchDefaultAudiences, DEFAULT_AUDIENCES_QUERY_KEY } from './useFetc
 export { useGetAudienceTemplateById, AUDIENCE_TEMPLATE_QUERY_KEY } from './useGetAudienceTemplateById'
 export { useCreateAudience } from './useCreateAudience'
 export { useGetAudienceById, AUDIENCE_QUERY_KEY } from './useGetAudienceById'
+export { useUpdateAudience } from './useUpdateAudience'
+export { useAddCommunityToAudience } from './useAddCommunityToAudience'
+export { useRemoveCommunityFromAudience } from './useRemoveCommunityFromAudience'

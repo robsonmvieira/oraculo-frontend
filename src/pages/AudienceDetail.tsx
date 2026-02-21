@@ -33,7 +33,10 @@ import type {
   ThemeGridItem,
   ThemeDetail,
 } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience } from '@/modules/audience/application/hooks'
+import { useCreateAudienceStore } from '@/modules/audience/application/store'
+import { SelectAudienceModal } from '@/components/shared'
+import { Community } from '@/modules/community/domain/entities/Community.entity'
 
 // Theme data for the themes tab
 const themesGridData: ThemeGridItem[] = [
@@ -228,6 +231,9 @@ export function AudienceDetail() {
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
 
+  const { openEditModal, closeModal } = useCreateAudienceStore()
+  const updateAudienceMutation = useUpdateAudience()
+
   const isUserAudience = searchParams.get('type') === 'user'
 
   const { data: audienceTemplate, isLoading: isLoadingTemplate, error: errorTemplate } = useGetAudienceTemplateById(isUserAudience ? '' : (id ?? ''))
@@ -327,10 +333,30 @@ export function AudienceDetail() {
               <Info className="w-4 h-4" />
               Info
             </Button>
-            <Button variant="outline" size="sm">
-              <Pencil className="w-4 h-4" />
-              Edit
-            </Button>
+            {isUserAudience && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const communities = userAudience!.getCommunities().map((c) =>
+                    new Community({
+                      name: c.display.display_name,
+                      title: c.display.display_name,
+                      description: c.display.public_description,
+                      subscribers: c.display.subscribers,
+                      icon_url: c.display.community_icon,
+                      growth_week: c.growth_week,
+                      growth_month: c.growth_month,
+                      category: '',
+                    })
+                  )
+                  openEditModal(audienceId, audienceName, communities)
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+                Edit
+              </Button>
+            )}
             <Button variant="outline" size="sm">
               <Share2 className="w-4 h-4" />
               Share
@@ -711,6 +737,26 @@ export function AudienceDetail() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <SelectAudienceModal
+        onCreateAudience={() => {}}
+        onUpdateAudience={(editAudienceId, name, selectedCommunityNames) => {
+          updateAudienceMutation.mutate(
+            {
+              audienceId: editAudienceId,
+              name,
+              description: userAudience?.getDescription() ?? '',
+              subreddit_names: selectedCommunityNames,
+            },
+            {
+              onSuccess: () => {
+                closeModal()
+              },
+            }
+          )
+        }}
+        isLoading={updateAudienceMutation.isPending}
+      />
     </div>
   )
 }

@@ -5,11 +5,14 @@ interface CreateAudienceState {
   audienceName: string
   selectedCommunities: Community[]
   isModalOpen: boolean
+  mode: 'create' | 'edit'
+  editingAudienceId: string | null
 
   setAudienceName: (name: string) => void
   toggleCommunity: (community: Community) => void
   removeCommunity: (communityName: string) => void
   openModal: () => void
+  openEditModal: (audienceId: string, name: string, communities: Community[]) => void
   closeModal: () => void
   reset: () => void
   getSelectedNames: () => string[]
@@ -19,6 +22,8 @@ const initialState = {
   audienceName: '',
   selectedCommunities: [] as Community[],
   isModalOpen: false,
+  mode: 'create' as const,
+  editingAudienceId: null as string | null,
 }
 
 export const useCreateAudienceStore = create<CreateAudienceState>()(
@@ -48,7 +53,16 @@ export const useCreateAudienceStore = create<CreateAudienceState>()(
         ),
       })),
 
-    openModal: () => set({ isModalOpen: true }),
+    openModal: () => set({ isModalOpen: true, mode: 'create', editingAudienceId: null }),
+
+    openEditModal: (audienceId: string, name: string, communities: Community[]) =>
+      set({
+        isModalOpen: true,
+        mode: 'edit',
+        editingAudienceId: audienceId,
+        audienceName: name,
+        selectedCommunities: communities,
+      }),
 
     closeModal: () => set(initialState),
 

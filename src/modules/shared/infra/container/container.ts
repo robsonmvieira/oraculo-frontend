@@ -3,8 +3,8 @@ import { TYPES } from './types'
 import { KyHttpClient, type HttpClient } from '../http'
 import { AudienceRepository } from '@/modules/audience/infra/repositories'
 import type { IAudienceRepository } from '@/modules/audience/domain/repositories'
-import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase } from '@/modules/audience/application/use-cases'
-import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase } from '@/modules/audience/domain/use-cases'
+import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase } from '@/modules/audience/application/use-cases'
+import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase } from '@/modules/audience/domain/use-cases'
 import { CommunityRepository } from '@/modules/community/infra/repositories'
 import type { ICommunityRepository } from '@/modules/community/domain/repositories'
 import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-cases'
@@ -46,6 +46,21 @@ container.bind<ICreateAudienceUseCase>(TYPES.CreateAudienceUseCase).toDynamicVal
 container.bind<IGetAudienceByIdUseCase>(TYPES.GetAudienceByIdUseCase).toDynamicValue(() => {
   const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
   return new GetAudienceByIdUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IUpdateAudienceUseCase>(TYPES.UpdateAudienceUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new UpdateAudienceUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IAddCommunityToAudienceUseCase>(TYPES.AddCommunityToAudienceUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new AddCommunityToAudienceUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IRemoveCommunityFromAudienceUseCase>(TYPES.RemoveCommunityFromAudienceUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new RemoveCommunityFromAudienceUseCase(audienceRepository)
 }).inSingletonScope()
 
 container.bind<ICommunityRepository>(TYPES.CommunityRepository).toDynamicValue(() => {

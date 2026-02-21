@@ -11,17 +11,21 @@ import type { Community } from '@/modules/community/domain/entities/Community.en
 
 export interface SelectAudienceModalProps {
   onCreateAudience: (name: string, selectedCommunityNames: string[]) => void
+  onUpdateAudience?: (audienceId: string, name: string, selectedCommunityNames: string[]) => void
   isLoading?: boolean
 }
 
 export function SelectAudienceModal({
   onCreateAudience,
+  onUpdateAudience,
   isLoading = false,
 }: Readonly<SelectAudienceModalProps>) {
   const {
     audienceName,
     selectedCommunities,
     isModalOpen,
+    mode,
+    editingAudienceId,
     setAudienceName,
     toggleCommunity,
     closeModal,
@@ -72,16 +76,29 @@ export function SelectAudienceModal({
   }
 
   const handleSubmit = () => {
-    if (audienceName.trim()) {
+    if (!audienceName.trim()) return
+
+    if (mode === 'edit' && editingAudienceId && onUpdateAudience) {
+      onUpdateAudience(editingAudienceId, audienceName.trim(), getSelectedNames())
+    } else {
       onCreateAudience(audienceName.trim(), getSelectedNames())
     }
   }
+
+  const isEditMode = mode === 'edit'
+  const modalTitle = isEditMode
+    ? 'Edit Audience - Select Communities'
+    : 'New Audience - Select Communities'
+
+  const submitLabel = isEditMode
+    ? (isLoading ? 'Saving...' : 'Save Changes')
+    : (isLoading ? 'Creating...' : 'Create Audience')
 
   return (
     <Modal
       isOpen={isModalOpen}
       onClose={handleClose}
-      title="New Audience - Select Communities"
+      title={modalTitle}
       icon={<Globe className="w-5 h-5" />}
       size="xl"
     >
@@ -104,7 +121,7 @@ export function SelectAudienceModal({
               variant="primary"
               size="md"
             >
-              {isLoading ? 'Creating...' : 'Create Audience'}
+              {submitLabel}
             </Button>
           </div>
         </div>

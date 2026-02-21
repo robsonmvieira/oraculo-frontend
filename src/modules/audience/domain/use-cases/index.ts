@@ -3,3 +3,6 @@ export type { IFetchDefaultAudiencesUseCase } from './fetch-default-audiences.us
 export type { IGetAudienceTemplateByIdUseCase } from './get-audience-template-by-id.use-case'
 export type { ICreateAudienceUseCase, CreateAudienceParams, CreateAudienceResult } from './create-audience.use-case'
 export type { IGetAudienceByIdUseCase } from './get-audience-by-id.use-case'
+export type { IUpdateAudienceUseCase, UpdateAudienceParams, UpdateAudienceResult } from './update-audience.use-case'
+export type { IAddCommunityToAudienceUseCase, AddCommunityToAudienceParams } from './add-community-to-audience.use-case'
+export type { IRemoveCommunityFromAudienceUseCase, RemoveCommunityFromAudienceParams } from './remove-community-from-audience.use-case'
