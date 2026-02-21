@@ -45,3 +45,6 @@ export type { SearchTabContentProps } from './SearchTabContent'
 
 export { SubredditsTabContent } from './SubredditsTabContent'
 export type { SubredditsTabContentProps } from './SubredditsTabContent'
+
+export { AudienceDetailTabs } from './AudienceDetailTabs'
+export type { AudienceDetailTabsProps } from './AudienceDetailTabs'
