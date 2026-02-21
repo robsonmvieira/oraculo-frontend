@@ -700,7 +700,7 @@ export function AudienceDetail() {
                   }
                 }}
               />
-              <div className="w-1/3 shrink-0">
+              <div className="w-1/2 shrink-0">
                 <TopicDetailPanel topic={selectedTopic} />
               </div>
             </div>
