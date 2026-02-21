@@ -194,35 +194,35 @@ export function TopicsTable({
                 : 'border-gray-200 dark:border-zinc-700 hover:border-lime dark:hover:border-lime'
             }`}
           >
-            <div className="flex items-center gap-4">
-              <div className="w-28 min-w-[112px]">
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  {topic.name}
-                </p>
-              </div>
+            <div className="flex items-center justify-between gap-4">
+              <p className="font-semibold text-gray-900 dark:text-white truncate">
+                {topic.name}
+              </p>
 
-              <div className="w-[70px] shrink-0">
-                <Sparkline growth={topic.growth} />
-              </div>
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="w-[70px]">
+                  <Sparkline growth={topic.growth} />
+                </div>
 
-              <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-20 shrink-0">
-                <TrendingUp className="w-4 h-4" />
-                <span>{topic.growth}%</span>
-              </div>
+                <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-20">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>{topic.growth}%</span>
+                </div>
 
-              <div className="flex-1 text-sm">
-                <span className="text-lime font-semibold">
-                  {topic.frequency} / {topic.frequencyUnit}
-                </span>
-                <span className="text-gray-500 dark:text-zinc-400"> in </span>
-                <span className="text-gray-700 dark:text-zinc-300">
-                  {topic.subreddits.slice(0, 2).join(', ')}
-                </span>
-                {topic.subreddits.length > 2 && (
-                  <span className="text-gray-400 dark:text-zinc-500">
-                    , and {topic.subreddits.length - 2} others
+                <div className="text-sm">
+                  <span className="text-lime font-semibold">
+                    {topic.frequency} / {topic.frequencyUnit}
                   </span>
-                )}
+                  <span className="text-gray-500 dark:text-zinc-400"> in </span>
+                  <span className="text-gray-700 dark:text-zinc-300">
+                    {topic.subreddits.slice(0, 2).join(', ')}
+                  </span>
+                  {topic.subreddits.length > 2 && (
+                    <span className="text-gray-400 dark:text-zinc-500">
+                      , and {topic.subreddits.length - 2} others
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </button>
