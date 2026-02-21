@@ -267,28 +267,34 @@ export class AudienceRepository implements IAudienceRepository {
   }
 
   async getAudienceTopics(params: GetAudienceTopicsParams): Promise<GetAudienceTopicsResult> {
+    const limit = params.limit ?? 200
+    const offset = params.offset ?? 0
     const response = await this.httpClient.get<AudienceTopicsApiResponse>(
-      `audiences/${params.audienceId}/topics`
+      `audiences/${params.audienceId}/topics?limit=${limit}&offset=${offset}`
     )
+    const topics = response.topics.map((t) => new Topic({
+      id: t.id,
+      name: t.name,
+      description: t.description,
+      growthPercentage: t.growth_percentage,
+      mentionFrequency: t.mention_frequency,
+      mentionPeriod: t.mention_period,
+      postCount: t.post_count,
+      communities: t.communities.map((c) => ({
+        name: c.name,
+        postCount: c.post_count,
+      })),
+      rank: t.rank,
+    }))
     return {
       status: response.status,
       analysisId: response.analysis_id,
       totalTopics: response.total_topics,
       completedAt: response.completed_at,
-      topics: response.topics.map((t) => new Topic({
-        id: t.id,
-        name: t.name,
-        description: t.description,
-        growthPercentage: t.growth_percentage,
-        mentionFrequency: t.mention_frequency,
-        mentionPeriod: t.mention_period,
-        postCount: t.post_count,
-        communities: t.communities.map((c) => ({
-          name: c.name,
-          postCount: c.post_count,
-        })),
-        rank: t.rank,
-      })),
+      topics,
+      limit,
+      offset,
+      hasMore: offset + topics.length < response.total_topics,
     }
   }
 }

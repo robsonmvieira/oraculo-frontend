@@ -37,7 +37,13 @@ export function AudienceDetail() {
   const { data: userAudience, isLoading: isLoadingUser, error: errorUser } = useGetAudienceById(isUserAudience ? (id ?? '') : '')
   const { data: keywordsData, isLoading: isLoadingKeywords } = useGetAudienceKeywords(id ?? '')
   const { data: suggestionsData, isLoading: isLoadingSuggestions } = useGetAudienceSuggestions(id)
-  const { data: topicsData, isLoading: isLoadingTopics } = useGetAudienceTopics(id ?? '')
+  const {
+    data: topicsData,
+    isLoading: isLoadingTopics,
+    fetchNextPage: fetchNextTopics,
+    hasNextPage: hasMoreTopics,
+    isFetchingNextPage: isLoadingMoreTopics,
+  } = useGetAudienceTopics(id ?? '')
 
   const isLoading = isUserAudience ? isLoadingUser : isLoadingTemplate
   const error = isUserAudience ? errorUser : errorTemplate
@@ -223,9 +229,12 @@ export function AudienceDetail() {
           onAddCommunity={handleEdit}
           onAddToAudience={handleAddToAudience}
           onMarkNotRelevant={handleMarkNotRelevant}
-          topics={topicsData?.topics ?? []}
-          totalTopics={topicsData?.totalTopics ?? 0}
+          topics={topicsData?.pages.flatMap((p) => p.topics) ?? []}
+          totalTopics={topicsData?.pages[0]?.totalTopics ?? 0}
           isLoadingTopics={isLoadingTopics}
+          onLoadMoreTopics={fetchNextTopics}
+          hasMoreTopics={hasMoreTopics ?? false}
+          isLoadingMoreTopics={isLoadingMoreTopics}
         />
       </div>
 

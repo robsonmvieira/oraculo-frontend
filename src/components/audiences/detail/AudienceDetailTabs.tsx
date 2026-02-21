@@ -32,6 +32,9 @@ export interface AudienceDetailTabsProps {
   topics: Topic[]
   totalTopics: number
   isLoadingTopics: boolean
+  onLoadMoreTopics: () => void
+  hasMoreTopics: boolean
+  isLoadingMoreTopics: boolean
 }
 
 export function AudienceDetailTabs({
@@ -50,6 +53,9 @@ export function AudienceDetailTabs({
   topics,
   totalTopics,
   isLoadingTopics,
+  onLoadMoreTopics,
+  hasMoreTopics,
+  isLoadingMoreTopics,
 }: Readonly<AudienceDetailTabsProps>) {
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
@@ -130,6 +136,9 @@ export function AudienceDetailTabs({
               topics={topicTableItems}
               totalCount={totalTopics}
               selectedTopicId={selectedTopic?.id}
+              onLoadMore={onLoadMoreTopics}
+              hasMore={hasMoreTopics}
+              isLoadingMore={isLoadingMoreTopics}
               onTopicSelect={(topic) => {
                 const fullTopic = topics.find((t) => t.getId() === topic.id)
                 if (fullTopic) {

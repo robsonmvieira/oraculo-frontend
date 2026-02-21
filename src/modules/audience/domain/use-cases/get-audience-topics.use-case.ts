@@ -2,6 +2,8 @@ import type { Topic } from '../entities/Topic.entity'
 
 export interface GetAudienceTopicsParams {
   audienceId: string
+  limit?: number
+  offset?: number
 }
 
 export interface GetAudienceTopicsResult {
@@ -10,6 +12,9 @@ export interface GetAudienceTopicsResult {
   totalTopics: number
   completedAt: string
   topics: Topic[]
+  limit: number
+  offset: number
+  hasMore: boolean
 }
 
 export interface IGetAudienceTopicsUseCase {

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Search, ChevronDown, TrendingUp } from 'lucide-react'
+import { Search, ChevronDown, TrendingUp, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 
@@ -17,6 +17,9 @@ export interface TopicsTableProps {
   totalCount: number
   selectedTopicId?: string | null
   onTopicSelect?: (topic: TopicTableItem) => void
+  onLoadMore?: () => void
+  hasMore?: boolean
+  isLoadingMore?: boolean
 }
 
 type SortOption = 'growth' | 'frequency' | 'name'
@@ -74,12 +77,35 @@ export function TopicsTable({
   totalCount,
   selectedTopicId,
   onTopicSelect,
+  onLoadMore,
+  hasMore,
+  isLoadingMore,
 }: Readonly<TopicsTableProps>) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('growth')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    const root = scrollContainerRef.current
+    if (!sentinel || !root) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+          onLoadMore?.()
+        }
+      },
+      { root, threshold: 0.1 }
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasMore, isLoadingMore, onLoadMore])
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'growth', label: 'Growth' },
@@ -182,58 +208,68 @@ export function TopicsTable({
         </div>
       </div>
 
-      <div ref={listRef} className="space-y-2">
-        {sortedTopics.map((topic) => (
-          <button
-            type="button"
-            key={topic.id}
-            onClick={() => onTopicSelect?.(topic)}
-            className={`w-full text-left bg-white dark:bg-zinc-800 border rounded-xl p-4 transition-colors cursor-pointer ${
-              selectedTopicId === topic.id
-                ? 'border-lime'
-                : 'border-gray-200 dark:border-zinc-700 hover:border-lime dark:hover:border-lime'
-            }`}
-          >
-            <div className="flex items-center gap-4">
-              <p className="font-semibold text-gray-900 dark:text-white truncate w-32 shrink-0">
-                {topic.name}
-              </p>
+      <div ref={scrollContainerRef} className="max-h-[600px] overflow-y-auto">
+        <div ref={listRef} className="space-y-2">
+          {sortedTopics.map((topic) => (
+            <button
+              type="button"
+              key={topic.id}
+              onClick={() => onTopicSelect?.(topic)}
+              className={`w-full text-left bg-white dark:bg-zinc-800 border rounded-xl p-4 transition-colors cursor-pointer ${
+                selectedTopicId === topic.id
+                  ? 'border-lime'
+                  : 'border-gray-200 dark:border-zinc-700 hover:border-lime dark:hover:border-lime'
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                <p className="font-semibold text-gray-900 dark:text-white truncate w-32 shrink-0">
+                  {topic.name}
+                </p>
 
-              <div className="flex items-center gap-4 flex-1 justify-end">
-                <div className="w-[70px] shrink-0">
-                  <Sparkline growth={topic.growth} />
-                </div>
+                <div className="flex items-center gap-4 flex-1 justify-end">
+                  <div className="w-[70px] shrink-0">
+                    <Sparkline growth={topic.growth} />
+                  </div>
 
-                <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-16 shrink-0">
-                  <TrendingUp className="w-4 h-4" />
-                  <span>{topic.growth}%</span>
-                </div>
+                  <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-16 shrink-0">
+                    <TrendingUp className="w-4 h-4" />
+                    <span>{topic.growth}%</span>
+                  </div>
 
-                <div className="text-sm text-right w-64 shrink-0 truncate">
-                  <span className="text-lime font-semibold">
-                    {topic.frequency} / {topic.frequencyUnit}
-                  </span>
-                  <span className="text-gray-500 dark:text-zinc-400"> in </span>
-                  <span className="text-gray-700 dark:text-zinc-300">
-                    {topic.subreddits.slice(0, 2).join(', ')}
-                  </span>
-                  {topic.subreddits.length > 2 && (
-                    <span className="text-gray-400 dark:text-zinc-500">
-                      , and {topic.subreddits.length - 2} others
+                  <div className="text-sm text-right w-64 shrink-0 truncate">
+                    <span className="text-lime font-semibold">
+                      {topic.frequency} / {topic.frequencyUnit}
                     </span>
-                  )}
+                    <span className="text-gray-500 dark:text-zinc-400"> in </span>
+                    <span className="text-gray-700 dark:text-zinc-300">
+                      {topic.subreddits.slice(0, 2).join(', ')}
+                    </span>
+                    {topic.subreddits.length > 2 && (
+                      <span className="text-gray-400 dark:text-zinc-500">
+                        , and {topic.subreddits.length - 2} others
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {sortedTopics.length === 0 && (
-        <div className="py-8 text-center text-gray-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700">
-          No topics found
+            </button>
+          ))}
         </div>
-      )}
+
+        {sortedTopics.length === 0 && (
+          <div className="py-8 text-center text-gray-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700">
+            No topics found
+          </div>
+        )}
+
+        <div ref={sentinelRef}>
+          {isLoadingMore && (
+            <div className="flex justify-center py-4">
+              <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
