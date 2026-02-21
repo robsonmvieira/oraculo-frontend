@@ -194,22 +194,22 @@ export function TopicsTable({
                 : 'border-gray-200 dark:border-zinc-700 hover:border-lime dark:hover:border-lime'
             }`}
           >
-            <div className="flex items-center justify-between gap-4">
-              <p className="font-semibold text-gray-900 dark:text-white truncate">
+            <div className="flex items-center gap-4">
+              <p className="font-semibold text-gray-900 dark:text-white truncate w-32 shrink-0">
                 {topic.name}
               </p>
 
-              <div className="flex items-center gap-4 shrink-0">
-                <div className="w-[70px]">
+              <div className="flex items-center gap-4 flex-1 justify-end">
+                <div className="w-[70px] shrink-0">
                   <Sparkline growth={topic.growth} />
                 </div>
 
-                <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-20">
+                <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-16 shrink-0">
                   <TrendingUp className="w-4 h-4" />
                   <span>{topic.growth}%</span>
                 </div>
 
-                <div className="text-sm">
+                <div className="text-sm text-right w-64 shrink-0 truncate">
                   <span className="text-lime font-semibold">
                     {topic.frequency} / {topic.frequencyUnit}
                   </span>
