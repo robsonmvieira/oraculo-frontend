@@ -3,3 +3,6 @@ export { FetchDefaultAudiencesUseCase } from './fetch-default-audiences-use-case
 export { GetAudienceTemplateByIdUseCase } from './get-audience-template-by-id-use-case'
 export { CreateAudienceUseCase } from './create-audience-use-case'
 export { GetAudienceByIdUseCase } from './get-audience-by-id-use-case'
+export { UpdateAudienceUseCase } from './update-audience-use-case'
+export { AddCommunityToAudienceUseCase } from './add-community-to-audience-use-case'
+export { RemoveCommunityFromAudienceUseCase } from './remove-community-from-audience-use-case'
