@@ -119,6 +119,8 @@ export function Audiences() {
         onSaveClick={handleSaveClick}
         onShareClick={handleShareClick}
         gridRef={templatesGridRef}
+        showAddCard={userAudiences.length === 0}
+        onAddClick={openModal}
       />
 
       <SelectAudienceModal
