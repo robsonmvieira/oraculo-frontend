@@ -10,3 +10,4 @@ export { GetAudienceSuggestionsUseCase } from './get-audience-suggestions-use-ca
 export { DeleteAudienceUseCase } from './delete-audience-use-case'
 export { GetAudienceKeywordsUseCase } from './get-audience-keywords-use-case'
 export { MarkCommunityNotRelevantUseCase } from './mark-community-not-relevant-use-case'
+export { GetAudienceTopicsUseCase } from './get-audience-topics-use-case'

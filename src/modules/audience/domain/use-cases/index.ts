@@ -10,3 +10,4 @@ export type { IGetAudienceSuggestionsUseCase, GetAudienceSuggestionsParams, Audi
 export type { IDeleteAudienceUseCase, DeleteAudienceParams, DeleteAudienceResult } from './delete-audience.use-case'
 export type { IGetAudienceKeywordsUseCase, GetAudienceKeywordsParams, GetAudienceKeywordsResult } from './get-audience-keywords.use-case'
 export type { IMarkCommunityNotRelevantUseCase, MarkCommunityNotRelevantParams } from './mark-community-not-relevant.use-case'
+export type { IGetAudienceTopicsUseCase, GetAudienceTopicsParams, GetAudienceTopicsResult } from './get-audience-topics.use-case'

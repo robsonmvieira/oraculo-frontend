@@ -10,3 +10,4 @@ export { useGetAudienceSuggestions, AUDIENCE_SUGGESTIONS_QUERY_KEY } from './use
 export { useDeleteAudience } from './useDeleteAudience'
 export { useGetAudienceKeywords, AUDIENCE_KEYWORDS_QUERY_KEY } from './useGetAudienceKeywords'
 export { useMarkCommunityNotRelevant } from './useMarkCommunityNotRelevant'
+export { useGetAudienceTopics, AUDIENCE_TOPICS_QUERY_KEY } from './useGetAudienceTopics'

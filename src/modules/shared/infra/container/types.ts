@@ -13,6 +13,7 @@ export const TYPES = {
   DeleteAudienceUseCase: Symbol.for('DeleteAudienceUseCase'),
   GetAudienceKeywordsUseCase: Symbol.for('GetAudienceKeywordsUseCase'),
   MarkCommunityNotRelevantUseCase: Symbol.for('MarkCommunityNotRelevantUseCase'),
+  GetAudienceTopicsUseCase: Symbol.for('GetAudienceTopicsUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

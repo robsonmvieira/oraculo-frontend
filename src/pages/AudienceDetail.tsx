@@ -8,7 +8,7 @@ import {
   AudienceDetailTabs,
   DeleteAudienceModal,
 } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions, useAddCommunityToAudience, useMarkCommunityNotRelevant } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions, useAddCommunityToAudience, useMarkCommunityNotRelevant, useGetAudienceTopics } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
 import { SelectAudienceModal } from '@/components/shared'
@@ -37,6 +37,13 @@ export function AudienceDetail() {
   const { data: userAudience, isLoading: isLoadingUser, error: errorUser } = useGetAudienceById(isUserAudience ? (id ?? '') : '')
   const { data: keywordsData, isLoading: isLoadingKeywords } = useGetAudienceKeywords(id ?? '')
   const { data: suggestionsData, isLoading: isLoadingSuggestions } = useGetAudienceSuggestions(id)
+  const {
+    data: topicsData,
+    isLoading: isLoadingTopics,
+    fetchNextPage: fetchNextTopics,
+    hasNextPage: hasMoreTopics,
+    isFetchingNextPage: isLoadingMoreTopics,
+  } = useGetAudienceTopics(id ?? '')
 
   const isLoading = isUserAudience ? isLoadingUser : isLoadingTemplate
   const error = isUserAudience ? errorUser : errorTemplate
@@ -222,6 +229,12 @@ export function AudienceDetail() {
           onAddCommunity={handleEdit}
           onAddToAudience={handleAddToAudience}
           onMarkNotRelevant={handleMarkNotRelevant}
+          topics={topicsData?.pages.flatMap((p) => p.topics) ?? []}
+          totalTopics={topicsData?.pages[0]?.totalTopics ?? 0}
+          isLoadingTopics={isLoadingTopics}
+          onLoadMoreTopics={fetchNextTopics}
+          hasMoreTopics={hasMoreTopics ?? false}
+          isLoadingMoreTopics={isLoadingMoreTopics}
         />
       </div>
 

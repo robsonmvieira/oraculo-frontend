@@ -13,7 +13,8 @@ import type { TopicDetail, ThemeDetail } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
 import type { SubredditDetail } from '@/data/audienceDetails'
 import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
-import { themesGridData, themesDetailData, topicsData } from '@/data/audienceDetailMocks'
+import type { Topic } from '@/modules/audience/domain/entities/Topic.entity'
+import { themesGridData, themesDetailData } from '@/data/audienceDetailMocks'
 
 export interface AudienceDetailTabsProps {
   contentRef: RefObject<HTMLDivElement | null>
@@ -28,6 +29,12 @@ export interface AudienceDetailTabsProps {
   onAddCommunity: () => void
   onAddToAudience?: (subredditName: string) => void
   onMarkNotRelevant?: (subredditName: string) => void
+  topics: Topic[]
+  totalTopics: number
+  isLoadingTopics: boolean
+  onLoadMoreTopics: () => void
+  hasMoreTopics: boolean
+  isLoadingMoreTopics: boolean
 }
 
 export function AudienceDetailTabs({
@@ -43,10 +50,29 @@ export function AudienceDetailTabs({
   onAddCommunity,
   onAddToAudience,
   onMarkNotRelevant,
+  topics,
+  totalTopics,
+  isLoadingTopics,
+  onLoadMoreTopics,
+  hasMoreTopics,
+  isLoadingMoreTopics,
 }: Readonly<AudienceDetailTabsProps>) {
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
+
+  const topicTableItems = topics.map((topic) => {
+    const period = topic.getMentionPeriod()
+    const frequencyUnit: 'day' | 'week' | 'mo' = period === 'month' ? 'mo' : period === 'week' ? 'week' : 'day'
+    return {
+      id: topic.getId(),
+      name: topic.getName(),
+      growth: topic.getGrowthPercentage(),
+      frequency: topic.getMentionFrequency(),
+      frequencyUnit,
+      subreddits: topic.getCommunities().map((c) => c.name),
+    }
+  })
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -57,7 +83,7 @@ export function AudienceDetailTabs({
         <TabsTrigger value="subreddits" count={communitiesCount}>
           Subreddits
         </TabsTrigger>
-        <TabsTrigger value="topics" count={200}>
+        <TabsTrigger value="topics" count={totalTopics}>
           Topics
         </TabsTrigger>
         <TabsTrigger value="themes">
@@ -100,30 +126,44 @@ export function AudienceDetailTabs({
       </TabsContent>
 
       <TabsContent value="topics" className="mt-6">
-        <div className="flex gap-6">
-          <TopicsTable
-            topics={topicsData}
-            totalCount={200}
-            selectedTopicId={selectedTopic?.id}
-            onTopicSelect={(topic) => {
-              const fullTopic = topicsData.find((t) => t.id === topic.id)
-              if (fullTopic) {
-                setSelectedTopic({
-                  id: fullTopic.id,
-                  name: fullTopic.name,
-                  frequency: fullTopic.frequency,
-                  frequencyUnit: fullTopic.frequencyUnit,
-                  growth: fullTopic.growth,
-                  description: fullTopic.description,
-                  subreddits: fullTopic.subredditCounts,
-                })
-              }
-            }}
-          />
-          <div className="w-1/2 shrink-0">
-            <TopicDetailPanel topic={selectedTopic} />
+        {isLoadingTopics ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-lime border-t-transparent rounded-full animate-spin" />
           </div>
-        </div>
+        ) : (
+          <div className="flex gap-6">
+            <TopicsTable
+              topics={topicTableItems}
+              totalCount={totalTopics}
+              selectedTopicId={selectedTopic?.id}
+              onLoadMore={onLoadMoreTopics}
+              hasMore={hasMoreTopics}
+              isLoadingMore={isLoadingMoreTopics}
+              onTopicSelect={(topic) => {
+                const fullTopic = topics.find((t) => t.getId() === topic.id)
+                if (fullTopic) {
+                  const period = fullTopic.getMentionPeriod()
+                  const frequencyUnit: 'day' | 'week' | 'mo' = period === 'month' ? 'mo' : period === 'week' ? 'week' : 'day'
+                  setSelectedTopic({
+                    id: fullTopic.getId(),
+                    name: fullTopic.getName(),
+                    frequency: fullTopic.getMentionFrequency(),
+                    frequencyUnit,
+                    growth: fullTopic.getGrowthPercentage(),
+                    description: fullTopic.getDescription(),
+                    subreddits: fullTopic.getCommunities().map((c) => ({
+                      name: c.name,
+                      postCount: c.postCount,
+                    })),
+                  })
+                }
+              }}
+            />
+            <div className="w-1/2 shrink-0">
+              <TopicDetailPanel topic={selectedTopic} />
+            </div>
+          </div>
+        )}
       </TabsContent>
 
       <TabsContent value="themes" className="mt-6">
