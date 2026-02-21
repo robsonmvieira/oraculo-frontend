@@ -27,9 +27,17 @@ A entidade `Topic` armazena todos os campos do backend. No componente, ela e tra
 - **TopicTableItem** — para a tabela (id, name, growth, frequency, frequencyUnit, subreddits como string[])
 - **TopicDetail** — para o painel de detalhes ao clicar (inclui description e subreddits com postCount)
 
-### 2.3 Loading state
+### 2.3 Paginacao com infinite scroll
 
-Enquanto os dados sao carregados, um spinner e exibido no lugar da tabela de topicos, mantendo o padrao visual do projeto.
+O endpoint suporta paginacao via `?limit=200&offset=0`. Implementamos infinite scroll seguindo o padrao ja existente no projeto:
+- **Hook:** `useInfiniteQuery` do React Query (mesmo padrao de `useBrowseCommunities`)
+- **UI:** `IntersectionObserver` com elemento sentinel no final da lista (mesmo padrao de `SelectAudienceModal`)
+- **PAGE_SIZE:** 200 topicos por pagina
+- O repositorio calcula `hasMore` comparando `offset + topics.length < total_topics`
+
+### 2.4 Loading state
+
+Enquanto os dados sao carregados, um spinner e exibido no lugar da tabela de topicos, mantendo o padrao visual do projeto. Durante o carregamento de paginas adicionais (infinite scroll), um spinner menor aparece no final da lista.
 
 ---
 
@@ -39,7 +47,14 @@ Enquanto os dados sao carregados, um spinner e exibido no lugar da tabela de top
 
 | Metodo | URL | Descricao |
 |--------|-----|-----------|
-| GET | `/audiences/{audience_id}/topics` | Buscar topicos da audiencia |
+| GET | `/audiences/{audience_id}/topics?limit=200&offset=0` | Buscar topicos da audiencia com paginacao |
+
+**Query Params:**
+
+| Param | Tipo | Default | Descricao |
+|-------|------|---------|-----------|
+| `limit` | number | 200 | Quantidade de topicos por pagina |
+| `offset` | number | 0 | Offset para paginacao |
 
 **Response:**
 
@@ -71,11 +86,17 @@ Enquanto os dados sao carregados, um spinner e exibido no lugar da tabela de top
 
 ```
 AudienceDetail Page
-  └── useGetAudienceTopics(audienceId)
+  └── useGetAudienceTopics(audienceId)  [useInfiniteQuery, PAGE_SIZE=200]
         └── GetAudienceTopicsUseCase
-              └── AudienceRepository.getAudienceTopics()
-                    └── GET /audiences/{id}/topics
+              └── AudienceRepository.getAudienceTopics({ limit, offset })
+                    └── GET /audiences/{id}/topics?limit=200&offset=0
                           └── Mapeia snake_case → Topic entity
+                          └── Calcula hasMore: offset + topics.length < total_topics
+
+TopicsTable Component
+  └── IntersectionObserver (sentinelRef)
+        └── onLoadMore() → fetchNextPage()
+              └── Proxima pagina: offset += PAGE_SIZE
 ```
 
 ### 3.3 Mapeamento de campos API → UI
@@ -102,7 +123,7 @@ AudienceDetail Page
 | `src/modules/audience/domain/entities/Topic.entity.ts` | Entidade Topic com getters e toJSON |
 | `src/modules/audience/domain/use-cases/get-audience-topics.use-case.ts` | Interface `IGetAudienceTopicsUseCase`, params e result types |
 | `src/modules/audience/application/use-cases/get-audience-topics-use-case/index.ts` | Implementacao do use-case |
-| `src/modules/audience/application/hooks/useGetAudienceTopics.ts` | Hook React Query com `useQuery` |
+| `src/modules/audience/application/hooks/useGetAudienceTopics.ts` | Hook React Query com `useInfiniteQuery` e paginacao offset-based |
 
 ---
 
@@ -112,13 +133,14 @@ AudienceDetail Page
 |---------|-----------|
 | `src/modules/audience/domain/use-cases/index.ts` | Export dos novos tipos |
 | `src/modules/audience/domain/repositories/audience.repository.ts` | Novo metodo `getAudienceTopics` na interface |
-| `src/modules/audience/infra/repositories/audience.repository.ts` | Implementacao HTTP com interfaces de resposta API e mapeamento para entidade |
+| `src/modules/audience/infra/repositories/audience.repository.ts` | Implementacao HTTP com interfaces de resposta API, mapeamento para entidade, paginacao com `limit`/`offset` e calculo de `hasMore` |
 | `src/modules/audience/application/use-cases/index.ts` | Export do `GetAudienceTopicsUseCase` |
 | `src/modules/audience/application/hooks/index.ts` | Export do `useGetAudienceTopics` e `AUDIENCE_TOPICS_QUERY_KEY` |
 | `src/modules/shared/infra/container/types.ts` | Novo symbol `GetAudienceTopicsUseCase` |
 | `src/modules/shared/infra/container/container.ts` | Binding do use-case no container Inversify |
-| `src/pages/AudienceDetail.tsx` | Chamada do hook `useGetAudienceTopics`, passagem de props (topics, totalTopics, isLoadingTopics) |
-| `src/components/audiences/detail/AudienceDetailTabs.tsx` | Novas props, remocao do import de mock `topicsData`, mapeamento Topic entity → TopicTableItem/TopicDetail, loading state |
+| `src/pages/AudienceDetail.tsx` | Chamada do hook `useGetAudienceTopics` com `useInfiniteQuery`, `flatMap` das pages, passagem de props de paginacao |
+| `src/components/audiences/detail/AudienceDetailTabs.tsx` | Novas props (incluindo scroll), remocao do import de mock, mapeamento Topic entity → TopicTableItem/TopicDetail, loading state |
+| `src/components/audiences/detail/TopicsTable.tsx` | Novas props (onLoadMore, hasMore, isLoadingMore), IntersectionObserver com sentinel, scroll container com max-h-[900px] |
 
 ---
 
