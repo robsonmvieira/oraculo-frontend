@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
-import { useGsapEntrance } from '@/hooks'
+import { useGsapEntrance, toast } from '@/hooks'
 import { useLogin } from '@/modules/auth'
 
 const FONT_DISPLAY = { fontFamily: "'Space Grotesk', sans-serif" }
@@ -26,7 +26,19 @@ export function LoginForm() {
     e.preventDefault()
     login(
       { email, password },
-      { onSuccess: () => navigate('/dashboard', { replace: true }) }
+      {
+        onSuccess: () => navigate('/dashboard', { replace: true }),
+        onError: (err) => {
+          const status = (err as { response?: { status?: number } }).response?.status
+          toast({
+            title: 'Login failed',
+            description: status === 401
+              ? 'Invalid email or password.'
+              : 'Something went wrong. Please try again.',
+            variant: 'destructive',
+          })
+        },
+      }
     )
   }
 

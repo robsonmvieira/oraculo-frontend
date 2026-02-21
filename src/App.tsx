@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { QueryProvider } from '@/modules/shared'
 import { AppRouter } from '@/router'
 import { useAuthStore } from '@/modules/auth'
+import { Toaster } from '@/components/ui/toaster'
 import '@/styles/globals.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   return (
     <QueryProvider>
       <AppRouter />
+      <Toaster />
     </QueryProvider>
   )
 }
