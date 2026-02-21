@@ -208,7 +208,7 @@ export function TopicsTable({
         </div>
       </div>
 
-      <div ref={scrollContainerRef} className="max-h-[600px] overflow-y-auto">
+      <div ref={scrollContainerRef} className="max-h-[900px] overflow-y-auto">
         <div ref={listRef} className="space-y-2">
           {sortedTopics.map((topic) => (
             <button
