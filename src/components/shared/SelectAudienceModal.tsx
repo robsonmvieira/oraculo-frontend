@@ -75,13 +75,15 @@ export function SelectAudienceModal({
         })
     )
 
-    const selectedNotInSuggestions = selectedCommunities.filter(
-      (c) => !aiSuggestionNames.has(c.getName())
+    const selectedNames = new Set(selectedCommunities.map((c) => c.getName()))
+
+    const suggestionsNotInSelected = suggestedAsCommunities.filter(
+      (c) => !selectedNames.has(c.getName())
     )
 
     const pinnedNames = new Set([
+      ...selectedNames,
       ...aiSuggestionNames,
-      ...selectedNotInSuggestions.map((c) => c.getName()),
     ])
 
     const remainingBrowse = browseCommunities.filter(
@@ -89,7 +91,7 @@ export function SelectAudienceModal({
     )
 
     return {
-      superlist: [...suggestedAsCommunities, ...selectedNotInSuggestions, ...remainingBrowse],
+      superlist: [...selectedCommunities, ...suggestionsNotInSelected, ...remainingBrowse],
       suggestedNames: aiSuggestionNames,
     }
   }, [isEditMode, suggestionsData, browseCommunities, selectedCommunities])
