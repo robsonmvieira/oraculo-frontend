@@ -53,13 +53,15 @@ export function SelectAudienceModal({
   const browseCommunities = data?.pages.flatMap((page) => page.communities) ?? []
 
   const { superlist, suggestedNames } = useMemo(() => {
-    if (!isEditMode || !suggestionsData?.suggestions.length) {
+    if (!isEditMode) {
       return { superlist: browseCommunities, suggestedNames: new Set<string>() }
     }
 
-    const names = new Set(suggestionsData.suggestions.map((s) => s.subredditName))
+    const aiSuggestionNames = new Set(
+      (suggestionsData?.suggestions ?? []).map((s) => s.subredditName)
+    )
 
-    const suggestedAsCommunities = suggestionsData.suggestions.map(
+    const suggestedAsCommunities = (suggestionsData?.suggestions ?? []).map(
       (s) =>
         new Community({
           name: s.subredditName,
@@ -73,13 +75,24 @@ export function SelectAudienceModal({
         })
     )
 
-    const filtered = browseCommunities.filter((c) => !names.has(c.getName()))
+    const selectedNotInSuggestions = selectedCommunities.filter(
+      (c) => !aiSuggestionNames.has(c.getName())
+    )
+
+    const pinnedNames = new Set([
+      ...aiSuggestionNames,
+      ...selectedNotInSuggestions.map((c) => c.getName()),
+    ])
+
+    const remainingBrowse = browseCommunities.filter(
+      (c) => !pinnedNames.has(c.getName())
+    )
 
     return {
-      superlist: [...suggestedAsCommunities, ...filtered],
-      suggestedNames: names,
+      superlist: [...suggestedAsCommunities, ...selectedNotInSuggestions, ...remainingBrowse],
+      suggestedNames: aiSuggestionNames,
     }
-  }, [isEditMode, suggestionsData, browseCommunities])
+  }, [isEditMode, suggestionsData, browseCommunities, selectedCommunities])
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
