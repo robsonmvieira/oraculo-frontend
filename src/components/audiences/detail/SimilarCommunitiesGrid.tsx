@@ -12,9 +12,67 @@ export interface SimilarCommunity {
 
 export interface SimilarCommunitiesGridProps {
   communities: readonly SimilarCommunity[]
+  isLoading?: boolean
 }
 
-export function SimilarCommunitiesGrid({ communities }: Readonly<SimilarCommunitiesGridProps>) {
+function SkeletonCard() {
+  return (
+    <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 animate-pulse">
+      <div className="flex items-start gap-4 mb-3">
+        <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-zinc-700 shrink-0" />
+        <div className="flex-1 min-w-0 space-y-2">
+          <div className="h-4 bg-gray-200 dark:bg-zinc-700 rounded w-2/3" />
+          <div className="h-3 bg-gray-200 dark:bg-zinc-700 rounded w-1/2" />
+        </div>
+      </div>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="h-3 bg-gray-200 dark:bg-zinc-700 rounded w-16" />
+        <div className="h-3 bg-gray-200 dark:bg-zinc-700 rounded w-20" />
+      </div>
+      <div className="mb-4 space-y-1">
+        <div className="h-2 bg-gray-200 dark:bg-zinc-700 rounded w-16" />
+        <div className="h-3 bg-gray-200 dark:bg-zinc-700 rounded w-full" />
+        <div className="h-3 bg-gray-200 dark:bg-zinc-700 rounded w-4/5" />
+      </div>
+      <div className="flex gap-3">
+        <div className="flex-1 h-10 bg-gray-200 dark:bg-zinc-700 rounded-lg" />
+        <div className="flex-1 h-10 bg-gray-200 dark:bg-zinc-700 rounded-lg" />
+      </div>
+    </div>
+  )
+}
+
+export function SimilarCommunitiesGrid({ communities, isLoading }: Readonly<SimilarCommunitiesGridProps>) {
+  if (isLoading) {
+    return (
+      <div>
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+          Expand your audience with similar communities
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (communities.length === 0) {
+    return (
+      <div>
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+          Expand your audience with similar communities
+        </h3>
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
+          <p className="text-sm text-gray-500 dark:text-zinc-400">
+            No suggestions available for this audience yet.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h3 className="font-semibold text-gray-900 dark:text-white mb-4">

@@ -16,12 +16,13 @@ import {
   DeleteAudienceModal,
 } from '@/components/audiences/detail'
 import type { TopicDetail, ThemeDetail } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
 import { SelectAudienceModal } from '@/components/shared'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
-import { themesGridData, themesDetailData, topicsData, similarCommunitiesData } from '@/data/audienceDetailMocks'
+import { themesGridData, themesDetailData, topicsData } from '@/data/audienceDetailMocks'
+import type { SimilarCommunity } from '@/components/audiences/detail/SimilarCommunitiesGrid'
 
 export function AudienceDetail() {
   const { id } = useParams<{ id: string }>()
@@ -45,6 +46,7 @@ export function AudienceDetail() {
   const { data: audienceTemplate, isLoading: isLoadingTemplate, error: errorTemplate } = useGetAudienceTemplateById(isUserAudience ? '' : (id ?? ''))
   const { data: userAudience, isLoading: isLoadingUser, error: errorUser } = useGetAudienceById(isUserAudience ? (id ?? '') : '')
   const { data: keywordsData, isLoading: isLoadingKeywords } = useGetAudienceKeywords(id ?? '')
+  const { data: suggestionsData, isLoading: isLoadingSuggestions } = useGetAudienceSuggestions(id)
 
   const isLoading = isUserAudience ? isLoadingUser : isLoadingTemplate
   const error = isUserAudience ? errorUser : errorTemplate
@@ -118,6 +120,16 @@ export function AudienceDetail() {
       }))
 
   const keywords = keywordsData?.keywords ?? []
+
+  const similarCommunities: SimilarCommunity[] = (suggestionsData?.suggestions ?? []).map((s) => ({
+    id: s.subredditName,
+    name: `r/${s.subredditName}`,
+    members: s.subscribers,
+    weeklyGrowth: s.growthWeek ?? 0,
+    sizeCategory: s.sizeTag ?? '',
+    activityLevel: s.activityTag ?? '',
+    description: s.description,
+  }))
 
   const handleEdit = () => {
     const communities = userAudience!.getCommunities().map((c) =>
@@ -213,7 +225,8 @@ export function AudienceDetail() {
               subredditsData={subredditsData}
               communitiesCount={communitiesCount}
               audienceName={audienceName}
-              similarCommunities={similarCommunitiesData}
+              similarCommunities={similarCommunities}
+              isLoadingSuggestions={isLoadingSuggestions}
             />
           </TabsContent>
 

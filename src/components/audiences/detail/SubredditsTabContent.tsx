@@ -9,6 +9,7 @@ export interface SubredditsTabContentProps {
   communitiesCount: number
   audienceName: string
   similarCommunities: readonly SimilarCommunity[]
+  isLoadingSuggestions?: boolean
 }
 
 export function SubredditsTabContent({
@@ -16,6 +17,7 @@ export function SubredditsTabContent({
   communitiesCount,
   audienceName,
   similarCommunities,
+  isLoadingSuggestions,
 }: Readonly<SubredditsTabContentProps>) {
   return (
     <div className="space-y-8">
@@ -44,7 +46,7 @@ export function SubredditsTabContent({
         </div>
       </div>
 
-      <SimilarCommunitiesGrid communities={similarCommunities} />
+      <SimilarCommunitiesGrid communities={similarCommunities} isLoading={isLoadingSuggestions} />
     </div>
   )
 }
