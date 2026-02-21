@@ -9,3 +9,4 @@ export { RemoveCommunityFromAudienceUseCase } from './remove-community-from-audi
 export { GetAudienceSuggestionsUseCase } from './get-audience-suggestions-use-case'
 export { DeleteAudienceUseCase } from './delete-audience-use-case'
 export { GetAudienceKeywordsUseCase } from './get-audience-keywords-use-case'
+export { MarkCommunityNotRelevantUseCase } from './mark-community-not-relevant-use-case'

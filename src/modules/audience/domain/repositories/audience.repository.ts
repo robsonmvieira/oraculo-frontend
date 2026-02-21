@@ -7,6 +7,7 @@ import type { RemoveCommunityFromAudienceParams } from "../use-cases/remove-comm
 import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from "../use-cases/get-audience-suggestions.use-case";
 import type { DeleteAudienceParams, DeleteAudienceResult } from "../use-cases/delete-audience.use-case";
 import type { GetAudienceKeywordsParams, GetAudienceKeywordsResult } from "../use-cases/get-audience-keywords.use-case";
+import type { MarkCommunityNotRelevantParams } from "../use-cases/mark-community-not-relevant.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -20,4 +21,5 @@ export interface IAudienceRepository {
   getAudienceSuggestions(params: GetAudienceSuggestionsParams): Promise<GetAudienceSuggestionsResult>
   deleteAudience(params: DeleteAudienceParams): Promise<DeleteAudienceResult>
   getAudienceKeywords(params: GetAudienceKeywordsParams): Promise<GetAudienceKeywordsResult>
+  markCommunityNotRelevant(params: MarkCommunityNotRelevantParams): Promise<void>
 }

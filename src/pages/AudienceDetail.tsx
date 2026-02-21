@@ -8,7 +8,7 @@ import {
   AudienceDetailTabs,
   DeleteAudienceModal,
 } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions, useAddCommunityToAudience, useMarkCommunityNotRelevant } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
 import { SelectAudienceModal } from '@/components/shared'
@@ -28,6 +28,8 @@ export function AudienceDetail() {
   const { openEditModal, closeModal } = useCreateAudienceStore()
   const updateAudienceMutation = useUpdateAudience()
   const deleteAudienceMutation = useDeleteAudience()
+  const addCommunityMutation = useAddCommunityToAudience()
+  const markNotRelevantMutation = useMarkCommunityNotRelevant()
 
   const isUserAudience = searchParams.get('type') === 'user'
 
@@ -135,6 +137,43 @@ export function AudienceDetail() {
     openEditModal(audienceId, audienceName, communities)
   }
 
+  const handleAddToAudience = (subredditName: string) => {
+    addCommunityMutation.mutate(
+      { audienceId, subreddit_name: subredditName },
+      {
+        onSuccess: () => {
+          toast({
+            title: 'Community added',
+            description: `${subredditName} has been added to your audience.`,
+            variant: 'success',
+          })
+        },
+        onError: () => {
+          toast({
+            title: 'Failed to add community',
+            description: 'Something went wrong. Please try again.',
+            variant: 'destructive',
+          })
+        },
+      }
+    )
+  }
+
+  const handleMarkNotRelevant = (subredditName: string) => {
+    markNotRelevantMutation.mutate(
+      { subredditName, audienceId },
+      {
+        onError: () => {
+          toast({
+            title: 'Failed to mark as not relevant',
+            description: 'Something went wrong. Please try again.',
+            variant: 'destructive',
+          })
+        },
+      }
+    )
+  }
+
   const handleDelete = () => {
     deleteAudienceMutation.mutate(
       { audienceId },
@@ -181,6 +220,8 @@ export function AudienceDetail() {
           similarCommunities={similarCommunities}
           isLoadingSuggestions={isLoadingSuggestions}
           onAddCommunity={handleEdit}
+          onAddToAudience={handleAddToAudience}
+          onMarkNotRelevant={handleMarkNotRelevant}
         />
       </div>
 

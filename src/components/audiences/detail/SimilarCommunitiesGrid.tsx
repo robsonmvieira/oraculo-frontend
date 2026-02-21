@@ -13,6 +13,8 @@ export interface SimilarCommunity {
 export interface SimilarCommunitiesGridProps {
   communities: readonly SimilarCommunity[]
   isLoading?: boolean
+  onAddToAudience?: (subredditName: string) => void
+  onMarkNotRelevant?: (subredditName: string) => void
 }
 
 function SkeletonCard() {
@@ -42,7 +44,7 @@ function SkeletonCard() {
   )
 }
 
-export function SimilarCommunitiesGrid({ communities, isLoading }: Readonly<SimilarCommunitiesGridProps>) {
+export function SimilarCommunitiesGrid({ communities, isLoading, onAddToAudience, onMarkNotRelevant }: Readonly<SimilarCommunitiesGridProps>) {
   if (isLoading) {
     return (
       <div>
@@ -82,7 +84,7 @@ export function SimilarCommunitiesGrid({ communities, isLoading }: Readonly<Simi
         {communities.map((subreddit) => (
           <div
             key={subreddit.id}
-            className="bg-white dark:bg-zinc-900 rounded-2xl p-5"
+            className="bg-white dark:bg-zinc-900 rounded-2xl p-5 flex flex-col"
           >
             <div className="flex items-start gap-4 mb-3">
               <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-zinc-700 flex items-center justify-center text-lg font-medium text-gray-600 dark:text-zinc-300 shrink-0">
@@ -116,7 +118,7 @@ export function SimilarCommunitiesGrid({ communities, isLoading }: Readonly<Simi
               </span>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 flex-1">
               <p className="text-[10px] font-medium text-gray-500 dark:text-zinc-500 uppercase tracking-wide mb-1">
                 Description
               </p>
@@ -125,11 +127,17 @@ export function SimilarCommunitiesGrid({ communities, isLoading }: Readonly<Simi
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <button className="cursor-pointer flex-1 py-2.5 text-sm font-medium text-zinc-900 bg-cyan-400 hover:bg-cyan-500 rounded-lg transition-colors">
+            <div className="flex gap-3 mt-auto">
+              <button
+                className="cursor-pointer flex-1 py-2.5 text-sm font-medium text-zinc-900 bg-cyan-400 hover:bg-cyan-500 rounded-lg transition-colors"
+                onClick={() => onAddToAudience?.(subreddit.id)}
+              >
                 Add to Audience
               </button>
-              <button className="cursor-pointer flex-1 py-2.5 text-sm font-medium text-gray-300 dark:text-zinc-400 bg-gray-700 dark:bg-zinc-700 hover:bg-gray-600 dark:hover:bg-zinc-600 rounded-lg transition-colors">
+              <button
+                className="cursor-pointer flex-1 py-2.5 text-sm font-medium text-gray-300 dark:text-zinc-400 bg-gray-700 dark:bg-zinc-700 hover:bg-gray-600 dark:hover:bg-zinc-600 rounded-lg transition-colors"
+                onClick={() => onMarkNotRelevant?.(subreddit.id)}
+              >
                 Not Relevant
               </button>
             </div>

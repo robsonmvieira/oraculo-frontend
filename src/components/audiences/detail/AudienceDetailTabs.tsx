@@ -26,6 +26,8 @@ export interface AudienceDetailTabsProps {
   similarCommunities: SimilarCommunity[]
   isLoadingSuggestions: boolean
   onAddCommunity: () => void
+  onAddToAudience?: (subredditName: string) => void
+  onMarkNotRelevant?: (subredditName: string) => void
 }
 
 export function AudienceDetailTabs({
@@ -39,6 +41,8 @@ export function AudienceDetailTabs({
   similarCommunities,
   isLoadingSuggestions,
   onAddCommunity,
+  onAddToAudience,
+  onMarkNotRelevant,
 }: Readonly<AudienceDetailTabsProps>) {
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
@@ -90,6 +94,8 @@ export function AudienceDetailTabs({
           audienceName={audienceName}
           similarCommunities={similarCommunities}
           isLoadingSuggestions={isLoadingSuggestions}
+          onAddToAudience={onAddToAudience}
+          onMarkNotRelevant={onMarkNotRelevant}
         />
       </TabsContent>
 
