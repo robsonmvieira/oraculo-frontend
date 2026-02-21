@@ -66,7 +66,7 @@ export function CommunitySelectCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        'cursor-pointer rounded-xl p-4 border-2 transition-colors duration-200 text-left w-full',
+        'cursor-pointer rounded-xl p-4 border-2 transition-colors duration-200 text-left w-full h-full',
         'bg-gray-50 dark:bg-zinc-800/50',
         isSelected
           ? 'border-lime bg-lime/5 dark:bg-lime/10'
