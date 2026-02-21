@@ -1,27 +1,19 @@
 import { useRef, useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { Sparkles } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
-  TopicsTable,
-  TopicDetailPanel,
-  ThemesGrid,
-  ThemeDetailPanel,
   AudienceDetailHeader,
-  SearchTabContent,
-  SubredditsTabContent,
+  AudienceDetailTabs,
   DeleteAudienceModal,
 } from '@/components/audiences/detail'
-import type { TopicDetail, ThemeDetail } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
 import { SelectAudienceModal } from '@/components/shared'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
-import { themesGridData, themesDetailData, topicsData, similarCommunitiesData } from '@/data/audienceDetailMocks'
+import type { SimilarCommunity } from '@/components/audiences/detail/SimilarCommunitiesGrid'
 
 export function AudienceDetail() {
   const { id } = useParams<{ id: string }>()
@@ -30,10 +22,7 @@ export function AudienceDetail() {
   const headerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
-  const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
-  const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
 
-  const [activeTab, setActiveTab] = useState('search')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const { openEditModal, closeModal } = useCreateAudienceStore()
@@ -45,6 +34,7 @@ export function AudienceDetail() {
   const { data: audienceTemplate, isLoading: isLoadingTemplate, error: errorTemplate } = useGetAudienceTemplateById(isUserAudience ? '' : (id ?? ''))
   const { data: userAudience, isLoading: isLoadingUser, error: errorUser } = useGetAudienceById(isUserAudience ? (id ?? '') : '')
   const { data: keywordsData, isLoading: isLoadingKeywords } = useGetAudienceKeywords(id ?? '')
+  const { data: suggestionsData, isLoading: isLoadingSuggestions } = useGetAudienceSuggestions(id)
 
   const isLoading = isUserAudience ? isLoadingUser : isLoadingTemplate
   const error = isUserAudience ? errorUser : errorTemplate
@@ -119,6 +109,16 @@ export function AudienceDetail() {
 
   const keywords = keywordsData?.keywords ?? []
 
+  const similarCommunities: SimilarCommunity[] = (suggestionsData?.suggestions ?? []).map((s) => ({
+    id: s.subredditName,
+    name: `r/${s.subredditName}`,
+    members: s.subscribers,
+    weeklyGrowth: s.growthWeek ?? 0,
+    sizeCategory: s.sizeTag ?? '',
+    activityLevel: s.activityTag ?? '',
+    description: s.description,
+  }))
+
   const handleEdit = () => {
     const communities = userAudience!.getCommunities().map((c) =>
       new Community({
@@ -170,128 +170,18 @@ export function AudienceDetail() {
           onDelete={() => setShowDeleteModal(true)}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList>
-            <TabsTrigger value="search">
-              Search
-            </TabsTrigger>
-            <TabsTrigger value="subreddits" count={communitiesCount}>
-              Subreddits
-            </TabsTrigger>
-            <TabsTrigger value="topics" count={200}>
-              Topics
-            </TabsTrigger>
-            <TabsTrigger value="themes">
-              <Sparkles className="w-4 h-4" />
-              Themes
-            </TabsTrigger>
-            <TabsTrigger value="ask">
-              <Sparkles className="w-4 h-4" />
-              Ask
-            </TabsTrigger>
-            <TabsTrigger value="products">
-              <Sparkles className="w-4 h-4" />
-              Products
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="search" className="mt-6">
-            <SearchTabContent
-              contentRef={contentRef}
-              subredditsData={subredditsData}
-              communitiesCount={communitiesCount}
-              keywords={keywords}
-              isLoadingKeywords={isLoadingKeywords}
-              isUserAudience={isUserAudience}
-              onAddCommunity={handleEdit}
-              onSubredditClick={() => setActiveTab('subreddits')}
-            />
-          </TabsContent>
-
-          <TabsContent value="subreddits" className="mt-6">
-            <SubredditsTabContent
-              subredditsData={subredditsData}
-              communitiesCount={communitiesCount}
-              audienceName={audienceName}
-              similarCommunities={similarCommunitiesData}
-            />
-          </TabsContent>
-
-          <TabsContent value="topics" className="mt-6">
-            <div className="flex gap-6">
-              <TopicsTable
-                topics={topicsData}
-                totalCount={200}
-                selectedTopicId={selectedTopic?.id}
-                onTopicSelect={(topic) => {
-                  const fullTopic = topicsData.find((t) => t.id === topic.id)
-                  if (fullTopic) {
-                    setSelectedTopic({
-                      id: fullTopic.id,
-                      name: fullTopic.name,
-                      frequency: fullTopic.frequency,
-                      frequencyUnit: fullTopic.frequencyUnit,
-                      growth: fullTopic.growth,
-                      description: fullTopic.description,
-                      subreddits: fullTopic.subredditCounts,
-                    })
-                  }
-                }}
-              />
-              <div className="w-1/2 shrink-0">
-                <TopicDetailPanel topic={selectedTopic} />
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="themes" className="mt-6">
-            <div className="flex gap-6">
-              <div className="flex-1">
-                <ThemesGrid
-                  themes={themesGridData}
-                  selectedThemeId={selectedTheme?.id}
-                  onThemeSelect={(theme) => {
-                    const detailData = themesDetailData[theme.id]
-                    if (detailData) {
-                      setSelectedTheme({
-                        id: theme.id,
-                        name: theme.name,
-                        ...detailData,
-                      })
-                    }
-                  }}
-                />
-              </div>
-              <div className="w-1/2 shrink-0">
-                <ThemeDetailPanel theme={selectedTheme} />
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="ask" className="mt-6">
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
-              <Sparkles className="w-8 h-8 text-lime mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                Ask AI
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-zinc-400">
-                Coming soon - Ask questions about this audience
-              </p>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="products" className="mt-6">
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
-              <Sparkles className="w-8 h-8 text-lime mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                Products
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-zinc-400">
-                Coming soon - Discover products relevant to this audience
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
+        <AudienceDetailTabs
+          contentRef={contentRef}
+          subredditsData={subredditsData}
+          communitiesCount={communitiesCount}
+          audienceName={audienceName}
+          keywords={keywords}
+          isLoadingKeywords={isLoadingKeywords}
+          isUserAudience={isUserAudience}
+          similarCommunities={similarCommunities}
+          isLoadingSuggestions={isLoadingSuggestions}
+          onAddCommunity={handleEdit}
+        />
       </div>
 
       <DeleteAudienceModal
