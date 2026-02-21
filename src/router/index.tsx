@@ -38,6 +38,20 @@ function AuthRedirect() {
   )
 }
 
+function RedirectIfAuthenticated({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isHydrated } = useAuthStore()
+
+  if (!isHydrated) {
+    return <PageLoader />
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return <>{children}</>
+}
+
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isHydrated } = useAuthStore()
 
@@ -60,9 +74,11 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: (
-      <Suspense fallback={<PageLoader />}>
-        <LoginPage />
-      </Suspense>
+      <RedirectIfAuthenticated>
+        <Suspense fallback={<PageLoader />}>
+          <LoginPage />
+        </Suspense>
+      </RedirectIfAuthenticated>
     ),
   },
   {
