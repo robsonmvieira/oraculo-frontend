@@ -9,6 +9,9 @@ import {
   Plus,
   Sparkles,
   TrendingUp,
+  Trash2,
+  AlertTriangle,
+  Loader2,
 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
@@ -33,10 +36,10 @@ import type {
   ThemeGridItem,
   ThemeDetail,
 } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
-import { SelectAudienceModal } from '@/components/shared'
+import { SelectAudienceModal, Modal } from '@/components/shared'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
 
 // Theme data for the themes tab
@@ -232,8 +235,11 @@ export function AudienceDetail() {
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
   const { openEditModal, closeModal } = useCreateAudienceStore()
   const updateAudienceMutation = useUpdateAudience()
+  const deleteAudienceMutation = useDeleteAudience()
 
   const isUserAudience = searchParams.get('type') === 'user'
 
@@ -366,6 +372,17 @@ export function AudienceDetail() {
               <Plus className="w-4 h-4" />
               Add
             </Button>
+            {isUserAudience && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-red-500 border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                onClick={() => setShowDeleteModal(true)}
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </Button>
+            )}
           </div>
         </div>
 
@@ -738,6 +755,69 @@ export function AudienceDetail() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Audience"
+        icon={<AlertTriangle className="w-5 h-5 text-red-500" />}
+        size="sm"
+      >
+        <div className="p-6 space-y-4">
+          <p className="text-sm text-gray-600 dark:text-zinc-400">
+            Are you sure you want to delete <span className="font-semibold text-gray-900 dark:text-white">{audienceName}</span>?
+          </p>
+          <p className="text-sm text-red-500">
+            This action is irreversible. All data associated with this audience will be permanently removed.
+          </p>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDeleteModal(false)}
+              disabled={deleteAudienceMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-500 border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+              disabled={deleteAudienceMutation.isPending}
+              onClick={() => {
+                deleteAudienceMutation.mutate(
+                  { audienceId },
+                  {
+                    onSuccess: () => {
+                      setShowDeleteModal(false)
+                      toast({
+                        title: 'Audience deleted',
+                        description: 'Your audience has been permanently deleted.',
+                        variant: 'success',
+                      })
+                      navigate('/audiences')
+                    },
+                    onError: () => {
+                      toast({
+                        title: 'Failed to delete audience',
+                        description: 'Something went wrong. Please try again.',
+                        variant: 'destructive',
+                      })
+                    },
+                  }
+                )
+              }}
+            >
+              {deleteAudienceMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4" />
+              )}
+              {deleteAudienceMutation.isPending ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       <SelectAudienceModal
         onCreateAudience={() => {}}

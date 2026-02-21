@@ -10,6 +10,7 @@ export const TYPES = {
   AddCommunityToAudienceUseCase: Symbol.for('AddCommunityToAudienceUseCase'),
   RemoveCommunityFromAudienceUseCase: Symbol.for('RemoveCommunityFromAudienceUseCase'),
   GetAudienceSuggestionsUseCase: Symbol.for('GetAudienceSuggestionsUseCase'),
+  DeleteAudienceUseCase: Symbol.for('DeleteAudienceUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

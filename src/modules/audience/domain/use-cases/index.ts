@@ -7,3 +7,4 @@ export type { IUpdateAudienceUseCase, UpdateAudienceParams, UpdateAudienceResult
 export type { IAddCommunityToAudienceUseCase, AddCommunityToAudienceParams } from './add-community-to-audience.use-case'
 export type { IRemoveCommunityFromAudienceUseCase, RemoveCommunityFromAudienceParams } from './remove-community-from-audience.use-case'
 export type { IGetAudienceSuggestionsUseCase, GetAudienceSuggestionsParams, AudienceSuggestion, GetAudienceSuggestionsResult } from './get-audience-suggestions.use-case'
+export type { IDeleteAudienceUseCase, DeleteAudienceParams, DeleteAudienceResult } from './delete-audience.use-case'
