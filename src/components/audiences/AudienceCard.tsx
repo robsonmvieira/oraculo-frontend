@@ -12,6 +12,8 @@ export interface Subreddit {
   icon?: string
 }
 
+export type AudienceType = 'user' | 'template'
+
 export interface AudienceCardProps {
   id: string
   name: string
@@ -19,6 +21,7 @@ export interface AudienceCardProps {
   totalMembers: number
   weeklyGrowth: number
   subreddits: readonly Subreddit[]
+  type?: AudienceType
   onSaveClick?: (id: string) => void
   onShareClick?: (id: string) => void
 }
@@ -55,6 +58,7 @@ export function AudienceCard({
   totalMembers,
   weeklyGrowth,
   subreddits,
+  type = 'template',
   onSaveClick,
   onShareClick,
 }: Readonly<AudienceCardProps>) {
@@ -103,7 +107,7 @@ export function AudienceCard({
       <div className="flex items-start justify-between mb-4">
         <button
           type="button"
-          onClick={() => navigate(`/audiences/${id}`)}
+          onClick={() => navigate(`/audiences/${id}${type === 'user' ? '?type=user' : ''}`)}
           className="text-lg font-bold text-gray-900 dark:text-white cursor-pointer hover:text-lime transition-colors text-left"
         >
           {name}

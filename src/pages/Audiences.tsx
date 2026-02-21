@@ -1,21 +1,11 @@
 import { useRef, useEffect, useState } from 'react'
-import { Search, LayoutGrid, List } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
-import { AudienceCard, AddAudienceCard } from '@/components/audiences'
+import { AudiencesToolbar, UserAudiencesSection, TemplateAudiencesSection } from '@/components/audiences'
+import type { SortOption, ViewMode } from '@/components/audiences'
 import { SelectAudienceModal } from '@/components/shared'
 import { useFetchDefaultAudiences, useCreateAudience, useListUserAudiences } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
-
-type SortOption = 'subreddits' | 'name'
-type ViewMode = 'grid' | 'list'
-
-const gridClassName = (viewMode: ViewMode) =>
-  `grid gap-4 ${
-    viewMode === 'grid'
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-      : 'grid-cols-1'
-  }`
 
 export function Audiences() {
   const userGridRef = useRef<HTMLDivElement>(null)
@@ -103,133 +93,32 @@ export function Audiences() {
 
   return (
     <div className="space-y-6">
-      {/* Global Controls */}
-      <div className="flex justify-end">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-zinc-400">
-            <span>Sort</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-transparent border-none text-gray-900 dark:text-white font-medium cursor-pointer focus:ring-0 focus:outline-none"
-            >
-              <option value="name">Name</option>
-              <option value="subreddits">Subreddits</option>
-            </select>
-          </div>
+      <AudiencesToolbar
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
 
-          <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-zinc-400">
-            <span>Display</span>
-            <div className="flex items-center bg-gray-100 dark:bg-zinc-800 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-white dark:bg-zinc-700 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300'
-                }`}
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
-                  viewMode === 'list'
-                    ? 'bg-white dark:bg-zinc-700 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300'
-                }`}
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+      <UserAudiencesSection
+        audiences={userAudiences}
+        viewMode={viewMode}
+        onAddClick={openModal}
+        onSaveClick={handleSaveClick}
+        onShareClick={handleShareClick}
+        gridRef={userGridRef}
+      />
 
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-zinc-400">
-            <span>Search</span>
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Audience/Subreddit"
-                className="w-48 pl-3 pr-8 py-1.5 bg-transparent border border-gray-200 dark:border-zinc-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-lime"
-              />
-              <Search className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Your Audiences Section */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Your Audiences
-          </h2>
-          <span className="text-lg text-gray-500 dark:text-zinc-400">
-            {userAudiences.length}
-          </span>
-        </div>
-
-        <div ref={userGridRef} className={gridClassName(viewMode)}>
-          {userAudiences.map((audience) => (
-            <AudienceCard
-              key={audience.id}
-              id={audience.id}
-              name={audience.name}
-              subredditCount={audience.subredditCount}
-              totalMembers={audience.totalMembers}
-              weeklyGrowth={audience.weeklyGrowth}
-              subreddits={audience.subreddits}
-              onSaveClick={handleSaveClick}
-              onShareClick={handleShareClick}
-            />
-          ))}
-          <AddAudienceCard onClick={openModal} />
-        </div>
-
-        {userAudiences.length === 0 && (
-          <p className="text-gray-500 dark:text-zinc-400 text-sm">
-            You haven't created any audiences yet. Start by creating your first one!
-          </p>
-        )}
-      </section>
-
-      {/* Find Audiences (Templates) Section */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Find Audiences
-          </h2>
-          <span className="text-lg text-gray-500 dark:text-zinc-400">
-            {filteredTemplates.length}
-          </span>
-        </div>
-
-        <div ref={templatesGridRef} className={gridClassName(viewMode)}>
-          {filteredTemplates.map((audience) => (
-            <AudienceCard
-              key={audience.id}
-              id={audience.id}
-              name={audience.name}
-              subredditCount={audience.subredditCount}
-              totalMembers={audience.totalMembers}
-              weeklyGrowth={audience.weeklyGrowth}
-              subreddits={audience.subreddits}
-              onSaveClick={handleSaveClick}
-              onShareClick={handleShareClick}
-            />
-          ))}
-        </div>
-
-        {filteredTemplates.length === 0 && searchQuery && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-zinc-400">
-              No audiences found matching "{searchQuery}"
-            </p>
-          </div>
-        )}
-      </section>
+      <TemplateAudiencesSection
+        audiences={filteredTemplates}
+        viewMode={viewMode}
+        searchQuery={searchQuery}
+        onSaveClick={handleSaveClick}
+        onShareClick={handleShareClick}
+        gridRef={templatesGridRef}
+      />
 
       <SelectAudienceModal
         onCreateAudience={(name, selectedCommunityNames) => {

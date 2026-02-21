@@ -37,39 +37,6 @@ interface UserAudienceListResponse {
   }>
 }
 
-interface AudienceResponse {
-  id: string
-  name: string
-  description: string
-  total_subs: number
-  total_members: number
-  communities: Array<{
-    id: string
-    display: {
-      display_name: string
-      subscribers: number
-      community_icon: string
-      public_description: string
-      primary_color: string
-      over18: boolean
-    }
-    related_terms: string[]
-    related_communities: Array<{
-      name: string
-      title: string
-      description: string
-      subscribers: number | null
-      discovered_via: string
-    }>
-    related_communities_status: 'ready' | 'processing'
-    growth_week: number | null
-    growth_month: number | null
-  }>
-  growth_week: number | null
-  growth_month?: number | null
-}
-
-
 
 export class AudienceRepository implements IAudienceRepository {
   constructor(private readonly httpClient: HttpClient) {}
@@ -112,8 +79,32 @@ export class AudienceRepository implements IAudienceRepository {
 
   async getAudienceById(id: string): Promise<Audience | null> {
     try {
-      const response = await this.httpClient.get<AudienceResponse>(`audiences/${id}`)
-      return new Audience(response)
+      const response = await this.httpClient.get<UserAudienceListResponse>(`audiences/${id}`)
+      return new Audience({
+        id: response.audience_id,
+        name: response.name,
+        description: response.description,
+        total_subs: response.total_subs,
+        total_members: response.total_members,
+        growth_week: response.growth_week,
+        growth_month: response.growth_month,
+        communities: response.communities.map((c) => ({
+          id: c.subreddit_name,
+          display: {
+            display_name: c.subreddit_name,
+            subscribers: c.subscribers,
+            community_icon: c.icon_url,
+            public_description: '',
+            primary_color: '',
+            over18: false,
+          },
+          related_terms: [],
+          related_communities: [],
+          related_communities_status: 'ready' as const,
+          growth_week: null,
+          growth_month: null,
+        })),
+      })
     } catch {
       return null
     }

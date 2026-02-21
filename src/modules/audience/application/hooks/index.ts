@@ -2,3 +2,4 @@ export { useListUserAudiences, AUDIENCES_QUERY_KEY } from './useListUserAudience
 export { useFetchDefaultAudiences, DEFAULT_AUDIENCES_QUERY_KEY } from './useFetchDefaultAudiences'
 export { useGetAudienceTemplateById, AUDIENCE_TEMPLATE_QUERY_KEY } from './useGetAudienceTemplateById'
 export { useCreateAudience } from './useCreateAudience'
+export { useGetAudienceById, AUDIENCE_QUERY_KEY } from './useGetAudienceById'
