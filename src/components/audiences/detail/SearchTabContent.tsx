@@ -1,0 +1,113 @@
+import { type RefObject } from 'react'
+import { Plus } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { SubredditsList } from './SubredditsList'
+import { ThemesList } from './ThemesList'
+import { TopicsList } from './TopicsList'
+import { KeywordTags } from './KeywordTags'
+import type { SubredditDetail } from '@/data/audienceDetails'
+import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
+
+export interface SearchTabContentProps {
+  contentRef: RefObject<HTMLDivElement | null>
+  subredditsData: readonly SubredditDetail[]
+  communitiesCount: number
+  keywords: Keyword[]
+  isLoadingKeywords: boolean
+  isUserAudience: boolean
+  onAddCommunity: () => void
+  onSubredditClick: () => void
+}
+
+export function SearchTabContent({
+  contentRef,
+  subredditsData,
+  communitiesCount,
+  keywords,
+  isLoadingKeywords,
+  isUserAudience,
+  onAddCommunity,
+  onSubredditClick,
+}: Readonly<SearchTabContentProps>) {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+            Keyword Search
+          </label>
+          <Input
+            icon
+            placeholder="Keyword search in audience"
+            className="max-w-2xl"
+          />
+        </div>
+
+        <KeywordTags keywords={keywords} isLoading={isLoadingKeywords} />
+      </div>
+
+      <div
+        ref={contentRef}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <div className="flex flex-col">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                Subreddits
+              </h3>
+              <span className="text-sm text-gray-500 dark:text-zinc-400">
+                {communitiesCount}
+              </span>
+            </div>
+            {isUserAudience && (
+              <button
+                className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 dark:text-zinc-400 hover:text-lime transition-colors"
+                onClick={onAddCommunity}
+              >
+                <Plus className="w-4 h-4" />
+                Add
+              </button>
+            )}
+          </div>
+          <SubredditsList
+            subreddits={subredditsData}
+            totalCount={communitiesCount}
+            showHeader={false}
+            onSubredditClick={onSubredditClick}
+          />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="font-semibold text-gray-900 dark:text-white">
+              Themes
+            </h3>
+            <span className="text-sm text-gray-500 dark:text-zinc-400">
+              0
+            </span>
+          </div>
+          <ThemesList
+            themes={[]}
+            totalCount={0}
+            showHeader={false}
+          />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="font-semibold text-gray-900 dark:text-white">
+              Topics
+            </h3>
+            <span className="text-sm text-gray-500 dark:text-zinc-400">
+              200
+            </span>
+          </div>
+          <TopicsList
+            topics={[]}
+            totalCount={0}
+            showHeader={false}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}

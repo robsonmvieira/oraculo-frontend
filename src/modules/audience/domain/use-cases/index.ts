@@ -8,3 +8,4 @@ export type { IAddCommunityToAudienceUseCase, AddCommunityToAudienceParams } fro
 export type { IRemoveCommunityFromAudienceUseCase, RemoveCommunityFromAudienceParams } from './remove-community-from-audience.use-case'
 export type { IGetAudienceSuggestionsUseCase, GetAudienceSuggestionsParams, AudienceSuggestion, GetAudienceSuggestionsResult } from './get-audience-suggestions.use-case'
 export type { IDeleteAudienceUseCase, DeleteAudienceParams, DeleteAudienceResult } from './delete-audience.use-case'
+export type { IGetAudienceKeywordsUseCase, GetAudienceKeywordsParams, GetAudienceKeywordsResult } from './get-audience-keywords.use-case'

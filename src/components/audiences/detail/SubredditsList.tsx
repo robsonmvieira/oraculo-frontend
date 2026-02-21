@@ -10,6 +10,7 @@ export interface SubredditsListProps {
   subreddits: readonly SubredditDetail[]
   totalCount: number
   onAddClick?: () => void
+  onSubredditClick?: () => void
   showHeader?: boolean
 }
 
@@ -27,6 +28,7 @@ export function SubredditsList({
   subreddits,
   totalCount,
   onAddClick,
+  onSubredditClick,
   showHeader = true,
 }: Readonly<SubredditsListProps>) {
   const listRef = useRef<HTMLUListElement>(null)
@@ -79,6 +81,7 @@ export function SubredditsList({
           <li
             key={subreddit.id}
             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            onClick={onSubredditClick}
           >
             <Avatar
               src={subreddit.icon}

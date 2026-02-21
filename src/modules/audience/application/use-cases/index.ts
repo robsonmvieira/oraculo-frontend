@@ -8,3 +8,4 @@ export { AddCommunityToAudienceUseCase } from './add-community-to-audience-use-c
 export { RemoveCommunityFromAudienceUseCase } from './remove-community-from-audience-use-case'
 export { GetAudienceSuggestionsUseCase } from './get-audience-suggestions-use-case'
 export { DeleteAudienceUseCase } from './delete-audience-use-case'
+export { GetAudienceKeywordsUseCase } from './get-audience-keywords-use-case'

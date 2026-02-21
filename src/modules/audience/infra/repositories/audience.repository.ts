@@ -8,6 +8,8 @@ import type { AddCommunityToAudienceParams } from '../../domain/use-cases/add-co
 import type { RemoveCommunityFromAudienceParams } from '../../domain/use-cases/remove-community-from-audience.use-case'
 import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from '../../domain/use-cases/get-audience-suggestions.use-case'
 import type { DeleteAudienceParams, DeleteAudienceResult } from '../../domain/use-cases/delete-audience.use-case'
+import type { GetAudienceKeywordsParams, GetAudienceKeywordsResult } from '../../domain/use-cases/get-audience-keywords.use-case'
+import { Keyword } from '../../domain/entities/Keyword.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -53,6 +55,22 @@ interface AudienceSuggestionApiItem {
   growth_week: number | null
   relevance_score: number
   relevance_reason: string
+}
+
+interface AudienceKeywordApiItem {
+  id: string
+  keyword: string
+  category: string
+  relevance_score: number
+  rank: number
+}
+
+interface AudienceKeywordsApiResponse {
+  status: string
+  analysis_id: string
+  total_keywords: number
+  completed_at: string
+  keywords: AudienceKeywordApiItem[]
 }
 
 interface AudienceSuggestionsApiResponse {
@@ -166,6 +184,25 @@ export class AudienceRepository implements IAudienceRepository {
 
   async deleteAudience(params: DeleteAudienceParams): Promise<DeleteAudienceResult> {
     return this.httpClient.delete<DeleteAudienceResult>(`audiences/${params.audienceId}`)
+  }
+
+  async getAudienceKeywords(params: GetAudienceKeywordsParams): Promise<GetAudienceKeywordsResult> {
+    const response = await this.httpClient.get<AudienceKeywordsApiResponse>(
+      `audiences/${params.audienceId}/keywords`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
+      totalKeywords: response.total_keywords,
+      completedAt: response.completed_at,
+      keywords: response.keywords.map((k) => new Keyword({
+        id: k.id,
+        keyword: k.keyword,
+        category: k.category,
+        relevanceScore: k.relevance_score,
+        rank: k.rank,
+      })),
+    }
   }
 
   async getAudienceSuggestions(params: GetAudienceSuggestionsParams): Promise<GetAudienceSuggestionsResult> {
