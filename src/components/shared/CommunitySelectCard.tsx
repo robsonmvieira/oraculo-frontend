@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Users, TrendingUp } from 'lucide-react'
+import { Users, TrendingUp, Sparkles } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { cn, formatCompactNumber } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks'
@@ -11,6 +11,7 @@ export interface CommunitySelectCardProps {
   isSelected: boolean
   onToggle: (community: Community) => void
   index: number
+  isAiSuggested?: boolean
 }
 
 export function CommunitySelectCard({
@@ -18,6 +19,7 @@ export function CommunitySelectCard({
   isSelected,
   onToggle,
   index,
+  isAiSuggested = false,
 }: Readonly<CommunitySelectCardProps>) {
   const cardRef = useRef<HTMLButtonElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -71,6 +73,15 @@ export function CommunitySelectCard({
           : 'border-transparent hover:border-gray-200 dark:hover:border-zinc-700'
       )}
     >
+      {isAiSuggested && (
+        <div className="flex items-center gap-1 mb-2">
+          <Sparkles className="w-3 h-3 text-lime" />
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-lime">
+            AI Suggested
+          </span>
+        </div>
+      )}
+
       <div className="flex items-start gap-3 mb-3">
         <Avatar
           src={community.getIconUrl()}

@@ -6,6 +6,7 @@ import type { CreateAudienceParams, CreateAudienceResult } from '../../domain/us
 import type { UpdateAudienceParams, UpdateAudienceResult } from '../../domain/use-cases/update-audience.use-case'
 import type { AddCommunityToAudienceParams } from '../../domain/use-cases/add-community-to-audience.use-case'
 import type { RemoveCommunityFromAudienceParams } from '../../domain/use-cases/remove-community-from-audience.use-case'
+import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from '../../domain/use-cases/get-audience-suggestions.use-case'
 
 interface AudienceTemplateResponse {
   id: string
@@ -40,6 +41,27 @@ interface UserAudienceListResponse {
   }>
 }
 
+
+interface AudienceSuggestionApiItem {
+  subreddit_name: string
+  title: string
+  description: string
+  subscribers: number
+  size_tag: string | null
+  activity_tag: string | null
+  growth_week: number | null
+  relevance_score: number
+  relevance_reason: string
+}
+
+interface AudienceSuggestionsApiResponse {
+  audience_id: string
+  audience_name: string
+  audience_theme: string
+  suggestions: AudienceSuggestionApiItem[]
+  total_found: number
+  filtered_by_feedback: number
+}
 
 export class AudienceRepository implements IAudienceRepository {
   constructor(private readonly httpClient: HttpClient) {}
@@ -139,5 +161,29 @@ export class AudienceRepository implements IAudienceRepository {
 
   async removeCommunityFromAudience(params: RemoveCommunityFromAudienceParams): Promise<void> {
     await this.httpClient.delete(`audiences/${params.audienceId}/communities/${params.subreddit_name}`)
+  }
+
+  async getAudienceSuggestions(params: GetAudienceSuggestionsParams): Promise<GetAudienceSuggestionsResult> {
+    const response = await this.httpClient.get<AudienceSuggestionsApiResponse>(
+      `audiences/${params.audienceId}/suggestions`
+    )
+    return {
+      audienceId: response.audience_id,
+      audienceName: response.audience_name,
+      audienceTheme: response.audience_theme,
+      suggestions: response.suggestions.map((s) => ({
+        subredditName: s.subreddit_name,
+        title: s.title,
+        description: s.description,
+        subscribers: s.subscribers,
+        sizeTag: s.size_tag,
+        activityTag: s.activity_tag,
+        growthWeek: s.growth_week,
+        relevanceScore: s.relevance_score,
+        relevanceReason: s.relevance_reason,
+      })),
+      totalFound: response.total_found,
+      filteredByFeedback: response.filtered_by_feedback,
+    }
   }
 }

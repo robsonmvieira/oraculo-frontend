@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { Globe, Loader2 } from 'lucide-react'
 import { useDebounce } from '@/hooks'
 import { Modal } from './Modal'
@@ -6,8 +6,9 @@ import { CommunitySelectCard } from './CommunitySelectCard'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useBrowseCommunities } from '@/modules/community/application/hooks'
+import { useGetAudienceSuggestions } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
-import type { Community } from '@/modules/community/domain/entities/Community.entity'
+import { Community } from '@/modules/community/domain/entities/Community.entity'
 
 export interface SelectAudienceModalProps {
   onCreateAudience: (name: string, selectedCommunityNames: string[]) => void
@@ -35,6 +36,8 @@ export function SelectAudienceModal({
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearch = useDebounce(searchQuery, 300)
 
+  const isEditMode = mode === 'edit'
+
   const {
     data,
     fetchNextPage,
@@ -43,7 +46,40 @@ export function SelectAudienceModal({
     isLoading: isLoadingCommunities,
   } = useBrowseCommunities(debouncedSearch || undefined)
 
-  const communities = data?.pages.flatMap((page) => page.communities) ?? []
+  const {
+    data: suggestionsData,
+  } = useGetAudienceSuggestions(isEditMode ? editingAudienceId : null)
+
+  const browseCommunities = data?.pages.flatMap((page) => page.communities) ?? []
+
+  const { superlist, suggestedNames } = useMemo(() => {
+    if (!isEditMode || !suggestionsData?.suggestions.length) {
+      return { superlist: browseCommunities, suggestedNames: new Set<string>() }
+    }
+
+    const names = new Set(suggestionsData.suggestions.map((s) => s.subredditName))
+
+    const suggestedAsCommunities = suggestionsData.suggestions.map(
+      (s) =>
+        new Community({
+          name: s.subredditName,
+          title: s.title,
+          description: s.description,
+          subscribers: s.subscribers,
+          icon_url: '',
+          growth_week: s.growthWeek,
+          growth_month: null,
+          category: '',
+        })
+    )
+
+    const filtered = browseCommunities.filter((c) => !names.has(c.getName()))
+
+    return {
+      superlist: [...suggestedAsCommunities, ...filtered],
+      suggestedNames: names,
+    }
+  }, [isEditMode, suggestionsData, browseCommunities])
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -85,7 +121,6 @@ export function SelectAudienceModal({
     }
   }
 
-  const isEditMode = mode === 'edit'
   const modalTitle = isEditMode
     ? 'Edit Audience - Select Communities'
     : 'New Audience - Select Communities'
@@ -148,7 +183,7 @@ export function SelectAudienceModal({
             </div>
           ) : (
             <>
-              {communities.map((community, index) => (
+              {superlist.map((community, index) => (
                 <CommunitySelectCard
                   key={community.getName()}
                   community={community}
@@ -157,9 +192,10 @@ export function SelectAudienceModal({
                   )}
                   onToggle={handleToggleCommunity}
                   index={index}
+                  isAiSuggested={suggestedNames.has(community.getName())}
                 />
               ))}
-              {communities.length === 0 && !isFetchingNextPage && (
+              {superlist.length === 0 && !isFetchingNextPage && (
                 <div className="col-span-full text-center py-12 text-gray-500 dark:text-zinc-400">
                   No communities found matching "{searchQuery}"
                 </div>

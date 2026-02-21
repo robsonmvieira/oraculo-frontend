@@ -4,6 +4,7 @@ import type { CreateAudienceParams, CreateAudienceResult } from "../use-cases/cr
 import type { UpdateAudienceParams, UpdateAudienceResult } from "../use-cases/update-audience.use-case";
 import type { AddCommunityToAudienceParams } from "../use-cases/add-community-to-audience.use-case";
 import type { RemoveCommunityFromAudienceParams } from "../use-cases/remove-community-from-audience.use-case";
+import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from "../use-cases/get-audience-suggestions.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -14,4 +15,5 @@ export interface IAudienceRepository {
   updateAudience(params: UpdateAudienceParams): Promise<UpdateAudienceResult>
   addCommunityToAudience(params: AddCommunityToAudienceParams): Promise<void>
   removeCommunityFromAudience(params: RemoveCommunityFromAudienceParams): Promise<void>
+  getAudienceSuggestions(params: GetAudienceSuggestionsParams): Promise<GetAudienceSuggestionsResult>
 }
