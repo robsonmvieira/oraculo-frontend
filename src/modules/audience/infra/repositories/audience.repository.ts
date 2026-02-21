@@ -10,7 +10,9 @@ import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from 
 import type { DeleteAudienceParams, DeleteAudienceResult } from '../../domain/use-cases/delete-audience.use-case'
 import type { GetAudienceKeywordsParams, GetAudienceKeywordsResult } from '../../domain/use-cases/get-audience-keywords.use-case'
 import type { MarkCommunityNotRelevantParams } from '../../domain/use-cases/mark-community-not-relevant.use-case'
+import type { GetAudienceTopicsParams, GetAudienceTopicsResult } from '../../domain/use-cases/get-audience-topics.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
+import { Topic } from '../../domain/entities/Topic.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -72,6 +74,31 @@ interface AudienceKeywordsApiResponse {
   total_keywords: number
   completed_at: string
   keywords: AudienceKeywordApiItem[]
+}
+
+interface AudienceTopicCommunityApiItem {
+  name: string
+  post_count: number
+}
+
+interface AudienceTopicApiItem {
+  id: string
+  name: string
+  description: string
+  growth_percentage: number
+  mention_frequency: number
+  mention_period: string
+  post_count: number
+  communities: AudienceTopicCommunityApiItem[]
+  rank: number
+}
+
+interface AudienceTopicsApiResponse {
+  status: string
+  analysis_id: string
+  total_topics: number
+  completed_at: string
+  topics: AudienceTopicApiItem[]
 }
 
 interface AudienceSuggestionsApiResponse {
@@ -237,5 +264,31 @@ export class AudienceRepository implements IAudienceRepository {
       context_type: 'audience',
       context_id: params.audienceId,
     })
+  }
+
+  async getAudienceTopics(params: GetAudienceTopicsParams): Promise<GetAudienceTopicsResult> {
+    const response = await this.httpClient.get<AudienceTopicsApiResponse>(
+      `audiences/${params.audienceId}/topics`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
+      totalTopics: response.total_topics,
+      completedAt: response.completed_at,
+      topics: response.topics.map((t) => new Topic({
+        id: t.id,
+        name: t.name,
+        description: t.description,
+        growthPercentage: t.growth_percentage,
+        mentionFrequency: t.mention_frequency,
+        mentionPeriod: t.mention_period,
+        postCount: t.post_count,
+        communities: t.communities.map((c) => ({
+          name: c.name,
+          postCount: c.post_count,
+        })),
+        rank: t.rank,
+      })),
+    }
   }
 }
