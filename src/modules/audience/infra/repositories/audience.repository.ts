@@ -7,6 +7,7 @@ import type { UpdateAudienceParams, UpdateAudienceResult } from '../../domain/us
 import type { AddCommunityToAudienceParams } from '../../domain/use-cases/add-community-to-audience.use-case'
 import type { RemoveCommunityFromAudienceParams } from '../../domain/use-cases/remove-community-from-audience.use-case'
 import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from '../../domain/use-cases/get-audience-suggestions.use-case'
+import type { DeleteAudienceParams, DeleteAudienceResult } from '../../domain/use-cases/delete-audience.use-case'
 
 interface AudienceTemplateResponse {
   id: string
@@ -161,6 +162,10 @@ export class AudienceRepository implements IAudienceRepository {
 
   async removeCommunityFromAudience(params: RemoveCommunityFromAudienceParams): Promise<void> {
     await this.httpClient.delete(`audiences/${params.audienceId}/communities/${params.subreddit_name}`)
+  }
+
+  async deleteAudience(params: DeleteAudienceParams): Promise<DeleteAudienceResult> {
+    return this.httpClient.delete<DeleteAudienceResult>(`audiences/${params.audienceId}`)
   }
 
   async getAudienceSuggestions(params: GetAudienceSuggestionsParams): Promise<GetAudienceSuggestionsResult> {
