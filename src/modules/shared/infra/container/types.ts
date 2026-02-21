@@ -5,6 +5,7 @@ export const TYPES = {
   FetchDefaultAudiencesUseCase: Symbol.for('FetchDefaultAudiencesUseCase'),
   GetAudienceTemplateByIdUseCase: Symbol.for('GetAudienceTemplateByIdUseCase'),
   CreateAudienceUseCase: Symbol.for('CreateAudienceUseCase'),
+  GetAudienceByIdUseCase: Symbol.for('GetAudienceByIdUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

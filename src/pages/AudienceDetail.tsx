@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ChevronLeft,
   Search,
@@ -33,7 +33,7 @@ import type {
   ThemeGridItem,
   ThemeDetail,
 } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById } from '@/modules/audience/application/hooks'
 
 // Theme data for the themes tab
 const themesGridData: ThemeGridItem[] = [
@@ -220,6 +220,7 @@ const topicsData: (TopicTableItem & { description: string; subredditCounts: { na
 
 export function AudienceDetail() {
   const { id } = useParams<{ id: string }>()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const headerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -227,7 +228,13 @@ export function AudienceDetail() {
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
 
-  const { data: audienceTemplate, isLoading, error } = useGetAudienceTemplateById(id ?? '')
+  const isUserAudience = searchParams.get('type') === 'user'
+
+  const { data: audienceTemplate, isLoading: isLoadingTemplate, error: errorTemplate } = useGetAudienceTemplateById(isUserAudience ? '' : (id ?? ''))
+  const { data: userAudience, isLoading: isLoadingUser, error: errorUser } = useGetAudienceById(isUserAudience ? (id ?? '') : '')
+
+  const isLoading = isUserAudience ? isLoadingUser : isLoadingTemplate
+  const error = isUserAudience ? errorUser : errorTemplate
 
   useEffect(() => {
     if (!headerRef.current || !contentRef.current || prefersReducedMotion) return
@@ -260,7 +267,7 @@ export function AudienceDetail() {
     )
   }
 
-  if (error || !audienceTemplate) {
+  if (error || (!audienceTemplate && !userAudience)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <p className="text-gray-500 dark:text-zinc-400">Audience not found</p>
@@ -271,13 +278,31 @@ export function AudienceDetail() {
     )
   }
 
-  const communities = audienceTemplate.getCommunities()
-  const subredditsData = communities.map((community, index) => ({
-    id: `${audienceTemplate.getId()}-${index}`,
-    name: `r/${community.name}`,
-    members: community.subscribers ?? 0,
-    monthlyGrowth: community.growth_month ?? 0,
-  }))
+  const audienceName = isUserAudience
+    ? userAudience!.getName()
+    : audienceTemplate!.getName()
+
+  const audienceId = isUserAudience
+    ? userAudience!.getId()
+    : audienceTemplate!.getId()
+
+  const communitiesCount = isUserAudience
+    ? userAudience!.getTotalSubs()
+    : audienceTemplate!.getCommunitiesCount()
+
+  const subredditsData = isUserAudience
+    ? userAudience!.getCommunities().map((community, index) => ({
+        id: `${audienceId}-${index}`,
+        name: `r/${community.display.display_name}`,
+        members: community.display.subscribers ?? 0,
+        monthlyGrowth: community.growth_month ?? 0,
+      }))
+    : audienceTemplate!.getCommunities().map((community, index) => ({
+        id: `${audienceId}-${index}`,
+        name: `r/${community.name}`,
+        members: community.subscribers ?? 0,
+        monthlyGrowth: community.growth_month ?? 0,
+      }))
 
   const suggestedTags = ['Search Tips', 'health issues', 'choice', 'I hate', 'Looking for']
 
@@ -293,7 +318,7 @@ export function AudienceDetail() {
               <ChevronLeft className="w-5 h-5" />
             </button>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {audienceTemplate.getName()}
+              {audienceName}
             </h1>
           </div>
 
@@ -323,7 +348,7 @@ export function AudienceDetail() {
               <Search className="w-4 h-4" />
               Search
             </TabsTrigger>
-            <TabsTrigger value="subreddits" count={audienceTemplate.getCommunitiesCount()}>
+            <TabsTrigger value="subreddits" count={communitiesCount}>
               Subreddits
             </TabsTrigger>
             <TabsTrigger value="topics" count={200}>
@@ -387,7 +412,7 @@ export function AudienceDetail() {
                         Subreddits
                       </h3>
                       <span className="text-sm text-gray-500 dark:text-zinc-400">
-                        {audienceTemplate.getCommunitiesCount()}
+                        {communitiesCount}
                       </span>
                     </div>
                     <button className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 dark:text-zinc-400 hover:text-lime transition-colors">
@@ -397,7 +422,7 @@ export function AudienceDetail() {
                   </div>
                   <SubredditsList
                     subreddits={subredditsData}
-                    totalCount={audienceTemplate.getCommunitiesCount()}
+                    totalCount={communitiesCount}
                     showHeader={false}
                   />
                 </div>
@@ -440,7 +465,7 @@ export function AudienceDetail() {
               <div className="flex gap-6">
                 <SubredditsGrid
                   subreddits={subredditsData}
-                  totalCount={audienceTemplate.getCommunitiesCount()}
+                  totalCount={communitiesCount}
                 />
                 <div className="w-[280px] shrink-0">
                   <AboutAudiencePanel
@@ -456,7 +481,7 @@ export function AudienceDetail() {
                       activity: 75,
                       growth: 60,
                     }}
-                    audienceName={audienceTemplate.getName()}
+                    audienceName={audienceName}
                     comparisonName="r/parrots"
                   />
                 </div>
