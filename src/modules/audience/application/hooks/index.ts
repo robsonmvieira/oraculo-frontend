@@ -9,3 +9,4 @@ export { useRemoveCommunityFromAudience } from './useRemoveCommunityFromAudience
 export { useGetAudienceSuggestions, AUDIENCE_SUGGESTIONS_QUERY_KEY } from './useGetAudienceSuggestions'
 export { useDeleteAudience } from './useDeleteAudience'
 export { useGetAudienceKeywords, AUDIENCE_KEYWORDS_QUERY_KEY } from './useGetAudienceKeywords'
+export { useMarkCommunityNotRelevant } from './useMarkCommunityNotRelevant'

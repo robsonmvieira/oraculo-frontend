@@ -10,6 +10,8 @@ export interface SubredditsTabContentProps {
   audienceName: string
   similarCommunities: readonly SimilarCommunity[]
   isLoadingSuggestions?: boolean
+  onAddToAudience?: (subredditName: string) => void
+  onMarkNotRelevant?: (subredditName: string) => void
 }
 
 export function SubredditsTabContent({
@@ -18,6 +20,8 @@ export function SubredditsTabContent({
   audienceName,
   similarCommunities,
   isLoadingSuggestions,
+  onAddToAudience,
+  onMarkNotRelevant,
 }: Readonly<SubredditsTabContentProps>) {
   return (
     <div className="space-y-8">
@@ -46,7 +50,7 @@ export function SubredditsTabContent({
         </div>
       </div>
 
-      <SimilarCommunitiesGrid communities={similarCommunities} isLoading={isLoadingSuggestions} />
+      <SimilarCommunitiesGrid communities={similarCommunities} isLoading={isLoadingSuggestions} onAddToAudience={onAddToAudience} onMarkNotRelevant={onMarkNotRelevant} />
     </div>
   )
 }

@@ -9,6 +9,7 @@ import type { RemoveCommunityFromAudienceParams } from '../../domain/use-cases/r
 import type { GetAudienceSuggestionsParams, GetAudienceSuggestionsResult } from '../../domain/use-cases/get-audience-suggestions.use-case'
 import type { DeleteAudienceParams, DeleteAudienceResult } from '../../domain/use-cases/delete-audience.use-case'
 import type { GetAudienceKeywordsParams, GetAudienceKeywordsResult } from '../../domain/use-cases/get-audience-keywords.use-case'
+import type { MarkCommunityNotRelevantParams } from '../../domain/use-cases/mark-community-not-relevant.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 
 interface AudienceTemplateResponse {
@@ -227,5 +228,14 @@ export class AudienceRepository implements IAudienceRepository {
       totalFound: response.total_found,
       filteredByFeedback: response.filtered_by_feedback,
     }
+  }
+
+  async markCommunityNotRelevant(params: MarkCommunityNotRelevantParams): Promise<void> {
+    await this.httpClient.post('feedback/community', {
+      subreddit_name: params.subredditName,
+      feedback: 'not_relevant',
+      context_type: 'audience',
+      context_id: params.audienceId,
+    })
   }
 }
