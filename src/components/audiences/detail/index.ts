@@ -27,3 +27,21 @@ export type { ThemeDetailPanelProps, ThemeDetail, ThemeSubcategory, ThemeTopic, 
 
 export { ThemesGrid } from './ThemesGrid'
 export type { ThemesGridProps, ThemeGridItem } from './ThemesGrid'
+
+export { AudienceDetailHeader } from './AudienceDetailHeader'
+export type { AudienceDetailHeaderProps } from './AudienceDetailHeader'
+
+export { KeywordTags } from './KeywordTags'
+export type { KeywordTagsProps } from './KeywordTags'
+
+export { DeleteAudienceModal } from './DeleteAudienceModal'
+export type { DeleteAudienceModalProps } from './DeleteAudienceModal'
+
+export { SimilarCommunitiesGrid } from './SimilarCommunitiesGrid'
+export type { SimilarCommunitiesGridProps, SimilarCommunity } from './SimilarCommunitiesGrid'
+
+export { SearchTabContent } from './SearchTabContent'
+export type { SearchTabContentProps } from './SearchTabContent'
+
+export { SubredditsTabContent } from './SubredditsTabContent'
+export type { SubredditsTabContentProps } from './SubredditsTabContent'
