@@ -36,7 +36,6 @@ export function TemplateAudiencesSection({
       </div>
 
       <div ref={gridRef} className={gridClassName(viewMode)}>
-        {showAddCard && <AddAudienceCard onClick={onAddClick} />}
         {audiences.map((audience) => (
           <AudienceCard
             key={audience.id}
@@ -50,6 +49,7 @@ export function TemplateAudiencesSection({
             onShareClick={onShareClick}
           />
         ))}
+        {showAddCard && <AddAudienceCard onClick={onAddClick} />}
       </div>
 
       {audiences.length === 0 && searchQuery && (
