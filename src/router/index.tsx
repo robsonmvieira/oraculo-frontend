@@ -1,8 +1,14 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/components/layout'
+import { useAuthStore } from '@/modules/auth'
 
+const LandingPage = lazy(() => import('@/pages/LandingPage'))
+const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
+const Audiences = lazy(() => import('@/pages/Audiences'))
+const AudienceDetail = lazy(() => import('@/pages/AudienceDetail'))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const Placeholder = lazy(() => import('@/pages/Placeholder'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -14,13 +20,76 @@ function PageLoader() {
   )
 }
 
+function AuthRedirect() {
+  const { isAuthenticated, isHydrated } = useAuthStore()
+
+  if (!isHydrated) {
+    return <PageLoader />
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <LandingPage />
+    </Suspense>
+  )
+}
+
+function RedirectIfAuthenticated({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isHydrated } = useAuthStore()
+
+  if (!isHydrated) {
+    return <PageLoader />
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return <>{children}</>
+}
+
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isHydrated } = useAuthStore()
+
+  if (!isHydrated) {
+    return <PageLoader />
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+
+  return <>{children}</>
+}
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: <AuthRedirect />,
+  },
+  {
+    path: '/login',
+    element: (
+      <RedirectIfAuthenticated>
+        <Suspense fallback={<PageLoader />}>
+          <LoginPage />
+        </Suspense>
+      </RedirectIfAuthenticated>
+    ),
+  },
+  {
+    element: (
+      <RequireAuth>
+        <MainLayout />
+      </RequireAuth>
+    ),
     children: [
       {
-        index: true,
+        path: 'dashboard',
         element: (
           <Suspense fallback={<PageLoader />}>
             <Dashboard />
@@ -36,10 +105,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'products',
+        path: 'audiences',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <Placeholder />
+            <Audiences />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'audiences/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AudienceDetail />
           </Suspense>
         ),
       },
@@ -88,6 +165,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Placeholder />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'profile',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ProfilePage />
           </Suspense>
         ),
       },

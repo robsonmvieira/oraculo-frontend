@@ -1,15 +1,25 @@
 import { useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Bell, Sun, Moon, Plus, ChevronDown } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Bell, Sun, Moon, Plus, ChevronDown, User, LogOut, Settings, HelpCircle } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { Button, Input, Avatar } from '@/components/ui'
-import { useTheme } from '@/contexts/ThemeContext'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useThemeStore } from '@/modules/shared'
+import { useAuthStore } from '@/modules/auth'
 import { useReducedMotion } from '@/hooks'
 
 const pageNames: Record<string, string> = {
-  '/': 'Dashboard',
+  '/dashboard': 'Dashboard',
   '/orders': 'Orders',
-  '/products': 'Products',
+  '/audiences': 'Audiences',
   '/campaigns': 'Campaigns',
   '/cart': 'Cart',
   '/analytics': 'Analytics',
@@ -18,6 +28,7 @@ const pageNames: Record<string, string> = {
   '/mobile': 'Mobile',
   '/settings': 'Settings',
   '/help': 'Help',
+  '/profile': 'Profile',
 }
 
 export function Topbar() {
@@ -25,10 +36,15 @@ export function Topbar() {
   const themeIconRef = useRef<HTMLButtonElement>(null)
   const bellRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
-  const { theme, toggleTheme } = useTheme()
+  const navigate = useNavigate()
+  const { theme, toggleTheme } = useThemeStore()
+  const { user } = useAuthStore()
   const prefersReducedMotion = useReducedMotion()
 
-  const pageName = pageNames[location.pathname] || 'Dashboard!'
+  const userName = user?.getFullName() || 'User'
+  const userRole = user?.getIsSuperuser() ? 'Admin' : 'Member'
+
+  const pageName = pageNames[location.pathname] || 'Dashboard'
 
   useEffect(() => {
     if (!topbarRef.current || prefersReducedMotion) return
@@ -124,14 +140,66 @@ export function Topbar() {
           </span>
         </button>
 
-        <button className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer">
-          <Avatar
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-            alt="John Anderson"
-            size="md"
-          />
-          <ChevronDown className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer">
+              <Avatar
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+                alt={userName}
+                size="md"
+              />
+              <ChevronDown className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
+            </button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent
+            align="end"
+            className="w-56 bg-white dark:bg-zinc-900 rounded-2xl border-gray-100 dark:border-zinc-800 p-2"
+          >
+            <DropdownMenuLabel className="px-3 py-2">
+              <p className="text-sm font-bold text-gray-900 dark:text-white">{userName}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-400">{userRole}</p>
+            </DropdownMenuLabel>
+
+            <DropdownMenuSeparator className="bg-gray-100 dark:bg-zinc-800" />
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={() => navigate('/profile')}
+                className="gap-3 px-3 py-2.5 rounded-xl cursor-pointer text-gray-700 dark:text-zinc-300 focus:bg-gray-50 dark:focus:bg-zinc-800"
+              >
+                <User className="w-4 h-4" />
+                Profile
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => navigate('/settings')}
+                className="gap-3 px-3 py-2.5 rounded-xl cursor-pointer text-gray-700 dark:text-zinc-300 focus:bg-gray-50 dark:focus:bg-zinc-800"
+              >
+                <Settings className="w-4 h-4" />
+                Settings
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => navigate('/help')}
+                className="gap-3 px-3 py-2.5 rounded-xl cursor-pointer text-gray-700 dark:text-zinc-300 focus:bg-gray-50 dark:focus:bg-zinc-800"
+              >
+                <HelpCircle className="w-4 h-4" />
+                Help Center
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+
+            <DropdownMenuSeparator className="bg-gray-100 dark:bg-zinc-800" />
+
+            <DropdownMenuItem
+              variant="destructive"
+              className="gap-3 px-3 py-2.5 rounded-xl cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )

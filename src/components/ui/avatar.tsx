@@ -5,7 +5,7 @@ interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   src?: string
   alt?: string
   fallback?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 }
 
 const sizeClasses = {
@@ -13,6 +13,7 @@ const sizeClasses = {
   md: 'w-10 h-10 text-sm',
   lg: 'w-12 h-12 text-base',
   xl: 'w-24 h-24 text-xl',
+  '2xl': 'w-32 h-32 text-2xl',
 }
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
@@ -23,7 +24,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          'relative rounded-full overflow-hidden bg-gradient-to-br from-lime to-lime-hover border-2 border-dashed border-gray-200 hover:border-lime transition-colors duration-300',
+          'relative rounded-full overflow-hidden bg-gradient-to-br from-lime to-lime-hover border-2 border-solid border-gray-200 hover:border-lime transition-colors duration-300',
           sizeClasses[size],
           className
         )}

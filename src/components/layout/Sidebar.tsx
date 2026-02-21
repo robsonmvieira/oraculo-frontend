@@ -19,9 +19,9 @@ import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks'
 
 const navItems = [
-  { icon: Home, path: '/', label: 'Dashboard' },
+  { icon: Home, path: '/dashboard', label: 'Dashboard' },
   { icon: FileText, path: '/orders', label: 'Orders' },
-  { icon: Package, path: '/products', label: 'Products' },
+  { icon: Package, path: '/audiences', label: 'Audiences' },
   { icon: Briefcase, path: '/campaigns', label: 'Campaigns' },
   { icon: ShoppingBag, path: '/cart', label: 'Cart' },
   { icon: Clock, path: '/analytics', label: 'Analytics' },

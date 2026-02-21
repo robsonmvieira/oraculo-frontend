@@ -1,0 +1,55 @@
+import type { RefObject } from 'react'
+import { AudienceCard, AddAudienceCard } from './AudienceCard'
+import { gridClassName } from './audiences.types'
+import type { AudienceDisplayItem, ViewMode } from './audiences.types'
+
+export interface UserAudiencesSectionProps {
+  audiences: readonly AudienceDisplayItem[]
+  viewMode: ViewMode
+  onAddClick: () => void
+  onSaveClick: (id: string) => void
+  onShareClick: (id: string) => void
+  gridRef?: RefObject<HTMLDivElement | null>
+}
+
+export function UserAudiencesSection({
+  audiences,
+  viewMode,
+  onAddClick,
+  onSaveClick,
+  onShareClick,
+  gridRef,
+}: Readonly<UserAudiencesSectionProps>) {
+  if (audiences.length === 0) return null
+
+  return (
+    <section className="space-y-4">
+      <div className="flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Your Audiences
+        </h2>
+        <span className="text-lg text-gray-500 dark:text-zinc-400">
+          {audiences.length}
+        </span>
+      </div>
+
+      <div ref={gridRef} className={gridClassName(viewMode)}>
+        {audiences.map((audience) => (
+          <AudienceCard
+            key={audience.id}
+            id={audience.id}
+            name={audience.name}
+            subredditCount={audience.subredditCount}
+            totalMembers={audience.totalMembers}
+            weeklyGrowth={audience.weeklyGrowth}
+            subreddits={audience.subreddits}
+            type="user"
+            onSaveClick={onSaveClick}
+            onShareClick={onShareClick}
+          />
+        ))}
+        <AddAudienceCard onClick={onAddClick} />
+      </div>
+    </section>
+  )
+}
