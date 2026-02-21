@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import { AudienceCard } from './AudienceCard'
+import { AudienceCard, AddAudienceCard } from './AudienceCard'
 import { gridClassName } from './audiences.types'
 import type { AudienceDisplayItem, ViewMode } from './audiences.types'
 
@@ -10,6 +10,8 @@ export interface TemplateAudiencesSectionProps {
   onSaveClick: (id: string) => void
   onShareClick: (id: string) => void
   gridRef?: RefObject<HTMLDivElement | null>
+  showAddCard?: boolean
+  onAddClick?: () => void
 }
 
 export function TemplateAudiencesSection({
@@ -19,6 +21,8 @@ export function TemplateAudiencesSection({
   onSaveClick,
   onShareClick,
   gridRef,
+  showAddCard,
+  onAddClick,
 }: Readonly<TemplateAudiencesSectionProps>) {
   return (
     <section className="space-y-4">
@@ -32,6 +36,7 @@ export function TemplateAudiencesSection({
       </div>
 
       <div ref={gridRef} className={gridClassName(viewMode)}>
+        {showAddCard && <AddAudienceCard onClick={onAddClick} />}
         {audiences.map((audience) => (
           <AudienceCard
             key={audience.id}

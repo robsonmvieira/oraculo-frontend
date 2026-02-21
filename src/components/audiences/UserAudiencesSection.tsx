@@ -20,6 +20,8 @@ export function UserAudiencesSection({
   onShareClick,
   gridRef,
 }: Readonly<UserAudiencesSectionProps>) {
+  if (audiences.length === 0) return null
+
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2">
@@ -48,12 +50,6 @@ export function UserAudiencesSection({
         ))}
         <AddAudienceCard onClick={onAddClick} />
       </div>
-
-      {audiences.length === 0 && (
-        <p className="text-gray-500 dark:text-zinc-400 text-sm">
-          You haven't created any audiences yet. Start by creating your first one!
-        </p>
-      )}
     </section>
   )
 }
