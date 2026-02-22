@@ -9,7 +9,6 @@ import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
 
 export function Audiences() {
-  const userGridRef = useRef<HTMLDivElement>(null)
   const templatesGridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [searchQuery, setSearchQuery] = useState('')
@@ -64,8 +63,10 @@ export function Audiences() {
   useEffect(() => {
     if (prefersReducedMotion) return
 
-    const animate = (grid: HTMLDivElement | null) => {
-      if (!grid) return
+    const grid = templatesGridRef.current
+    if (!grid) return
+
+    const ctx = gsap.context(() => {
       gsap.fromTo(
         Array.from(grid.children),
         { y: 30, opacity: 0 },
@@ -78,11 +79,10 @@ export function Audiences() {
           clearProps: 'all',
         }
       )
-    }
+    }, grid)
 
-    animate(userGridRef.current)
-    animate(templatesGridRef.current)
-  }, [prefersReducedMotion, userAudiences, filteredTemplates])
+    return () => ctx.revert()
+  }, [prefersReducedMotion, filteredTemplates])
 
   const handleSaveClick = (id: string) => {
     console.log('Save clicked for audience:', id)
@@ -109,7 +109,6 @@ export function Audiences() {
         onAddClick={openModal}
         onSaveClick={handleSaveClick}
         onShareClick={handleShareClick}
-        gridRef={userGridRef}
       />
 
       <TemplateAudiencesSection

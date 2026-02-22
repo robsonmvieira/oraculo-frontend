@@ -1,4 +1,6 @@
-import type { RefObject } from 'react'
+import { useRef, useEffect } from 'react'
+import { gsap } from '@/lib/gsap'
+import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from './AudienceCard'
 import { gridClassName } from './audiences.types'
 import type { AudienceDisplayItem, ViewMode } from './audiences.types'
@@ -9,7 +11,6 @@ export interface UserAudiencesSectionProps {
   onAddClick: () => void
   onSaveClick: (id: string) => void
   onShareClick: (id: string) => void
-  gridRef?: RefObject<HTMLDivElement | null>
 }
 
 export function UserAudiencesSection({
@@ -18,12 +19,56 @@ export function UserAudiencesSection({
   onAddClick,
   onSaveClick,
   onShareClick,
-  gridRef,
 }: Readonly<UserAudiencesSectionProps>) {
+  const sectionRef = useRef<HTMLElement>(null)
+  const hasAnimated = useRef(false)
+  const prefersReducedMotion = useReducedMotion()
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || hasAnimated.current || prefersReducedMotion) return
+
+    if (audiences.length === 0) return
+
+    hasAnimated.current = true
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        section,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+        }
+      )
+
+      const grid = section.querySelector('[data-user-grid]')
+      if (grid) {
+        gsap.fromTo(
+          Array.from(grid.children),
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.06,
+            delay: 0.15,
+            ease: 'power2.out',
+            clearProps: 'transform',
+          }
+        )
+      }
+    }, section)
+
+    return () => ctx.revert()
+  }, [audiences.length, prefersReducedMotion])
+
   if (audiences.length === 0) return null
 
   return (
-    <section className="space-y-4">
+    <section ref={sectionRef} className="space-y-4" style={{ opacity: 0 }}>
       <div className="flex items-center gap-2">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Your Audiences
@@ -33,7 +78,7 @@ export function UserAudiencesSection({
         </span>
       </div>
 
-      <div ref={gridRef} className={gridClassName(viewMode)}>
+      <div data-user-grid className={gridClassName(viewMode)}>
         {audiences.map((audience) => (
           <AudienceCard
             key={audience.id}
