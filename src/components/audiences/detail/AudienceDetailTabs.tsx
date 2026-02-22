@@ -38,6 +38,7 @@ export interface AudienceDetailTabsProps {
   onLoadMoreTopics: () => void
   hasMoreTopics: boolean
   isLoadingMoreTopics: boolean
+  audienceId: string
 }
 
 export function AudienceDetailTabs({
@@ -61,6 +62,7 @@ export function AudienceDetailTabs({
   onLoadMoreTopics,
   hasMoreTopics,
   isLoadingMoreTopics,
+  audienceId,
 }: Readonly<AudienceDetailTabsProps>) {
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
@@ -170,7 +172,7 @@ export function AudienceDetailTabs({
               }}
             />
             <div className="w-1/2 shrink-0">
-              <TopicDetailPanel topic={selectedTopic} />
+              <TopicDetailPanel topic={selectedTopic} audienceId={audienceId} />
             </div>
           </div>
         )}

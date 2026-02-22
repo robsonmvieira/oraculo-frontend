@@ -265,6 +265,7 @@ export function AudienceDetail() {
           onLoadMoreTopics={fetchNextTopics}
           hasMoreTopics={hasMoreTopics ?? false}
           isLoadingMoreTopics={isLoadingMoreTopics}
+          audienceId={audienceId}
         />
       </div>
 

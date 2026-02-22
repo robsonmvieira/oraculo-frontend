@@ -11,8 +11,11 @@ import type { DeleteAudienceParams, DeleteAudienceResult } from '../../domain/us
 import type { GetAudienceKeywordsParams, GetAudienceKeywordsResult } from '../../domain/use-cases/get-audience-keywords.use-case'
 import type { MarkCommunityNotRelevantParams } from '../../domain/use-cases/mark-community-not-relevant.use-case'
 import type { GetAudienceTopicsParams, GetAudienceTopicsResult } from '../../domain/use-cases/get-audience-topics.use-case'
+import type { GetTopicDeepDiveParams, GetTopicDeepDiveResult, TopicDeepDiveStatus } from '../../domain/use-cases/get-topic-deep-dive.use-case'
+import type { TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from '../../domain/use-cases/trigger-topic-deep-dive.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
+import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -108,6 +111,34 @@ interface AudienceSuggestionsApiResponse {
   suggestions: AudienceSuggestionApiItem[]
   total_found: number
   filtered_by_feedback: number
+}
+
+interface TopicDeepDiveApiResponse {
+  status: string
+  analysis_id?: string
+  topic_id?: string
+  topic_name?: string
+  completed_at?: string
+  summary?: string
+  subtopics?: Array<{ name: string; description: string; post_count: number }>
+  common_questions?: Array<{ question: string; frequency: string; example_context: string }>
+  sentiment?: {
+    overall: string
+    positive_ratio: number
+    negative_ratio: number
+    neutral_ratio: number
+    highlights: Array<{ text: string; sentiment: string; source: string }>
+  }
+  mentioned_products?: Array<{ name: string; category: string; sentiment: string; mention_count: number; context: string }>
+  representative_posts?: Array<{ title: string; subreddit: string; score: number; permalink: string; excerpt: string }>
+  actionable_insights?: Array<{ insight: string; type: string; confidence: string }>
+  message?: string
+}
+
+interface TriggerDeepDiveApiResponse {
+  status: string
+  analysis_id: string
+  message?: string
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -295,6 +326,79 @@ export class AudienceRepository implements IAudienceRepository {
       limit,
       offset,
       hasMore: offset + topics.length < response.total_topics,
+    }
+  }
+
+  async getTopicDeepDive(params: GetTopicDeepDiveParams): Promise<GetTopicDeepDiveResult> {
+    const response = await this.httpClient.get<TopicDeepDiveApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/deep-dive`
+    )
+
+    const status = response.status as TopicDeepDiveStatus
+
+    if (status !== 'ready' || !response.summary) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: new TopicDeepDive({
+        analysisId: response.analysis_id ?? '',
+        topicId: response.topic_id ?? params.topicId,
+        topicName: response.topic_name ?? '',
+        completedAt: response.completed_at ?? '',
+        summary: response.summary,
+        subtopics: (response.subtopics ?? []).map((s) => ({
+          name: s.name,
+          description: s.description,
+          postCount: s.post_count,
+        })),
+        commonQuestions: (response.common_questions ?? []).map((q) => ({
+          question: q.question,
+          frequency: q.frequency as 'high' | 'medium' | 'low',
+          exampleContext: q.example_context,
+        })),
+        sentiment: {
+          overall: (response.sentiment?.overall ?? 'neutral') as 'positive' | 'negative' | 'neutral' | 'mixed',
+          positiveRatio: response.sentiment?.positive_ratio ?? 0,
+          negativeRatio: response.sentiment?.negative_ratio ?? 0,
+          neutralRatio: response.sentiment?.neutral_ratio ?? 0,
+          highlights: (response.sentiment?.highlights ?? []).map((h) => ({
+            text: h.text,
+            sentiment: h.sentiment as 'positive' | 'negative' | 'neutral',
+            source: h.source,
+          })),
+        },
+        mentionedProducts: (response.mentioned_products ?? []).map((p) => ({
+          name: p.name,
+          category: p.category,
+          sentiment: p.sentiment,
+          mentionCount: p.mention_count,
+          context: p.context,
+        })),
+        representativePosts: (response.representative_posts ?? []).map((p) => ({
+          title: p.title,
+          subreddit: p.subreddit,
+          score: p.score,
+          permalink: p.permalink,
+          excerpt: p.excerpt,
+        })),
+        actionableInsights: (response.actionable_insights ?? []).map((i) => ({
+          insight: i.insight,
+          type: i.type as 'opportunity' | 'gap' | 'risk' | 'trend',
+          confidence: i.confidence as 'high' | 'medium' | 'low',
+        })),
+      }),
+    }
+  }
+
+  async triggerTopicDeepDive(params: TriggerTopicDeepDiveParams): Promise<TriggerTopicDeepDiveResult> {
+    const response = await this.httpClient.post<TriggerDeepDiveApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/deep-dive/refresh`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
     }
   }
 }

@@ -14,6 +14,8 @@ export const TYPES = {
   GetAudienceKeywordsUseCase: Symbol.for('GetAudienceKeywordsUseCase'),
   MarkCommunityNotRelevantUseCase: Symbol.for('MarkCommunityNotRelevantUseCase'),
   GetAudienceTopicsUseCase: Symbol.for('GetAudienceTopicsUseCase'),
+  GetTopicDeepDiveUseCase: Symbol.for('GetTopicDeepDiveUseCase'),
+  TriggerTopicDeepDiveUseCase: Symbol.for('TriggerTopicDeepDiveUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

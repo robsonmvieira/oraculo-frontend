@@ -11,3 +11,5 @@ export type { IDeleteAudienceUseCase, DeleteAudienceParams, DeleteAudienceResult
 export type { IGetAudienceKeywordsUseCase, GetAudienceKeywordsParams, GetAudienceKeywordsResult } from './get-audience-keywords.use-case'
 export type { IMarkCommunityNotRelevantUseCase, MarkCommunityNotRelevantParams } from './mark-community-not-relevant.use-case'
 export type { IGetAudienceTopicsUseCase, GetAudienceTopicsParams, GetAudienceTopicsResult } from './get-audience-topics.use-case'
+export type { IGetTopicDeepDiveUseCase, GetTopicDeepDiveParams, GetTopicDeepDiveResult, TopicDeepDiveStatus } from './get-topic-deep-dive.use-case'
+export type { ITriggerTopicDeepDiveUseCase, TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from './trigger-topic-deep-dive.use-case'
