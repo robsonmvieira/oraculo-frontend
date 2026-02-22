@@ -14,6 +14,7 @@ import { toast } from '@/hooks'
 import { SelectAudienceModal } from '@/components/shared'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
 import type { SimilarCommunity } from '@/components/audiences/detail/SimilarCommunitiesGrid'
+import type { AudienceStats, RadarData } from '@/components/audiences/detail/AboutAudiencePanel'
 
 export function AudienceDetail() {
   const { id } = useParams<{ id: string }>()
@@ -115,6 +116,33 @@ export function AudienceDetail() {
         members: community.subscribers ?? 0,
         monthlyGrowth: community.growth_month ?? 0,
       }))
+
+  const totalMembers = isUserAudience
+    ? userAudience!.getTotalMembers()
+    : audienceTemplate!.getTotalSubscribers()
+
+  const monthlyGrowth = isUserAudience
+    ? (userAudience!.getGrowthMonth() ?? 0)
+    : 0
+
+  const audienceStats: AudienceStats = {
+    type: 'Curated Audience',
+    totalMembers,
+    monthlyGrowth,
+  }
+
+  const maxMembers = Math.max(...subredditsData.map((s) => s.members), 1)
+  const avgGrowth = subredditsData.length > 0
+    ? subredditsData.reduce((sum, s) => sum + s.monthlyGrowth, 0) / subredditsData.length
+    : 0
+
+  const radarData: RadarData = {
+    age: Math.min(Math.round((communitiesCount / 20) * 100), 100),
+    reach: Math.min(Math.round((totalMembers / 50_000_000) * 100), 100),
+    size: Math.min(Math.round((maxMembers / 10_000_000) * 100), 100),
+    activity: Math.min(Math.round(avgGrowth * 50), 100),
+    growth: Math.min(Math.round(monthlyGrowth * 50), 100),
+  }
 
   const keywords = keywordsData?.keywords ?? []
 
@@ -221,6 +249,8 @@ export function AudienceDetail() {
           subredditsData={subredditsData}
           communitiesCount={communitiesCount}
           audienceName={audienceName}
+          audienceStats={audienceStats}
+          radarData={radarData}
           keywords={keywords}
           isLoadingKeywords={isLoadingKeywords}
           isUserAudience={isUserAudience}

@@ -3,11 +3,14 @@ import { AboutAudiencePanel } from './AboutAudiencePanel'
 import { SimilarCommunitiesGrid } from './SimilarCommunitiesGrid'
 import type { SubredditDetail } from '@/data/audienceDetails'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
+import type { AudienceStats, RadarData } from './AboutAudiencePanel'
 
 export interface SubredditsTabContentProps {
   subredditsData: readonly SubredditDetail[]
   communitiesCount: number
   audienceName: string
+  audienceStats: AudienceStats
+  radarData: RadarData
   similarCommunities: readonly SimilarCommunity[]
   isLoadingSuggestions?: boolean
   onAddToAudience?: (subredditName: string) => void
@@ -18,6 +21,8 @@ export function SubredditsTabContent({
   subredditsData,
   communitiesCount,
   audienceName,
+  audienceStats,
+  radarData,
   similarCommunities,
   isLoadingSuggestions,
   onAddToAudience,
@@ -32,20 +37,9 @@ export function SubredditsTabContent({
         />
         <div className="w-[280px] shrink-0">
           <AboutAudiencePanel
-            stats={{
-              type: 'Curated Audience',
-              totalMembers: 24_200_000,
-              monthlyGrowth: 0.8,
-            }}
-            radarData={{
-              age: 65,
-              reach: 80,
-              size: 90,
-              activity: 75,
-              growth: 60,
-            }}
+            stats={audienceStats}
+            radarData={radarData}
             audienceName={audienceName}
-            comparisonName="r/parrots"
           />
         </div>
       </div>
