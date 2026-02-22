@@ -7,6 +7,7 @@ import { TopicsList } from './TopicsList'
 import { KeywordTags } from './KeywordTags'
 import type { SubredditDetail } from '@/data/audienceDetails'
 import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
+import type { Topic } from '@/modules/audience/domain/entities/Topic.entity'
 
 export interface SearchTabContentProps {
   contentRef: RefObject<HTMLDivElement | null>
@@ -17,6 +18,9 @@ export interface SearchTabContentProps {
   isUserAudience: boolean
   onAddCommunity: () => void
   onSubredditClick: () => void
+  topics: Topic[]
+  totalTopics: number
+  onTopicClick: () => void
 }
 
 export function SearchTabContent({
@@ -28,6 +32,9 @@ export function SearchTabContent({
   isUserAudience,
   onAddCommunity,
   onSubredditClick,
+  topics,
+  totalTopics,
+  onTopicClick,
 }: Readonly<SearchTabContentProps>) {
   return (
     <div className="space-y-6">
@@ -98,13 +105,14 @@ export function SearchTabContent({
               Topics
             </h3>
             <span className="text-sm text-gray-500 dark:text-zinc-400">
-              200
+              {totalTopics}
             </span>
           </div>
           <TopicsList
-            topics={[]}
-            totalCount={0}
+            topics={topics}
+            totalCount={totalTopics}
             showHeader={false}
+            onTopicClick={onTopicClick}
           />
         </div>
       </div>
