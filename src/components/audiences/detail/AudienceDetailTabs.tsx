@@ -115,6 +115,9 @@ export function AudienceDetailTabs({
           isUserAudience={isUserAudience}
           onAddCommunity={onAddCommunity}
           onSubredditClick={() => setActiveTab('subreddits')}
+          topics={topics}
+          totalTopics={totalTopics}
+          onTopicClick={() => setActiveTab('topics')}
         />
       </TabsContent>
 

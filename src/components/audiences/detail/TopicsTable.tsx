@@ -222,7 +222,7 @@ export function TopicsTable({
               }`}
             >
               <div className="flex items-center gap-4">
-                <p className="font-semibold text-gray-900 dark:text-white truncate w-32 shrink-0">
+                <p className="font-semibold text-gray-900 dark:text-white truncate  shrink-0">
                   {topic.name}
                 </p>
 
@@ -236,7 +236,7 @@ export function TopicsTable({
                     <span>{topic.growth}%</span>
                   </div>
 
-                  <div className="text-sm text-right w-64 shrink-0 truncate">
+                  <div className="text-sm text-right shrink-0 truncate mr-2">
                     <span className="text-lime font-semibold">
                       {topic.frequency} / {topic.frequencyUnit}
                     </span>
