@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useThemeStore } from '@/modules/shared'
-import { useAuthStore } from '@/modules/auth'
+import { useAuthStore, useLogout } from '@/modules/auth'
 import { useReducedMotion } from '@/hooks'
 
 const pageNames: Record<string, string> = {
@@ -39,6 +39,7 @@ export function Topbar() {
   const navigate = useNavigate()
   const { theme, toggleTheme } = useThemeStore()
   const { user } = useAuthStore()
+  const handleLogout = useLogout()
   const prefersReducedMotion = useReducedMotion()
 
   const userName = user?.getFullName() || 'User'
@@ -193,6 +194,7 @@ export function Topbar() {
 
             <DropdownMenuItem
               variant="destructive"
+              onClick={handleLogout}
               className="gap-3 px-3 py-2.5 rounded-xl cursor-pointer"
             >
               <LogOut className="w-4 h-4" />

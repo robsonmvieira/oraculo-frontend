@@ -17,6 +17,7 @@ import {
 import { gsap } from '@/lib/gsap'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks'
+import { useLogout } from '@/modules/auth'
 
 const navItems = [
   { icon: Home, path: '/dashboard', label: 'Dashboard' },
@@ -40,6 +41,7 @@ export function Sidebar() {
   const iconsRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const location = useLocation()
+  const handleLogout = useLogout()
 
   useEffect(() => {
     if (!sidebarRef.current || !iconsRef.current || prefersReducedMotion) return
@@ -136,7 +138,8 @@ export function Sidebar() {
         ))}
 
         <button
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors duration-300 mt-4"
+          onClick={handleLogout}
+          className="cursor-pointer w-10 h-10 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors duration-300 mt-4"
           title="Logout"
         >
           <LogOut className="w-5 h-5" />
