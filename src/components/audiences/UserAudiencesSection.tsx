@@ -65,6 +65,12 @@ export function UserAudiencesSection({
     return () => ctx.revert()
   }, [audiences.length, prefersReducedMotion])
 
+  useEffect(() => {
+    return () => {
+      hasAnimated.current = false
+    }
+  }, [])
+
   if (audiences.length === 0) return null
 
   return (

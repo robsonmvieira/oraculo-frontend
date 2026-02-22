@@ -11,6 +11,7 @@ import {
 } from '@/components/audiences/detail'
 import type { TopicDetail, ThemeDetail } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
+import type { AudienceStats, RadarData } from './AboutAudiencePanel'
 import type { SubredditDetail } from '@/data/audienceDetails'
 import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
 import type { Topic } from '@/modules/audience/domain/entities/Topic.entity'
@@ -21,6 +22,8 @@ export interface AudienceDetailTabsProps {
   subredditsData: readonly SubredditDetail[]
   communitiesCount: number
   audienceName: string
+  audienceStats: AudienceStats
+  radarData: RadarData
   keywords: Keyword[]
   isLoadingKeywords: boolean
   isUserAudience: boolean
@@ -42,6 +45,8 @@ export function AudienceDetailTabs({
   subredditsData,
   communitiesCount,
   audienceName,
+  audienceStats,
+  radarData,
   keywords,
   isLoadingKeywords,
   isUserAudience,
@@ -118,6 +123,8 @@ export function AudienceDetailTabs({
           subredditsData={subredditsData}
           communitiesCount={communitiesCount}
           audienceName={audienceName}
+          audienceStats={audienceStats}
+          radarData={radarData}
           similarCommunities={similarCommunities}
           isLoadingSuggestions={isLoadingSuggestions}
           onAddToAudience={onAddToAudience}

@@ -112,6 +112,10 @@ export class Audience {
     return this.growth_week
   }
 
+  getGrowthMonth(): number | null {
+    return this.growth_month ?? null
+  }
+
   toJSON(): object {
     return {
       id: this.id,
