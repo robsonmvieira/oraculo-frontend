@@ -9,6 +9,8 @@ import type { DeleteAudienceParams, DeleteAudienceResult } from "../use-cases/de
 import type { GetAudienceKeywordsParams, GetAudienceKeywordsResult } from "../use-cases/get-audience-keywords.use-case";
 import type { MarkCommunityNotRelevantParams } from "../use-cases/mark-community-not-relevant.use-case";
 import type { GetAudienceTopicsParams, GetAudienceTopicsResult } from "../use-cases/get-audience-topics.use-case";
+import type { GetTopicDeepDiveParams, GetTopicDeepDiveResult } from "../use-cases/get-topic-deep-dive.use-case";
+import type { TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from "../use-cases/trigger-topic-deep-dive.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -24,4 +26,6 @@ export interface IAudienceRepository {
   getAudienceKeywords(params: GetAudienceKeywordsParams): Promise<GetAudienceKeywordsResult>
   markCommunityNotRelevant(params: MarkCommunityNotRelevantParams): Promise<void>
   getAudienceTopics(params: GetAudienceTopicsParams): Promise<GetAudienceTopicsResult>
+  getTopicDeepDive(params: GetTopicDeepDiveParams): Promise<GetTopicDeepDiveResult>
+  triggerTopicDeepDive(params: TriggerTopicDeepDiveParams): Promise<TriggerTopicDeepDiveResult>
 }
