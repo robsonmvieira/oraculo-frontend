@@ -134,7 +134,22 @@
     "workarounds": "Workarounds",
     "frictionPoints": "Friction Points",
     "migrationShifts": "Migration Shifts",
-    "demandSignals": "Demand Signals"
+    "demandSignals": "Demand Signals",
+    "analyzingSentiment": "Analyzing sentiment...",
+    "analyzingSentimentHelp": "This may take 2-3 minutes",
+    "sentimentFailed": "Sentiment analysis failed. Please try again.",
+    "noSentimentAnalysis": "No sentiment analysis found for this topic.",
+    "sentimentAnalysis": "Sentiment Analysis",
+    "overallSentiment": "Overall Sentiment",
+    "emotionalMap": "Emotional Map",
+    "sentimentByCommunity": "Sentiment by Community",
+    "sentimentBySubtopic": "Sentiment by Subtopic",
+    "sentimentDrivers": "Sentiment Drivers",
+    "positiveDrivers": "Positive Drivers",
+    "negativeDrivers": "Negative Drivers",
+    "tensionPoints": "Tension Points",
+    "painPoints": "Pain Points",
+    "sentimentOpportunities": "Opportunities"
   },
   "tabs": {
     "search": "Search",
@@ -190,6 +205,37 @@
       "medium": "medium",
       "low": "low"
     }
+  },
+  "topicSentiment": {
+    "score": {
+      "positive": "positive",
+      "negative": "negative",
+      "neutral": "neutral",
+      "mixed": "mixed"
+    },
+    "intensity": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    },
+    "confidence": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    },
+    "severity": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    },
+    "frequency": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    },
+    "mentions": "{{count}} mentions",
+    "forLabel": "For",
+    "againstLabel": "Against"
   },
   "behavioralPatterns": {
     "summary": "Summary",

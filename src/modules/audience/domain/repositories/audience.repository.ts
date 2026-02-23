@@ -13,6 +13,8 @@ import type { GetTopicDeepDiveParams, GetTopicDeepDiveResult } from "../use-case
 import type { TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from "../use-cases/trigger-topic-deep-dive.use-case";
 import type { GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult } from "../use-cases/get-topic-behavioral-patterns.use-case";
 import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from "../use-cases/trigger-topic-behavioral-patterns.use-case";
+import type { GetTopicSentimentParams, GetTopicSentimentResult } from "../use-cases/get-topic-sentiment.use-case";
+import type { TriggerTopicSentimentParams, TriggerTopicSentimentResult } from "../use-cases/trigger-topic-sentiment.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -32,4 +34,6 @@ export interface IAudienceRepository {
   triggerTopicDeepDive(params: TriggerTopicDeepDiveParams): Promise<TriggerTopicDeepDiveResult>
   getTopicBehavioralPatterns(params: GetTopicBehavioralPatternsParams): Promise<GetTopicBehavioralPatternsResult>
   triggerTopicBehavioralPatterns(params: TriggerTopicBehavioralPatternsParams): Promise<TriggerTopicBehavioralPatternsResult>
+  getTopicSentiment(params: GetTopicSentimentParams): Promise<GetTopicSentimentResult>
+  triggerTopicSentiment(params: TriggerTopicSentimentParams): Promise<TriggerTopicSentimentResult>
 }

@@ -3,8 +3,8 @@ import { TYPES } from './types'
 import { KyHttpClient, type HttpClient } from '../http'
 import { AudienceRepository } from '@/modules/audience/infra/repositories'
 import type { IAudienceRepository } from '@/modules/audience/domain/repositories'
-import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase, GetAudienceSuggestionsUseCase, DeleteAudienceUseCase, GetAudienceKeywordsUseCase, MarkCommunityNotRelevantUseCase, GetAudienceTopicsUseCase, GetTopicDeepDiveUseCase, TriggerTopicDeepDiveUseCase, GetTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsUseCase } from '@/modules/audience/application/use-cases'
-import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase, IGetAudienceSuggestionsUseCase, IDeleteAudienceUseCase, IGetAudienceKeywordsUseCase, IMarkCommunityNotRelevantUseCase, IGetAudienceTopicsUseCase, IGetTopicDeepDiveUseCase, ITriggerTopicDeepDiveUseCase, IGetTopicBehavioralPatternsUseCase, ITriggerTopicBehavioralPatternsUseCase } from '@/modules/audience/domain/use-cases'
+import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase, GetAudienceSuggestionsUseCase, DeleteAudienceUseCase, GetAudienceKeywordsUseCase, MarkCommunityNotRelevantUseCase, GetAudienceTopicsUseCase, GetTopicDeepDiveUseCase, TriggerTopicDeepDiveUseCase, GetTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsUseCase, GetTopicSentimentUseCase, TriggerTopicSentimentUseCase } from '@/modules/audience/application/use-cases'
+import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase, IGetAudienceSuggestionsUseCase, IDeleteAudienceUseCase, IGetAudienceKeywordsUseCase, IMarkCommunityNotRelevantUseCase, IGetAudienceTopicsUseCase, IGetTopicDeepDiveUseCase, ITriggerTopicDeepDiveUseCase, IGetTopicBehavioralPatternsUseCase, ITriggerTopicBehavioralPatternsUseCase, IGetTopicSentimentUseCase, ITriggerTopicSentimentUseCase } from '@/modules/audience/domain/use-cases'
 import { CommunityRepository } from '@/modules/community/infra/repositories'
 import type { ICommunityRepository } from '@/modules/community/domain/repositories'
 import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-cases'
@@ -110,6 +110,16 @@ container.bind<IGetTopicBehavioralPatternsUseCase>(TYPES.GetTopicBehavioralPatte
 container.bind<ITriggerTopicBehavioralPatternsUseCase>(TYPES.TriggerTopicBehavioralPatternsUseCase).toDynamicValue(() => {
   const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
   return new TriggerTopicBehavioralPatternsUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IGetTopicSentimentUseCase>(TYPES.GetTopicSentimentUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new GetTopicSentimentUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<ITriggerTopicSentimentUseCase>(TYPES.TriggerTopicSentimentUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new TriggerTopicSentimentUseCase(audienceRepository)
 }).inSingletonScope()
 
 container.bind<ICommunityRepository>(TYPES.CommunityRepository).toDynamicValue(() => {

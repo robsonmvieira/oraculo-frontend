@@ -134,7 +134,22 @@
     "workarounds": "Gambiarras",
     "frictionPoints": "Pontos de Fricção",
     "migrationShifts": "Migrações",
-    "demandSignals": "Sinais de Demanda"
+    "demandSignals": "Sinais de Demanda",
+    "analyzingSentiment": "Analisando sentimento...",
+    "analyzingSentimentHelp": "Isso pode levar de 2 a 3 minutos",
+    "sentimentFailed": "A análise de sentimento falhou. Por favor, tente novamente.",
+    "noSentimentAnalysis": "Nenhuma análise de sentimento encontrada para este tópico.",
+    "sentimentAnalysis": "Análise de Sentimento",
+    "overallSentiment": "Sentimento Geral",
+    "emotionalMap": "Mapa Emocional",
+    "sentimentByCommunity": "Sentimento por Comunidade",
+    "sentimentBySubtopic": "Sentimento por Subtópico",
+    "sentimentDrivers": "Drivers de Sentimento",
+    "positiveDrivers": "Drivers Positivos",
+    "negativeDrivers": "Drivers Negativos",
+    "tensionPoints": "Pontos de Tensão",
+    "painPoints": "Pontos de Dor",
+    "sentimentOpportunities": "Oportunidades"
   },
   "tabs": {
     "search": "Buscar",
@@ -190,6 +205,37 @@
       "medium": "médio",
       "low": "baixo"
     }
+  },
+  "topicSentiment": {
+    "score": {
+      "positive": "positivo",
+      "negative": "negativo",
+      "neutral": "neutro",
+      "mixed": "misto"
+    },
+    "intensity": {
+      "high": "alto",
+      "medium": "médio",
+      "low": "baixo"
+    },
+    "confidence": {
+      "high": "alto",
+      "medium": "médio",
+      "low": "baixo"
+    },
+    "severity": {
+      "high": "alto",
+      "medium": "médio",
+      "low": "baixo"
+    },
+    "frequency": {
+      "high": "alto",
+      "medium": "médio",
+      "low": "baixo"
+    },
+    "mentions": "{{count}} menções",
+    "forLabel": "A favor",
+    "againstLabel": "Contra"
   },
   "behavioralPatterns": {
     "summary": "Resumo",

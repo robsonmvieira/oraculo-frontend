@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TrendingUp, Search, Sparkles, MessageSquare, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import { TrendingUp, Search, Sparkles, Heart, MessageSquare, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
-import { useGetTopicDeepDive, useTriggerTopicDeepDive, useGetTopicBehavioralPatterns, useTriggerTopicBehavioralPatterns } from '@/modules/audience/application/hooks'
+import { useGetTopicDeepDive, useTriggerTopicDeepDive, useGetTopicBehavioralPatterns, useTriggerTopicBehavioralPatterns, useGetTopicSentiment, useTriggerTopicSentiment } from '@/modules/audience/application/hooks'
 import {
   DeepDiveSummarySection,
   DeepDiveSubtopicsSection,
@@ -21,6 +21,16 @@ import {
   ShiftPatternsSection,
   DemandSignalsSection,
 } from './behavioral-patterns'
+import {
+  SentimentOverallSection,
+  EmotionalMapSection,
+  SentimentByCommunitySection,
+  SentimentBySubtopicSection,
+  SentimentDriversSection,
+  TensionPointsSection,
+  PainPointsSection,
+  SentimentOpportunitiesSection,
+} from './sentiment'
 
 export interface TopicSubreddit {
   name: string
@@ -49,10 +59,12 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const prefersReducedMotion = useReducedMotion()
   const [deepDiveActive, setDeepDiveActive] = useState(false)
   const [patternsActive, setPatternsActive] = useState(false)
+  const [sentimentActive, setSentimentActive] = useState(false)
   const [currentTopicId, setCurrentTopicId] = useState<string | null>(null)
 
   const triggerDeepDive = useTriggerTopicDeepDive()
   const triggerPatterns = useTriggerTopicBehavioralPatterns()
+  const triggerSentiment = useTriggerTopicSentiment()
 
   const { data: deepDiveResult, isLoading: isLoadingDeepDive } = useGetTopicDeepDive(
     audienceId,
@@ -66,6 +78,12 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     patternsActive && !!topic,
   )
 
+  const { data: sentimentResult, isLoading: isLoadingSentiment } = useGetTopicSentiment(
+    audienceId,
+    topic?.id ?? '',
+    sentimentActive && !!topic,
+  )
+
   const deepDiveStatus = deepDiveResult?.status
   const deepDiveData = deepDiveResult?.data
   const isProcessing = deepDiveStatus === 'processing'
@@ -74,11 +92,16 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const patternsData = patternsResult?.data
   const isPatternsProcessing = patternsStatus === 'processing'
 
+  const sentimentStatus = sentimentResult?.status
+  const sentimentData = sentimentResult?.data
+  const isSentimentProcessing = sentimentStatus === 'processing'
+
   // Reset when topic changes
   useEffect(() => {
     if (topic?.id !== currentTopicId) {
       setDeepDiveActive(false)
       setPatternsActive(false)
+      setSentimentActive(false)
       setCurrentTopicId(topic?.id ?? null)
     }
   }, [topic?.id, currentTopicId])
@@ -87,6 +110,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     if (!topic) return
     setDeepDiveActive(true)
     setPatternsActive(false)
+    setSentimentActive(false)
   }
 
   const handleRetry = () => {
@@ -98,11 +122,24 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     if (!topic) return
     setPatternsActive(true)
     setDeepDiveActive(false)
+    setSentimentActive(false)
   }
 
   const handlePatternsRetry = () => {
     if (!topic) return
     triggerPatterns.mutate({ audienceId, topicId: topic.id })
+  }
+
+  const handleSentiment = () => {
+    if (!topic) return
+    setSentimentActive(true)
+    setDeepDiveActive(false)
+    setPatternsActive(false)
+  }
+
+  const handleSentimentRetry = () => {
+    if (!topic) return
+    triggerSentiment.mutate({ audienceId, topicId: topic.id })
   }
 
   useLayoutEffect(() => {
@@ -157,6 +194,9 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
 
   const patternsLabel = isPatternsProcessing ? t('topicDetail.analyzing') : t('topicDetail.patterns')
   const patternsDisabled = isPatternsProcessing || triggerPatterns.isPending
+
+  const sentimentLabel = isSentimentProcessing ? t('topicDetail.analyzing') : t('topicDetail.sentiment')
+  const sentimentDisabled = isSentimentProcessing || triggerSentiment.isPending
 
   return (
     <div ref={containerRef} className="h-full">
@@ -218,9 +258,15 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 variant="outline"
                 size="sm"
                 className="gap-1.5"
+                onClick={handleSentiment}
+                disabled={sentimentDisabled}
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                {t('topicDetail.sentiment')}
+                {isSentimentProcessing ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Heart className="w-3.5 h-3.5" />
+                )}
+                {sentimentLabel}
               </Button>
               <Button
                 variant="outline"
@@ -445,6 +491,101 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <FrictionPatternsSection patterns={patternsData.getFrictionPatterns()} />
                     <ShiftPatternsSection patterns={patternsData.getShiftPatterns()} />
                     <DemandSignalsSection signals={patternsData.getDemandSignals()} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Sentiment Analysis Section */}
+            {sentimentActive && (
+              <div className="mt-6 border-t border-gray-100 dark:border-zinc-800">
+                {/* Loading initial fetch */}
+                {isLoadingSentiment && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-6 h-6 border-3 border-lime border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+
+                {/* Processing state */}
+                {isSentimentProcessing && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <Loader2 className="w-6 h-6 text-lime animate-spin" />
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {t('topicDetail.analyzingSentiment')}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
+                        {t('topicDetail.analyzingSentimentHelp')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Failed state */}
+                {sentimentStatus === 'failed' && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <AlertCircle className="w-6 h-6 text-red-500" />
+                    <p className="text-sm text-gray-600 dark:text-zinc-300">
+                      {t('topicDetail.sentimentFailed')}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={handleSentimentRetry}
+                      disabled={triggerSentiment.isPending}
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      {t('topicDetail.retry')}
+                    </Button>
+                  </div>
+                )}
+
+                {/* No analysis state */}
+                {sentimentStatus === 'no_analysis' && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <p className="text-sm text-gray-500 dark:text-zinc-400">
+                      {t('topicDetail.noSentimentAnalysis')}
+                    </p>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={handleSentimentRetry}
+                      disabled={triggerSentiment.isPending}
+                    >
+                      <Heart className="w-3.5 h-3.5" />
+                      {t('topicDetail.startAnalysis')}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Ready state — render all sections */}
+                {sentimentStatus === 'ready' && sentimentData && (
+                  <div>
+                    <div className="flex items-center justify-between pt-4 mb-2">
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white">
+                        {t('topicDetail.sentimentAnalysis')}
+                      </h4>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-1 text-xs"
+                        onClick={handleSentimentRetry}
+                        disabled={triggerSentiment.isPending}
+                      >
+                        <RefreshCw className="w-3 h-3" />
+                        {t('topicDetail.refresh')}
+                      </Button>
+                    </div>
+                    <SentimentOverallSection overall={sentimentData.getOverallSentiment()} />
+                    <EmotionalMapSection entries={sentimentData.getEmotionalMap()} />
+                    <SentimentByCommunitySection communities={sentimentData.getSentimentByCommunity()} />
+                    <SentimentBySubtopicSection subtopics={sentimentData.getSentimentBySubtopic()} />
+                    <SentimentDriversSection drivers={sentimentData.getSentimentDrivers()} />
+                    <TensionPointsSection tensions={sentimentData.getTensionPoints()} />
+                    <PainPointsSection pains={sentimentData.getPainPoints()} />
+                    <SentimentOpportunitiesSection opportunities={sentimentData.getSentimentOpportunities()} />
                   </div>
                 )}
               </div>
