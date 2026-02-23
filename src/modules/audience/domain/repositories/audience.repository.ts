@@ -11,6 +11,8 @@ import type { MarkCommunityNotRelevantParams } from "../use-cases/mark-community
 import type { GetAudienceTopicsParams, GetAudienceTopicsResult } from "../use-cases/get-audience-topics.use-case";
 import type { GetTopicDeepDiveParams, GetTopicDeepDiveResult } from "../use-cases/get-topic-deep-dive.use-case";
 import type { TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from "../use-cases/trigger-topic-deep-dive.use-case";
+import type { GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult } from "../use-cases/get-topic-behavioral-patterns.use-case";
+import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from "../use-cases/trigger-topic-behavioral-patterns.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -28,4 +30,6 @@ export interface IAudienceRepository {
   getAudienceTopics(params: GetAudienceTopicsParams): Promise<GetAudienceTopicsResult>
   getTopicDeepDive(params: GetTopicDeepDiveParams): Promise<GetTopicDeepDiveResult>
   triggerTopicDeepDive(params: TriggerTopicDeepDiveParams): Promise<TriggerTopicDeepDiveResult>
+  getTopicBehavioralPatterns(params: GetTopicBehavioralPatternsParams): Promise<GetTopicBehavioralPatternsResult>
+  triggerTopicBehavioralPatterns(params: TriggerTopicBehavioralPatternsParams): Promise<TriggerTopicBehavioralPatternsResult>
 }

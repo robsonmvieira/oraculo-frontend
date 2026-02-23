@@ -16,6 +16,8 @@ export const TYPES = {
   GetAudienceTopicsUseCase: Symbol.for('GetAudienceTopicsUseCase'),
   GetTopicDeepDiveUseCase: Symbol.for('GetTopicDeepDiveUseCase'),
   TriggerTopicDeepDiveUseCase: Symbol.for('TriggerTopicDeepDiveUseCase'),
+  GetTopicBehavioralPatternsUseCase: Symbol.for('GetTopicBehavioralPatternsUseCase'),
+  TriggerTopicBehavioralPatternsUseCase: Symbol.for('TriggerTopicBehavioralPatternsUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

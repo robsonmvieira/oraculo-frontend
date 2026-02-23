@@ -13,3 +13,5 @@ export type { IMarkCommunityNotRelevantUseCase, MarkCommunityNotRelevantParams }
 export type { IGetAudienceTopicsUseCase, GetAudienceTopicsParams, GetAudienceTopicsResult } from './get-audience-topics.use-case'
 export type { IGetTopicDeepDiveUseCase, GetTopicDeepDiveParams, GetTopicDeepDiveResult, TopicDeepDiveStatus } from './get-topic-deep-dive.use-case'
 export type { ITriggerTopicDeepDiveUseCase, TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from './trigger-topic-deep-dive.use-case'
+export type { IGetTopicBehavioralPatternsUseCase, GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult, TopicBehavioralPatternsStatus } from './get-topic-behavioral-patterns.use-case'
+export type { ITriggerTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from './trigger-topic-behavioral-patterns.use-case'

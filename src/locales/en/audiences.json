@@ -124,7 +124,17 @@
     "startAnalysis": "Start Analysis",
     "deepDive": "Deep Dive",
     "refresh": "Refresh",
-    "subreddits": "Subreddits"
+    "subreddits": "Subreddits",
+    "detectingPatterns": "Detecting behavioral patterns...",
+    "detectingPatternsHelp": "This may take 3-5 minutes",
+    "patternsFailed": "Pattern detection failed. Please try again.",
+    "noPatternsAnalysis": "No behavioral patterns analysis found for this topic.",
+    "behavioralPatterns": "Behavioral Patterns",
+    "toolPatterns": "Tool Patterns",
+    "workarounds": "Workarounds",
+    "frictionPoints": "Friction Points",
+    "migrationShifts": "Migration Shifts",
+    "demandSignals": "Demand Signals"
   },
   "tabs": {
     "search": "Search",

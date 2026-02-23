@@ -124,7 +124,17 @@
     "startAnalysis": "Iniciar Análise",
     "deepDive": "Análise Profunda",
     "refresh": "Atualizar",
-    "subreddits": "Subreddits"
+    "subreddits": "Subreddits",
+    "detectingPatterns": "Detectando padrões comportamentais...",
+    "detectingPatternsHelp": "Isso pode levar de 3 a 5 minutos",
+    "patternsFailed": "A detecção de padrões falhou. Por favor, tente novamente.",
+    "noPatternsAnalysis": "Nenhuma análise de padrões comportamentais encontrada para este tópico.",
+    "behavioralPatterns": "Padrões Comportamentais",
+    "toolPatterns": "Padrões de Ferramentas",
+    "workarounds": "Gambiarras",
+    "frictionPoints": "Pontos de Fricção",
+    "migrationShifts": "Migrações",
+    "demandSignals": "Sinais de Demanda"
   },
   "tabs": {
     "search": "Buscar",

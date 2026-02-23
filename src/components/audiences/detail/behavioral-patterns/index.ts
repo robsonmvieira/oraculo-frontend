@@ -1,0 +1,6 @@
+export { BehavioralPatternsSummarySection } from './BehavioralPatternsSummarySection'
+export { ToolPatternsSection } from './ToolPatternsSection'
+export { WorkaroundPatternsSection } from './WorkaroundPatternsSection'
+export { FrictionPatternsSection } from './FrictionPatternsSection'
+export { ShiftPatternsSection } from './ShiftPatternsSection'
+export { DemandSignalsSection } from './DemandSignalsSection'
