@@ -1,0 +1,31 @@
+{
+  "actions": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "or": "ou"
+  },
+  "status": {
+    "online": "ONLINE",
+    "pending": "Pendente",
+    "completed": "Concluído",
+    "removed": "Removido",
+    "onDelivery": "Em entrega"
+  },
+  "errors": {
+    "somethingWentWrong": "Algo deu errado. Por favor, tente novamente.",
+    "notFound": "Não encontrado"
+  },
+  "labels": {
+    "notSet": "Não definido"
+  }
+}

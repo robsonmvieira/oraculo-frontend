@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { useAuthStore } from '@/modules/auth'
@@ -18,6 +19,7 @@ export function ProfilePage() {
   const rightColRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const { user } = useAuthStore()
+  const { t } = useTranslation('layout')
 
   const profileCardUser = useMemo(() => ({
     ...profileUser,
@@ -26,8 +28,8 @@ export function ProfilePage() {
     bio: user?.getBio() || profileUser.bio,
     location: user?.getLocale() || profileUser.location,
     phone: user?.getPhoneNumber() || profileUser.phone,
-    role: user?.getIsSuperuser() ? 'Admin' : 'Member',
-  }), [user])
+    role: user?.getIsSuperuser() ? t('topbar.roleAdmin') : t('topbar.roleMember'),
+  }), [user, t])
 
   useEffect(() => {
     if (prefersReducedMotion) return

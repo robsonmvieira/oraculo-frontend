@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudienceCard, AddAudienceCard } from './AudienceCard'
@@ -71,13 +72,15 @@ export function UserAudiencesSection({
     }
   }, [])
 
+  const { t } = useTranslation('audiences')
+
   if (audiences.length === 0) return null
 
   return (
     <section ref={sectionRef} className="space-y-4" style={{ opacity: 0 }}>
       <div className="flex items-center gap-2">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Your Audiences
+          {t('page.yourAudiences')}
         </h2>
         <span className="text-lg text-gray-500 dark:text-zinc-400">
           {audiences.length}

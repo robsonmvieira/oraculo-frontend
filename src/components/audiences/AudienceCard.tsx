@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Users, TrendingUp, Waypoints, Tag, Unplug } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
@@ -41,12 +42,14 @@ export interface AddAudienceCardProps {
 }
 
 export function AddAudienceCard({ onClick }: Readonly<AddAudienceCardProps>) {
+  const { t } = useTranslation('audiences')
+
   return (
     <button
       onClick={onClick}
       className="cursor-pointer bg-transparent rounded-2xl p-6 border-2 border-dashed border-gray-300 dark:border-zinc-700 transition-all duration-300 hover:border-lime dark:hover:border-lime flex items-center justify-center min-h-[140px]"
     >
-      <span className="text-lg font-bold text-gray-400 dark:text-zinc-500">Add new Audience</span>
+      <span className="text-lg font-bold text-gray-400 dark:text-zinc-500">{t('card.addNewAudience')}</span>
     </button>
   )
 }
@@ -62,6 +65,7 @@ export function AudienceCard({
   onSaveClick,
   onShareClick,
 }: Readonly<AudienceCardProps>) {
+  const { t } = useTranslation('audiences')
   const navigate = useNavigate()
   const cardRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -116,14 +120,14 @@ export function AudienceCard({
           <button
             onClick={() => onSaveClick?.(id)}
             className="cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-lime hover:bg-lime/10 transition-colors duration-200"
-            title="Save"
+            title={t('card.save')}
           >
             <Tag className="w-4 h-4" />
           </button>
           <button
             onClick={() => onShareClick?.(id)}
             className="cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-lime hover:bg-lime/10 transition-colors duration-200"
-            title="add to audience"
+            title={t('card.addToAudience')}
           >
             <Unplug className="w-4 h-4" />
           </button>
@@ -133,18 +137,18 @@ export function AudienceCard({
       <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-zinc-400 mb-4">
         <div className="flex items-center gap-1.5">
           <Waypoints className="w-4 h-4" />
-          <span>{subredditCount} Subs</span>
+          <span>{subredditCount} {t('card.subs')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Users className="w-4 h-4" />
-          <span>{formatNumber(totalMembers)} Members</span>
+          <span>{formatNumber(totalMembers)} {t('card.members')}</span>
         </div>
         <div className={cn(
           'flex items-center gap-1.5',
           weeklyGrowth >= 0 ? 'text-success-light' : 'text-error-light'
         )}>
           <TrendingUp className="w-4 h-4" />
-          <span>{weeklyGrowth.toFixed(2)}% /wk</span>
+          <span>{weeklyGrowth.toFixed(2)}% {t('card.weeklyGrowth')}</span>
         </div>
       </div>
 

@@ -1,0 +1,19 @@
+{
+  "navbar": {
+    "register": "Cadastrar",
+    "login": "Entrar"
+  },
+  "hero": {
+    "tagline": "Ideias infinitas",
+    "heading": "Ideias infinitas",
+    "headingIn": "no",
+    "headingReddit": "Reddit.",
+    "description": "Encontre o que realmente importa. Gere ideias e insights valiosos para o seu negócio e crie conteúdo que realmente impacte sua audiência.",
+    "loginNow": "Entrar Agora"
+  },
+  "footer": {
+    "renderTime": "RENDER_TIME",
+    "particles": "PARTÍCULAS",
+    "status": "STATUS"
+  }
+}

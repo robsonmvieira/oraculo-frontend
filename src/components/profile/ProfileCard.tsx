@@ -1,4 +1,5 @@
 import { Camera } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Card, Avatar, Button } from '@/components/ui'
 import type { ProfileUser } from '@/data/profile'
 
@@ -8,6 +9,8 @@ interface ProfileCardProps {
 }
 
 export function ProfileCard({ user, onViewPublicProfile }: Readonly<ProfileCardProps>) {
+  const { t } = useTranslation('profile')
+
   return (
     <Card className="flex flex-col items-center text-center py-8 px-6">
       <div className="relative mb-4">
@@ -19,7 +22,7 @@ export function ProfileCard({ user, onViewPublicProfile }: Readonly<ProfileCardP
         />
         <button
           className="absolute bottom-0 right-0 w-8 h-8 bg-lime rounded-full flex items-center justify-center border-2 border-white hover:bg-lime-hover transition-colors cursor-pointer"
-          title="Change photo"
+          title={t('card.changePhoto')}
         >
           <Camera className="w-4 h-4 text-black" />
         </button>
@@ -31,20 +34,20 @@ export function ProfileCard({ user, onViewPublicProfile }: Readonly<ProfileCardP
       <div className="flex items-center justify-center gap-6 mb-6 w-full">
         <div className="text-center">
           <p className="text-xl font-bold text-gray-900 dark:text-white">{user.stats.orders}</p>
-          <p className="text-xs text-gray-500 dark:text-zinc-400">Orders</p>
+          <p className="text-xs text-gray-500 dark:text-zinc-400">{t('card.orders')}</p>
         </div>
         <div className="text-center">
           <p className="text-xl font-bold text-gray-900 dark:text-white">{user.stats.reviews}</p>
-          <p className="text-xs text-gray-500 dark:text-zinc-400">Reviews</p>
+          <p className="text-xs text-gray-500 dark:text-zinc-400">{t('card.reviews')}</p>
         </div>
         <div className="text-center">
           <p className="text-xl font-bold text-gray-900 dark:text-white">{user.stats.rating}</p>
-          <p className="text-xs text-gray-500 dark:text-zinc-400">Rating</p>
+          <p className="text-xs text-gray-500 dark:text-zinc-400">{t('card.rating')}</p>
         </div>
       </div>
 
       <Button variant="outline" size="md" className="w-full" onClick={onViewPublicProfile}>
-        View Public Profile
+        {t('card.viewPublicProfile')}
       </Button>
     </Card>
   )

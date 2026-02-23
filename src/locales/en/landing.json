@@ -1,0 +1,19 @@
+{
+  "navbar": {
+    "register": "Register",
+    "login": "Login"
+  },
+  "hero": {
+    "tagline": "Infinite ideas",
+    "heading": "Infinite ideas",
+    "headingIn": "in",
+    "headingReddit": "Reddit.",
+    "description": "Find what really matters. Generate ideas and insights, ideas valuable for your business and build content that really impact your audience.",
+    "loginNow": "Login Now"
+  },
+  "footer": {
+    "renderTime": "RENDER_TIME",
+    "particles": "PARTICLES",
+    "status": "STATUS"
+  }
+}

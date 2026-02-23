@@ -1,0 +1,43 @@
+{
+  "personalInfo": {
+    "title": "Personal Information",
+    "editProfile": "Edit Profile",
+    "cancelEdit": "Cancel Edit",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "+55 21 99999-9999",
+    "location": "Location",
+    "locationPlaceholder": "Rio de Janeiro, Brasil",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell us about yourself...",
+    "saveChanges": "Save Changes"
+  },
+  "language": {
+    "title": "Analysis Language",
+    "description": "Choose the language for AI-generated analyses, insights and recommendations.",
+    "changeTitle": "Change Analysis Language",
+    "changeMessage": "You are about to change your analysis language to {{language}}.",
+    "changeWarning": "Previous analyses will remain in their original language. Only new analyses will be generated in the selected language.",
+    "confirmChange": "Confirm Change",
+    "updating": "Updating..."
+  },
+  "card": {
+    "viewPublicProfile": "View Public Profile",
+    "orders": "Orders",
+    "reviews": "Reviews",
+    "rating": "Rating",
+    "changePhoto": "Change photo",
+    "shareProfile": "Share Profile"
+  },
+  "connectedAccounts": {
+    "title": "Connected Accounts",
+    "connectedAs": "Connected as {{username}}",
+    "notConnected": "Not connected",
+    "disconnect": "Disconnect",
+    "connect": "Connect"
+  },
+  "recentActivity": {
+    "title": "Recent Activity"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "personalInfo": {
+    "title": "Informações Pessoais",
+    "editProfile": "Editar Perfil",
+    "cancelEdit": "Cancelar Edição",
+    "fullName": "Nome Completo",
+    "emailAddress": "Endereço de Email",
+    "phoneNumber": "Telefone",
+    "phonePlaceholder": "+55 21 99999-9999",
+    "location": "Localização",
+    "locationPlaceholder": "Rio de Janeiro, Brasil",
+    "bio": "Bio",
+    "bioPlaceholder": "Conte um pouco sobre você...",
+    "saveChanges": "Salvar Alterações"
+  },
+  "language": {
+    "title": "Idioma de Análise",
+    "description": "Escolha o idioma para análises, insights e recomendações geradas por IA.",
+    "changeTitle": "Alterar Idioma de Análise",
+    "changeMessage": "Você está prestes a alterar o idioma de análise para {{language}}.",
+    "changeWarning": "As análises anteriores permanecerão no idioma original. Apenas novas análises serão geradas no idioma selecionado.",
+    "confirmChange": "Confirmar Alteração",
+    "updating": "Atualizando..."
+  },
+  "card": {
+    "viewPublicProfile": "Ver Perfil Público",
+    "orders": "Pedidos",
+    "reviews": "Avaliações",
+    "rating": "Nota",
+    "changePhoto": "Alterar foto",
+    "shareProfile": "Compartilhar Perfil"
+  },
+  "connectedAccounts": {
+    "title": "Contas Conectadas",
+    "connectedAs": "Conectado como {{username}}",
+    "notConnected": "Não conectado",
+    "disconnect": "Desconectar",
+    "connect": "Conectar"
+  },
+  "recentActivity": {
+    "title": "Atividade Recente"
+  }
+}

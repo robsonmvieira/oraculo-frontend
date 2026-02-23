@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Globe, ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui'
 import { useUpdateLanguage } from '@/modules/auth'
@@ -22,6 +23,7 @@ interface LanguagePreferenceCardProps {
 }
 
 export function LanguagePreferenceCard({ user }: Readonly<LanguagePreferenceCardProps>) {
+  const { t } = useTranslation('profile')
   const currentLanguageCode = user.getPreferredLanguage() || 'en'
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [pendingLanguage, setPendingLanguage] = useState<{ code: string; label: string } | null>(null)
@@ -55,12 +57,12 @@ export function LanguagePreferenceCard({ user }: Readonly<LanguagePreferenceCard
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Globe className="w-5 h-5 text-gray-500 dark:text-zinc-400" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Analysis Language</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('language.title')}</h3>
           </div>
         </div>
 
         <p className="text-sm text-gray-500 dark:text-zinc-400 mb-4">
-          Choose the language for AI-generated analyses, insights and recommendations.
+          {t('language.description')}
         </p>
 
         <div className="relative">

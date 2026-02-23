@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudiencesToolbar, UserAudiencesSection, TemplateAudiencesSection } from '@/components/audiences'
@@ -9,6 +10,7 @@ import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
 
 export function Audiences() {
+  const { t } = useTranslation('audiences')
   const templatesGridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [searchQuery, setSearchQuery] = useState('')
@@ -134,15 +136,15 @@ export function Audiences() {
               onSuccess: () => {
                 closeModal()
                 toast({
-                  title: 'Audience created',
-                  description: 'Your audience has been created successfully.',
+                  title: t('toast.created'),
+                  description: t('toast.createdDescription'),
                   variant: 'success',
                 })
               },
               onError: () => {
                 toast({
-                  title: 'Failed to create audience',
-                  description: 'Something went wrong. Please try again.',
+                  title: t('toast.createFailed'),
+                  description: t('toast.genericError'),
                   variant: 'destructive',
                 })
               },

@@ -1,4 +1,5 @@
 import { AlertTriangle, Globe, Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/shared'
 
@@ -17,21 +18,22 @@ export function ChangeLanguageModal({
   onClose,
   onConfirm,
 }: Readonly<ChangeLanguageModalProps>) {
+  const { t } = useTranslation(['profile', 'common'])
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Change Analysis Language"
+      title={t('profile:language.changeTitle')}
       icon={<AlertTriangle className="w-5 h-5 text-yellow-500" />}
       size="sm"
     >
       <div className="p-6 space-y-4">
         <p className="text-sm text-gray-600 dark:text-zinc-400">
-          You are about to change your analysis language to{' '}
-          <span className="font-semibold text-gray-900 dark:text-white">{targetLanguageLabel}</span>.
+          {t('profile:language.changeMessage', { language: targetLanguageLabel })}
         </p>
         <p className="text-sm text-yellow-600 dark:text-yellow-500">
-          Previous analyses will remain in their original language. Only new analyses will be generated in the selected language.
+          {t('profile:language.changeWarning')}
         </p>
         <div className="flex justify-end gap-3 pt-2">
           <Button
@@ -40,7 +42,7 @@ export function ChangeLanguageModal({
             onClick={onClose}
             disabled={isPending}
           >
-            Cancel
+            {t('common:actions.cancel')}
           </Button>
           <Button
             variant="primary"
@@ -53,7 +55,7 @@ export function ChangeLanguageModal({
             ) : (
               <Globe className="w-4 h-4" />
             )}
-            {isPending ? 'Updating...' : 'Confirm Change'}
+            {isPending ? t('profile:language.updating') : t('profile:language.confirmChange')}
           </Button>
         </div>
       </div>

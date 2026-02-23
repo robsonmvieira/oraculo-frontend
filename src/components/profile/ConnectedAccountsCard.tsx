@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Github } from 'lucide-react'
 import { Card } from '@/components/ui'
 import type { ConnectedAccount } from '@/data/profile'
@@ -24,6 +25,7 @@ function GithubIcon() {
 }
 
 export function ConnectedAccountsCard({ accounts }: Readonly<ConnectedAccountsCardProps>) {
+  const { t } = useTranslation('profile')
   const [localAccounts, setLocalAccounts] = useState(accounts)
 
   const toggleConnection = (id: string) => {
@@ -36,7 +38,7 @@ export function ConnectedAccountsCard({ accounts }: Readonly<ConnectedAccountsCa
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Connected Accounts</h3>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">{t('connectedAccounts.title')}</h3>
 
       <div className="space-y-4">
         {localAccounts.map((account) => (
@@ -51,7 +53,7 @@ export function ConnectedAccountsCard({ accounts }: Readonly<ConnectedAccountsCa
                   {account.label}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-zinc-400">
-                  {account.connected ? `Connected as ${account.username}` : 'Not connected'}
+                  {account.connected ? t('connectedAccounts.connectedAs', { username: account.username }) : t('connectedAccounts.notConnected')}
                 </p>
               </div>
             </div>
@@ -64,7 +66,7 @@ export function ConnectedAccountsCard({ accounts }: Readonly<ConnectedAccountsCa
                   : 'text-lime hover:text-lime-hover'
               }`}
             >
-              {account.connected ? 'Disconnect' : 'Connect'}
+              {account.connected ? t('connectedAccounts.disconnect') : t('connectedAccounts.connect')}
             </button>
           </div>
         ))}

@@ -1,0 +1,31 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "or": "or"
+  },
+  "status": {
+    "online": "ONLINE",
+    "pending": "Pending",
+    "completed": "Completed",
+    "removed": "Removed",
+    "onDelivery": "On Delivery"
+  },
+  "errors": {
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "notFound": "Not found"
+  },
+  "labels": {
+    "notSet": "Not set"
+  }
+}

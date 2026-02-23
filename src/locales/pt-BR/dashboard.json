@@ -1,0 +1,36 @@
+{
+  "title": "Visão Geral da Loja",
+  "stats": {
+    "totalRevenue": "Receita Total",
+    "totalOrders": "Total de Pedidos",
+    "activeCustomers": "Clientes Ativos",
+    "avgRating": "Avaliação Média",
+    "fromLastMonth": "em relação ao mês passado"
+  },
+  "salesChart": {
+    "title": "Desempenho de Vendas",
+    "netIncome": "Receita líquida",
+    "totalSales": "Total de vendas",
+    "totalRevenue": "Receita total",
+    "thisWeek": "Esta Semana"
+  },
+  "paymentMethods": {
+    "title": "Métodos de Pagamento",
+    "total": "Total"
+  },
+  "orderList": {
+    "title": "Lista de Pedidos",
+    "searchPlaceholder": "Buscar pedidos...",
+    "filter": "Filtrar",
+    "customer": "Cliente",
+    "orderDate": "Data do Pedido",
+    "productName": "Nome do Produto",
+    "quantity": "Quantidade",
+    "amount": "Valor",
+    "status": "Status"
+  },
+  "inventory": {
+    "title": "Alertas de Estoque",
+    "lowStockAlert": "Alerta de estoque baixo"
+  }
+}
