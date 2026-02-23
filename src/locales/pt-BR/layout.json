@@ -1,0 +1,43 @@
+{
+  "sidebar": {
+    "dashboard": "Painel",
+    "orders": "Pedidos",
+    "audiences": "Audiências",
+    "campaigns": "Campanhas",
+    "cart": "Carrinho",
+    "analytics": "Análises",
+    "customers": "Clientes",
+    "integrations": "Integrações",
+    "mobile": "Mobile",
+    "settings": "Configurações",
+    "help": "Ajuda",
+    "logout": "Sair"
+  },
+  "topbar": {
+    "searchPlaceholder": "Buscar...",
+    "createAudience": "Criar Audiência",
+    "switchToDarkMode": "Mudar para modo escuro",
+    "switchToLightMode": "Mudar para modo claro",
+    "notifications": "Notificações",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "helpCenter": "Central de Ajuda",
+    "logout": "Sair",
+    "roleAdmin": "Administrador",
+    "roleMember": "Membro"
+  },
+  "pageNames": {
+    "dashboard": "Painel",
+    "orders": "Pedidos",
+    "audiences": "Audiências",
+    "campaigns": "Campanhas",
+    "cart": "Carrinho",
+    "analytics": "Análises",
+    "customers": "Clientes",
+    "integrations": "Integrações",
+    "mobile": "Mobile",
+    "settings": "Configurações",
+    "help": "Ajuda",
+    "profile": "Perfil"
+  }
+}

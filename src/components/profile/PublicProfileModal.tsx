@@ -1,4 +1,5 @@
 import { CheckCircle, MapPin, Mail, Share2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Modal } from '@/components/shared/Modal'
 import { Avatar, Button } from '@/components/ui'
 import type { ProfileUser } from '@/data/profile'
@@ -10,6 +11,8 @@ interface PublicProfileModalProps {
 }
 
 export function PublicProfileModal({ isOpen, onClose, user }: Readonly<PublicProfileModalProps>) {
+  const { t } = useTranslation('profile')
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <div className="relative">
@@ -58,22 +61,22 @@ export function PublicProfileModal({ isOpen, onClose, user }: Readonly<PublicPro
           <div className="flex items-center justify-start gap-8 mt-6 pb-2">
             <div className="text-center">
               <p className="text-xl font-bold text-gray-900 dark:text-white">{user.stats.orders}</p>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wide">Orders</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wide">{t('card.orders')}</p>
             </div>
             <div className="text-center border-l border-gray-200 dark:border-zinc-700 pl-8">
               <p className="text-xl font-bold text-gray-900 dark:text-white">{user.stats.reviews}</p>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wide">Reviews</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wide">{t('card.reviews')}</p>
             </div>
             <div className="text-center border-l border-gray-200 dark:border-zinc-700 pl-8">
               <p className="text-xl font-bold text-gray-900 dark:text-white">{user.stats.rating}</p>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wide">Rating</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wide">{t('card.rating')}</p>
             </div>
           </div>
 
           <div className="mt-6 pb-6">
             <Button variant="dark" size="full" className="gap-2">
               <Share2 className="w-4 h-4" />
-              Share Profile
+              {t('card.shareProfile')}
             </Button>
           </div>
         </div>

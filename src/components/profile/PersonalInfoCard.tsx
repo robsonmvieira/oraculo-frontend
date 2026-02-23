@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { User, Mail, Phone, MapPin, Save, Loader2 } from 'lucide-react'
 import { Card, Button, Input } from '@/components/ui'
 import { useUpdateProfile } from '@/modules/auth'
@@ -9,6 +10,7 @@ interface PersonalInfoCardProps {
 }
 
 export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
+  const { t } = useTranslation(['profile', 'common'])
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     phone_number: user.getPhoneNumber() || '',
@@ -42,21 +44,21 @@ export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Personal Information</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('profile:personalInfo.title')}</h3>
         <Button
           variant={isEditing ? 'danger' : 'dark'}
           size="sm"
           onClick={isEditing ? handleCancel : () => setIsEditing(true)}
           disabled={isPending}
         >
-          {isEditing ? 'Cancel Edit' : 'Edit Profile'}
+          {isEditing ? t('profile:personalInfo.cancelEdit') : t('profile:personalInfo.editProfile')}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-2 block">
-            Full Name
+            {t('profile:personalInfo.fullName')}
           </label>
           <div className="flex items-center gap-3 h-10">
             <User className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
@@ -66,7 +68,7 @@ export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
 
         <div>
           <label className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-2 block">
-            Email Address
+            {t('profile:personalInfo.emailAddress')}
           </label>
           <div className="flex items-center gap-3 h-10">
             <Mail className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
@@ -76,20 +78,20 @@ export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
 
         <div>
           <label className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-2 block">
-            Phone Number
+            {t('profile:personalInfo.phoneNumber')}
           </label>
           {isEditing ? (
             <Input
               type="tel"
               value={formData.phone_number}
               onChange={(e) => handleChange('phone_number', e.target.value)}
-              placeholder="+55 21 99999-9999"
+              placeholder={t('profile:personalInfo.phonePlaceholder')}
             />
           ) : (
             <div className="flex items-center gap-3 h-10">
               <Phone className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
               <span className="text-sm text-gray-900 dark:text-white">
-                {user.getPhoneNumber() || 'Not set'}
+                {user.getPhoneNumber() || t('common:labels.notSet')}
               </span>
             </div>
           )}
@@ -97,19 +99,19 @@ export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
 
         <div>
           <label className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-2 block">
-            Location
+            {t('profile:personalInfo.location')}
           </label>
           {isEditing ? (
             <Input
               value={formData.locale}
               onChange={(e) => handleChange('locale', e.target.value)}
-              placeholder="Rio de Janeiro, Brasil"
+              placeholder={t('profile:personalInfo.locationPlaceholder')}
             />
           ) : (
             <div className="flex items-center gap-3 h-10">
               <MapPin className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
               <span className="text-sm text-gray-900 dark:text-white">
-                {user.getLocale() || 'Not set'}
+                {user.getLocale() || t('common:labels.notSet')}
               </span>
             </div>
           )}
@@ -118,19 +120,19 @@ export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
 
       <div className="mt-6">
         <label className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-2 block">
-          Bio
+          {t('profile:personalInfo.bio')}
         </label>
         {isEditing ? (
           <textarea
             value={formData.bio}
             onChange={(e) => handleChange('bio', e.target.value)}
             rows={3}
-            placeholder="Tell us about yourself..."
+            placeholder={t('profile:personalInfo.bioPlaceholder')}
             className="flex w-full rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white px-4 py-3 text-sm placeholder:text-gray-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-lime transition-colors duration-300 resize-none"
           />
         ) : (
           <p className="text-sm text-gray-900 dark:text-white leading-relaxed">
-            {user.getBio() || 'Not set'}
+            {user.getBio() || t('common:labels.notSet')}
           </p>
         )}
       </div>
@@ -139,7 +141,7 @@ export function PersonalInfoCard({ user }: Readonly<PersonalInfoCardProps>) {
         <div className="flex justify-end mt-6">
           <Button variant="primary" size="md" onClick={handleSave} disabled={isPending} className="gap-2">
             {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {isPending ? 'Saving...' : 'Save Changes'}
+            {isPending ? t('common:actions.saving') : t('profile:personalInfo.saveChanges')}
           </Button>
         </div>
       )}

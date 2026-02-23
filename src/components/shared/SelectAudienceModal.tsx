@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Globe, Loader2 } from 'lucide-react'
 import { useDebounce } from '@/hooks'
 import { Modal } from './Modal'
@@ -33,6 +34,7 @@ export function SelectAudienceModal({
     getSelectedNames,
   } = useCreateAudienceStore()
 
+  const { t } = useTranslation('audiences')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearch = useDebounce(searchQuery, 300)
 
@@ -137,12 +139,12 @@ export function SelectAudienceModal({
   }
 
   const modalTitle = isEditMode
-    ? 'Edit Audience - Select Communities'
-    : 'New Audience - Select Communities'
+    ? t('selectModal.editTitle')
+    : t('selectModal.createTitle')
 
   const submitLabel = isEditMode
-    ? (isLoading ? 'Saving...' : 'Save Changes')
-    : (isLoading ? 'Creating...' : 'Create Audience')
+    ? (isLoading ? t('selectModal.saving') : t('selectModal.saveChanges'))
+    : (isLoading ? t('selectModal.creating') : t('selectModal.createAudience'))
 
   return (
     <Modal
@@ -155,14 +157,14 @@ export function SelectAudienceModal({
       <div className="p-6">
         <div className="mb-6">
           <label htmlFor="audienceName" className="block text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wide mb-2">
-            Name your custom audience
+            {t('selectModal.nameLabel')}
           </label>
           <div className="flex gap-3">
             <Input
               id="audienceName"
               value={audienceName}
               onChange={(e) => setAudienceName(e.target.value)}
-              placeholder='Pick a short name, like "Digital Marketers" or "Movie-Goers"'
+              placeholder={t('selectModal.namePlaceholder')}
               className="flex-1"
             />
             <Button
@@ -179,13 +181,13 @@ export function SelectAudienceModal({
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wide">
-              Browse and select communities for your audience
+              {t('selectModal.browseLabel')}
             </p>
             <Input
               icon
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search communities..."
+              placeholder={t('selectModal.searchPlaceholder')}
               className="w-64"
             />
           </div>
@@ -212,7 +214,7 @@ export function SelectAudienceModal({
               ))}
               {superlist.length === 0 && !isFetchingNextPage && (
                 <div className="col-span-full text-center py-12 text-gray-500 dark:text-zinc-400">
-                  No communities found matching "{searchQuery}"
+                  {t('selectModal.noCommunitiesFound', { query: searchQuery })}
                 </div>
               )}
               <div ref={sentinelRef} className="col-span-full">
@@ -232,7 +234,7 @@ export function SelectAudienceModal({
               <span className="font-semibold text-lime">
                 {selectedCommunities.length}
               </span>{' '}
-              communit{selectedCommunities.length !== 1 ? 'ies' : 'y'} selected
+              {t('selectModal.communitiesSelected', { count: selectedCommunities.length })}
             </p>
           </div>
         )}

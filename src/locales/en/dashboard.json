@@ -1,0 +1,36 @@
+{
+  "title": "Store Overview",
+  "stats": {
+    "totalRevenue": "Total Revenue",
+    "totalOrders": "Total Orders",
+    "activeCustomers": "Active Customers",
+    "avgRating": "Avg. Rating",
+    "fromLastMonth": "from last month"
+  },
+  "salesChart": {
+    "title": "Sales Performance",
+    "netIncome": "Net income",
+    "totalSales": "Total sales",
+    "totalRevenue": "Total revenue",
+    "thisWeek": "This Week"
+  },
+  "paymentMethods": {
+    "title": "Payment Methods",
+    "total": "Total"
+  },
+  "orderList": {
+    "title": "Order List",
+    "searchPlaceholder": "Search orders...",
+    "filter": "Filter",
+    "customer": "Customer",
+    "orderDate": "Order Date",
+    "productName": "Product Name",
+    "quantity": "Quantity",
+    "amount": "Amount",
+    "status": "Status"
+  },
+  "inventory": {
+    "title": "Inventory Alerts",
+    "lowStockAlert": "Low stock alert"
+  }
+}

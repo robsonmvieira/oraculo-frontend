@@ -1,4 +1,5 @@
 import type { RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AudienceCard, AddAudienceCard } from './AudienceCard'
 import { gridClassName } from './audiences.types'
 import type { AudienceDisplayItem, ViewMode } from './audiences.types'
@@ -24,11 +25,13 @@ export function TemplateAudiencesSection({
   showAddCard,
   onAddClick,
 }: Readonly<TemplateAudiencesSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Find Audiences
+          {t('page.findAudiences')}
         </h2>
         <span className="text-lg text-gray-500 dark:text-zinc-400">
           {audiences.length}
@@ -55,7 +58,7 @@ export function TemplateAudiencesSection({
       {audiences.length === 0 && searchQuery && (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-zinc-400">
-            No audiences found matching "{searchQuery}"
+            {t('page.noAudiencesFound', { query: searchQuery })}
           </p>
         </div>
       )}
