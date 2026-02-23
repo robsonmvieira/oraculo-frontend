@@ -1,0 +1,49 @@
+{
+  "page": {
+    "title": "Notificacoes",
+    "subtitle": "Fique por dentro das ultimas atividades."
+  },
+  "tabs": {
+    "all": "Todas",
+    "unread": "Nao lidas",
+    "archived": "Arquivadas"
+  },
+  "actions": {
+    "markAsRead": "Marcar como lida",
+    "markAllAsRead": "Marcar todas como lidas"
+  },
+  "dropdown": {
+    "title": "Notificacoes",
+    "newCount": "{{count}} Novas",
+    "viewAll": "Ver Todas as Notificacoes",
+    "empty": "Nenhuma notificacao nova"
+  },
+  "empty": {
+    "all": "Nenhuma notificacao ainda",
+    "unread": "Tudo em dia! Nenhuma notificacao nao lida.",
+    "archived": "Nenhuma notificacao arquivada"
+  },
+  "types": {
+    "behavioral_pattern_complete": "Padroes Comportamentais Prontos",
+    "behavioral_pattern_failed": "Padroes Comportamentais Falharam",
+    "deep_dive_complete": "Deep Dive Pronto",
+    "deep_dive_failed": "Deep Dive Falhou",
+    "pattern_analysis_complete": "Analise de Padroes Pronta",
+    "pattern_analysis_failed": "Analise de Padroes Falhou",
+    "keyword_analysis_complete": "Keywords Prontas",
+    "keyword_analysis_failed": "Keywords Falharam",
+    "topic_analysis_complete": "Topicos Prontos",
+    "topic_analysis_failed": "Topicos Falharam"
+  },
+  "time": {
+    "justNow": "Agora mesmo",
+    "minutesAgo": "{{count}} min atras",
+    "hoursAgo": "{{count}}h atras",
+    "daysAgo": "{{count}}d atras"
+  },
+  "toast": {
+    "markedAsRead": "Notificacao marcada como lida",
+    "allMarkedAsRead": "Todas as notificacoes marcadas como lidas",
+    "error": "Erro ao atualizar notificacao"
+  }
+}

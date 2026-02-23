@@ -9,6 +9,7 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Audiences = lazy(() => import('@/pages/Audiences'))
 const AudienceDetail = lazy(() => import('@/pages/AudienceDetail'))
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
+const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'))
 const Placeholder = lazy(() => import('@/pages/Placeholder'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -165,6 +166,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Placeholder />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'notifications',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <NotificationsPage />
           </Suspense>
         ),
       },

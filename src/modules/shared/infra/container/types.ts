@@ -25,4 +25,9 @@ export const TYPES = {
   GetMeUseCase: Symbol.for('GetMeUseCase'),
   UpdateProfileUseCase: Symbol.for('UpdateProfileUseCase'),
   UpdateLanguageUseCase: Symbol.for('UpdateLanguageUseCase'),
+  NotificationRepository: Symbol.for('NotificationRepository'),
+  ListNotificationsUseCase: Symbol.for('ListNotificationsUseCase'),
+  GetUnreadCountUseCase: Symbol.for('GetUnreadCountUseCase'),
+  MarkNotificationReadUseCase: Symbol.for('MarkNotificationReadUseCase'),
+  MarkAllReadUseCase: Symbol.for('MarkAllReadUseCase'),
 } as const

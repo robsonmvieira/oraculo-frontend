@@ -9,6 +9,7 @@ import enDashboard from '@/locales/en/dashboard.json'
 import enAudiences from '@/locales/en/audiences.json'
 import enProfile from '@/locales/en/profile.json'
 import enLanding from '@/locales/en/landing.json'
+import enNotifications from '@/locales/en/notifications.json'
 
 import ptBRCommon from '@/locales/pt-BR/common.json'
 import ptBRAuth from '@/locales/pt-BR/auth.json'
@@ -17,6 +18,7 @@ import ptBRDashboard from '@/locales/pt-BR/dashboard.json'
 import ptBRAudiences from '@/locales/pt-BR/audiences.json'
 import ptBRProfile from '@/locales/pt-BR/profile.json'
 import ptBRLanding from '@/locales/pt-BR/landing.json'
+import ptBRNotifications from '@/locales/pt-BR/notifications.json'
 
 export const defaultNS = 'common'
 
@@ -29,6 +31,7 @@ export const resources = {
     audiences: enAudiences,
     profile: enProfile,
     landing: enLanding,
+    notifications: enNotifications,
   },
   'pt-BR': {
     common: ptBRCommon,
@@ -38,6 +41,7 @@ export const resources = {
     audiences: ptBRAudiences,
     profile: ptBRProfile,
     landing: ptBRLanding,
+    notifications: ptBRNotifications,
   },
 } as const
 
