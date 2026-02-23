@@ -48,8 +48,8 @@ export class NotificationRepository implements INotificationRepository {
   }
 
   async getUnreadCount(): Promise<number> {
-    const response = await this.httpClient.get<{ count: number }>('notifications/unread-count')
-    return response.count ?? 0
+    const response = await this.httpClient.get<{ unread_count: number }>('notifications/unread-count')
+    return response.unread_count ?? 0
   }
 
   async markAsRead(id: string): Promise<void> {
