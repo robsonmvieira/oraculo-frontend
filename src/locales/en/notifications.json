@@ -1,0 +1,49 @@
+{
+  "page": {
+    "title": "Notifications",
+    "subtitle": "Stay updated with the latest activity."
+  },
+  "tabs": {
+    "all": "All",
+    "unread": "Unread",
+    "archived": "Archived"
+  },
+  "actions": {
+    "markAsRead": "Mark as read",
+    "markAllAsRead": "Mark all as read"
+  },
+  "dropdown": {
+    "title": "Notifications",
+    "newCount": "{{count}} New",
+    "viewAll": "View All Notifications",
+    "empty": "No new notifications"
+  },
+  "empty": {
+    "all": "No notifications yet",
+    "unread": "All caught up! No unread notifications.",
+    "archived": "No archived notifications"
+  },
+  "types": {
+    "behavioral_pattern_complete": "Behavioral Patterns Ready",
+    "behavioral_pattern_failed": "Behavioral Patterns Failed",
+    "deep_dive_complete": "Deep Dive Ready",
+    "deep_dive_failed": "Deep Dive Failed",
+    "pattern_analysis_complete": "Pattern Analysis Ready",
+    "pattern_analysis_failed": "Pattern Analysis Failed",
+    "keyword_analysis_complete": "Keywords Ready",
+    "keyword_analysis_failed": "Keywords Failed",
+    "topic_analysis_complete": "Topics Ready",
+    "topic_analysis_failed": "Topics Failed"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minutesAgo": "{{count}} min ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago"
+  },
+  "toast": {
+    "markedAsRead": "Notification marked as read",
+    "allMarkedAsRead": "All notifications marked as read",
+    "error": "Failed to update notification"
+  }
+}

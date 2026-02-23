@@ -4,11 +4,13 @@ import { gsap } from '@/lib/gsap'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { useReducedMotion } from '@/hooks'
+import { useNotificationSSE } from '@/modules/notifications'
 
 export function MainLayout() {
   const contentRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const prefersReducedMotion = useReducedMotion()
+  useNotificationSSE()
 
   useEffect(() => {
     if (!contentRef.current || prefersReducedMotion) return

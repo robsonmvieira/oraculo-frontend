@@ -13,6 +13,10 @@ import { AuthRepository } from '@/modules/auth/infra/repositories'
 import type { IAuthRepository } from '@/modules/auth/domain/repositories'
 import { LoginUseCase, RegisterUseCase, RefreshTokenUseCase, GetMeUseCase, UpdateProfileUseCase, UpdateLanguageUseCase } from '@/modules/auth/application/use-cases'
 import type { ILoginUseCase, IRegisterUseCase, IRefreshTokenUseCase, IGetMeUseCase, IUpdateProfileUseCase, IUpdateLanguageUseCase } from '@/modules/auth/domain/use-cases'
+import { NotificationRepository } from '@/modules/notifications/infra/repositories'
+import type { INotificationRepository } from '@/modules/notifications/domain/repositories'
+import { ListNotificationsUseCase, GetUnreadCountUseCase, MarkNotificationReadUseCase, MarkAllReadUseCase } from '@/modules/notifications/application/use-cases'
+import type { IListNotificationsUseCase, IGetUnreadCountUseCase, IMarkNotificationReadUseCase, IMarkAllReadUseCase } from '@/modules/notifications/domain/use-cases'
 
 const container = new Container()
 
@@ -141,6 +145,31 @@ container.bind<IUpdateProfileUseCase>(TYPES.UpdateProfileUseCase).toDynamicValue
 container.bind<IUpdateLanguageUseCase>(TYPES.UpdateLanguageUseCase).toDynamicValue(() => {
   const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
   return new UpdateLanguageUseCase(authRepository)
+}).inSingletonScope()
+
+container.bind<INotificationRepository>(TYPES.NotificationRepository).toDynamicValue(() => {
+  const httpClient = container.get<HttpClient>(TYPES.HttpClient)
+  return new NotificationRepository(httpClient)
+}).inSingletonScope()
+
+container.bind<IListNotificationsUseCase>(TYPES.ListNotificationsUseCase).toDynamicValue(() => {
+  const notificationRepository = container.get<INotificationRepository>(TYPES.NotificationRepository)
+  return new ListNotificationsUseCase(notificationRepository)
+}).inSingletonScope()
+
+container.bind<IGetUnreadCountUseCase>(TYPES.GetUnreadCountUseCase).toDynamicValue(() => {
+  const notificationRepository = container.get<INotificationRepository>(TYPES.NotificationRepository)
+  return new GetUnreadCountUseCase(notificationRepository)
+}).inSingletonScope()
+
+container.bind<IMarkNotificationReadUseCase>(TYPES.MarkNotificationReadUseCase).toDynamicValue(() => {
+  const notificationRepository = container.get<INotificationRepository>(TYPES.NotificationRepository)
+  return new MarkNotificationReadUseCase(notificationRepository)
+}).inSingletonScope()
+
+container.bind<IMarkAllReadUseCase>(TYPES.MarkAllReadUseCase).toDynamicValue(() => {
+  const notificationRepository = container.get<INotificationRepository>(TYPES.NotificationRepository)
+  return new MarkAllReadUseCase(notificationRepository)
 }).inSingletonScope()
 
 export { container }

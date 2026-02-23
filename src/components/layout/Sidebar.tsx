@@ -10,6 +10,7 @@ import {
   User,
   Link2,
   Smartphone,
+  Bell,
   Settings,
   HelpCircle,
   LogOut,
@@ -29,6 +30,7 @@ const navItems = [
   { icon: User, path: '/customers', label: 'Customers' },
   { icon: Link2, path: '/integrations', label: 'Integrations' },
   { icon: Smartphone, path: '/mobile', label: 'Mobile' },
+  { icon: Bell, path: '/notifications', label: 'Notifications' },
 ]
 
 const bottomItems = [

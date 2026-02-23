@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useThemeStore } from '@/modules/shared'
 import { useAuthStore, useLogout } from '@/modules/auth'
+import { useUnreadCount, useNotificationStore } from '@/modules/notifications'
+import { NotificationDropdown } from '@/components/notifications'
 import { useReducedMotion } from '@/hooks'
 
 const pageNames: Record<string, string> = {
@@ -29,6 +31,7 @@ const pageNames: Record<string, string> = {
   '/settings': 'Settings',
   '/help': 'Help',
   '/profile': 'Profile',
+  '/notifications': 'Notifications',
 }
 
 export function Topbar() {
@@ -41,6 +44,8 @@ export function Topbar() {
   const { user } = useAuthStore()
   const handleLogout = useLogout()
   const prefersReducedMotion = useReducedMotion()
+  useUnreadCount()
+  const unreadCount = useNotificationStore((state) => state.unreadCount)
 
   const userName = user?.getFullName() || 'User'
   const userRole = user?.getIsSuperuser() ? 'Admin' : 'Member'
@@ -63,9 +68,12 @@ export function Topbar() {
   }, [prefersReducedMotion])
 
   useEffect(() => {
-    if (!bellRef.current || prefersReducedMotion) return
+    if (!bellRef.current || prefersReducedMotion || unreadCount === 0) return
 
-    const pulse = gsap.to(bellRef.current?.querySelector('.notification-badge'), {
+    const badge = bellRef.current?.querySelector('.notification-badge')
+    if (!badge) return
+
+    const pulse = gsap.to(badge, {
       scale: 1.3,
       duration: 0.8,
       repeat: -1,
@@ -76,7 +84,7 @@ export function Topbar() {
     return () => {
       pulse.kill()
     }
-  }, [prefersReducedMotion])
+  }, [prefersReducedMotion, unreadCount])
 
   const handleThemeToggle = () => {
     if (!prefersReducedMotion && themeIconRef.current) {
@@ -130,16 +138,20 @@ export function Topbar() {
           )}
         </button>
 
-        <button
-          ref={bellRef}
-          className="relative w-10 h-10 rounded-full flex items-center justify-center text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-          title="Notifications"
-        >
-          <Bell className="w-5 h-5" />
-          <span className="notification-badge absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-            3
-          </span>
-        </button>
+        <NotificationDropdown>
+          <button
+            ref={bellRef}
+            className="relative w-10 h-10 rounded-full flex items-center justify-center text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Notifications"
+          >
+            <Bell className="w-5 h-5" />
+            {unreadCount > 0 && (
+              <span className="notification-badge absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+        </NotificationDropdown>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
