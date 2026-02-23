@@ -13,9 +13,12 @@ import type { MarkCommunityNotRelevantParams } from '../../domain/use-cases/mark
 import type { GetAudienceTopicsParams, GetAudienceTopicsResult } from '../../domain/use-cases/get-audience-topics.use-case'
 import type { GetTopicDeepDiveParams, GetTopicDeepDiveResult, TopicDeepDiveStatus } from '../../domain/use-cases/get-topic-deep-dive.use-case'
 import type { TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from '../../domain/use-cases/trigger-topic-deep-dive.use-case'
+import type { GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult, TopicBehavioralPatternsStatus } from '../../domain/use-cases/get-topic-behavioral-patterns.use-case'
+import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from '../../domain/use-cases/trigger-topic-behavioral-patterns.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
+import { TopicBehavioralPattern } from '../../domain/entities/TopicBehavioralPattern.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -136,6 +139,58 @@ interface TopicDeepDiveApiResponse {
 }
 
 interface TriggerDeepDiveApiResponse {
+  status: string
+  analysis_id: string
+  message?: string
+}
+
+interface TopicBehavioralPatternsApiResponse {
+  status: string
+  analysis_id?: string
+  topic_id?: string
+  topic_name?: string
+  completed_at?: string
+  summary?: string
+  tool_patterns?: Array<{
+    tool: string
+    use_case: string
+    satisfaction: string
+    pain_points: string[]
+    evidence: string
+    communities: string[]
+  }>
+  workaround_patterns?: Array<{
+    problem: string
+    workaround: string
+    frequency: string
+    evidence: string
+    communities: string[]
+  }>
+  friction_patterns?: Array<{
+    friction: string
+    category: string
+    severity: string
+    affected_tools: string[]
+    evidence: string
+  }>
+  shift_patterns?: Array<{
+    from: string
+    to: string
+    reason: string
+    stage: string
+    evidence: string
+  }>
+  demand_signals?: Array<{
+    signal: string
+    signal_type: string
+    frequency: string
+    communities: string[]
+    evidence: string
+  }>
+  message?: string
+}
+
+interface TriggerBehavioralPatternsApiResponse {
   status: string
   analysis_id: string
   message?: string
@@ -395,6 +450,75 @@ export class AudienceRepository implements IAudienceRepository {
   async triggerTopicDeepDive(params: TriggerTopicDeepDiveParams): Promise<TriggerTopicDeepDiveResult> {
     const response = await this.httpClient.post<TriggerDeepDiveApiResponse>(
       `audiences/${params.audienceId}/topics/${params.topicId}/deep-dive/refresh`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
+    }
+  }
+
+  async getTopicBehavioralPatterns(params: GetTopicBehavioralPatternsParams): Promise<GetTopicBehavioralPatternsResult> {
+    const response = await this.httpClient.get<TopicBehavioralPatternsApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/behavioral-patterns`
+    )
+
+    const status = response.status as TopicBehavioralPatternsStatus
+
+    if (status !== 'ready' || !response.summary) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: new TopicBehavioralPattern({
+        analysisId: response.analysis_id ?? '',
+        topicId: response.topic_id ?? params.topicId,
+        topicName: response.topic_name ?? '',
+        completedAt: response.completed_at ?? '',
+        summary: response.summary,
+        toolPatterns: (response.tool_patterns ?? []).map((t) => ({
+          tool: t.tool,
+          useCase: t.use_case,
+          satisfaction: t.satisfaction,
+          painPoints: t.pain_points,
+          evidence: t.evidence,
+          communities: t.communities,
+        })),
+        workaroundPatterns: (response.workaround_patterns ?? []).map((w) => ({
+          problem: w.problem,
+          workaround: w.workaround,
+          frequency: w.frequency,
+          evidence: w.evidence,
+          communities: w.communities,
+        })),
+        frictionPatterns: (response.friction_patterns ?? []).map((f) => ({
+          friction: f.friction,
+          category: f.category,
+          severity: f.severity,
+          affectedTools: f.affected_tools,
+          evidence: f.evidence,
+        })),
+        shiftPatterns: (response.shift_patterns ?? []).map((s) => ({
+          from: s.from,
+          to: s.to,
+          reason: s.reason,
+          stage: s.stage,
+          evidence: s.evidence,
+        })),
+        demandSignals: (response.demand_signals ?? []).map((d) => ({
+          signal: d.signal,
+          signalType: d.signal_type,
+          frequency: d.frequency,
+          communities: d.communities,
+          evidence: d.evidence,
+        })),
+      }),
+    }
+  }
+
+  async triggerTopicBehavioralPatterns(params: TriggerTopicBehavioralPatternsParams): Promise<TriggerTopicBehavioralPatternsResult> {
+    const response = await this.httpClient.post<TriggerBehavioralPatternsApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/behavioral-patterns/refresh`
     )
     return {
       status: response.status,

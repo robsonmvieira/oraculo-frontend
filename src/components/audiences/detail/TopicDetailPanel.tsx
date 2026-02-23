@@ -3,7 +3,7 @@ import { TrendingUp, Search, Sparkles, MessageSquare, Loader2, AlertCircle, Refr
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
-import { useGetTopicDeepDive, useTriggerTopicDeepDive } from '@/modules/audience/application/hooks'
+import { useGetTopicDeepDive, useTriggerTopicDeepDive, useGetTopicBehavioralPatterns, useTriggerTopicBehavioralPatterns } from '@/modules/audience/application/hooks'
 import {
   DeepDiveSummarySection,
   DeepDiveSubtopicsSection,
@@ -13,6 +13,14 @@ import {
   DeepDivePostsSection,
   DeepDiveInsightsSection,
 } from './deep-dive'
+import {
+  BehavioralPatternsSummarySection,
+  ToolPatternsSection,
+  WorkaroundPatternsSection,
+  FrictionPatternsSection,
+  ShiftPatternsSection,
+  DemandSignalsSection,
+} from './behavioral-patterns'
 
 export interface TopicSubreddit {
   name: string
@@ -39,9 +47,11 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const panelRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [deepDiveActive, setDeepDiveActive] = useState(false)
+  const [patternsActive, setPatternsActive] = useState(false)
   const [currentTopicId, setCurrentTopicId] = useState<string | null>(null)
 
   const triggerDeepDive = useTriggerTopicDeepDive()
+  const triggerPatterns = useTriggerTopicBehavioralPatterns()
 
   const { data: deepDiveResult, isLoading: isLoadingDeepDive } = useGetTopicDeepDive(
     audienceId,
@@ -49,14 +59,25 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     deepDiveActive && !!topic,
   )
 
+  const { data: patternsResult, isLoading: isLoadingPatterns } = useGetTopicBehavioralPatterns(
+    audienceId,
+    topic?.id ?? '',
+    patternsActive && !!topic,
+  )
+
   const deepDiveStatus = deepDiveResult?.status
   const deepDiveData = deepDiveResult?.data
   const isProcessing = deepDiveStatus === 'processing'
 
-  // Reset deep dive when topic changes
+  const patternsStatus = patternsResult?.status
+  const patternsData = patternsResult?.data
+  const isPatternsProcessing = patternsStatus === 'processing'
+
+  // Reset when topic changes
   useEffect(() => {
     if (topic?.id !== currentTopicId) {
       setDeepDiveActive(false)
+      setPatternsActive(false)
       setCurrentTopicId(topic?.id ?? null)
     }
   }, [topic?.id, currentTopicId])
@@ -70,6 +91,17 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const handleRetry = () => {
     if (!topic) return
     triggerDeepDive.mutate({ audienceId, topicId: topic.id })
+  }
+
+  const handlePatterns = () => {
+    if (!topic) return
+    setPatternsActive(true)
+    triggerPatterns.mutate({ audienceId, topicId: topic.id })
+  }
+
+  const handlePatternsRetry = () => {
+    if (!topic) return
+    triggerPatterns.mutate({ audienceId, topicId: topic.id })
   }
 
   useLayoutEffect(() => {
@@ -122,6 +154,9 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const browseAllLabel = isProcessing ? 'Analyzing...' : 'Browse all'
   const browseAllDisabled = isProcessing || triggerDeepDive.isPending
 
+  const patternsLabel = isPatternsProcessing ? 'Analyzing...' : 'Patterns'
+  const patternsDisabled = isPatternsProcessing || triggerPatterns.isPending
+
   return (
     <div ref={containerRef} className="h-full">
       <div
@@ -168,9 +203,15 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 variant="outline"
                 size="sm"
                 className="gap-1.5"
+                onClick={handlePatterns}
+                disabled={patternsDisabled}
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                Patterns
+                {isPatternsProcessing ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                {patternsLabel}
               </Button>
               <Button
                 variant="outline"
@@ -311,6 +352,99 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <DeepDiveProductsSection products={deepDiveData.getMentionedProducts()} />
                     <DeepDivePostsSection posts={deepDiveData.getRepresentativePosts()} />
                     <DeepDiveInsightsSection insights={deepDiveData.getActionableInsights()} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Behavioral Patterns Section */}
+            {patternsActive && (
+              <div className="mt-6 border-t border-gray-100 dark:border-zinc-800">
+                {/* Loading initial fetch */}
+                {isLoadingPatterns && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-6 h-6 border-3 border-lime border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+
+                {/* Processing state */}
+                {isPatternsProcessing && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <Loader2 className="w-6 h-6 text-lime animate-spin" />
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        Detecting behavioral patterns...
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
+                        This may take 3-5 minutes
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Failed state */}
+                {patternsStatus === 'failed' && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <AlertCircle className="w-6 h-6 text-red-500" />
+                    <p className="text-sm text-gray-600 dark:text-zinc-300">
+                      Pattern detection failed. Please try again.
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={handlePatternsRetry}
+                      disabled={triggerPatterns.isPending}
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      Retry
+                    </Button>
+                  </div>
+                )}
+
+                {/* No analysis state */}
+                {patternsStatus === 'no_analysis' && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <p className="text-sm text-gray-500 dark:text-zinc-400">
+                      No behavioral patterns analysis found for this topic.
+                    </p>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={handlePatternsRetry}
+                      disabled={triggerPatterns.isPending}
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Start Analysis
+                    </Button>
+                  </div>
+                )}
+
+                {/* Ready state — render all sections */}
+                {patternsStatus === 'ready' && patternsData && (
+                  <div>
+                    <div className="flex items-center justify-between pt-4 mb-2">
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white">
+                        Behavioral Patterns
+                      </h4>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-1 text-xs"
+                        onClick={handlePatternsRetry}
+                        disabled={triggerPatterns.isPending}
+                      >
+                        <RefreshCw className="w-3 h-3" />
+                        Refresh
+                      </Button>
+                    </div>
+                    <BehavioralPatternsSummarySection summary={patternsData.getSummary()} />
+                    <ToolPatternsSection patterns={patternsData.getToolPatterns()} />
+                    <WorkaroundPatternsSection patterns={patternsData.getWorkaroundPatterns()} />
+                    <FrictionPatternsSection patterns={patternsData.getFrictionPatterns()} />
+                    <ShiftPatternsSection patterns={patternsData.getShiftPatterns()} />
+                    <DemandSignalsSection signals={patternsData.getDemandSignals()} />
                   </div>
                 )}
               </div>

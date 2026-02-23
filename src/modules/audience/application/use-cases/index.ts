@@ -13,3 +13,5 @@ export { MarkCommunityNotRelevantUseCase } from './mark-community-not-relevant-u
 export { GetAudienceTopicsUseCase } from './get-audience-topics-use-case'
 export { GetTopicDeepDiveUseCase } from './get-topic-deep-dive-use-case'
 export { TriggerTopicDeepDiveUseCase } from './trigger-topic-deep-dive-use-case'
+export { GetTopicBehavioralPatternsUseCase } from './get-topic-behavioral-patterns-use-case'
+export { TriggerTopicBehavioralPatternsUseCase } from './trigger-topic-behavioral-patterns-use-case'
