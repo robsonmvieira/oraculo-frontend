@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { cn } from '@/lib/utils'
-import { useListNotifications, useNotificationStore } from '@/modules/notifications'
-import { Badge } from '@/components/ui'
+import { Check } from 'lucide-react'
+import { useListNotifications, useMarkAsRead, useMarkAllAsRead, useNotificationStore } from '@/modules/notifications'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,30 +29,39 @@ function useTimeAgo(dateString: string) {
   return t('time.daysAgo', { count: diffDays })
 }
 
-function DropdownNotificationItem({ notification }: Readonly<{ notification: { id: string; type: string; title: string; isRead: boolean; createdAt: string } }>) {
+interface DropdownNotificationItemProps {
+  notification: { id: string; type: string; title: string; isRead: boolean; createdAt: string }
+  onMarkAsRead: (id: string) => void
+  isMarkingRead: boolean
+}
+
+function DropdownNotificationItem({ notification, onMarkAsRead, isMarkingRead }: Readonly<DropdownNotificationItemProps>) {
+  const { t } = useTranslation('notifications')
   const timeAgo = useTimeAgo(notification.createdAt)
 
   return (
     <div className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
       <div className="mt-0.5">
-        {notification.isRead ? (
-          <span className="block w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-600" />
-        ) : (
-          <span className="block w-2 h-2 rounded-full bg-red-500" />
-        )}
+        <span className="block w-2 h-2 rounded-full bg-red-500" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className={cn(
-          'text-sm truncate',
-          notification.isRead
-            ? 'text-gray-500 dark:text-zinc-400'
-            : 'text-gray-900 dark:text-white font-medium'
-        )}>
+        <p className="text-sm truncate text-gray-900 dark:text-white font-medium">
           {notification.title}
         </p>
         <p className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">
           {timeAgo}
         </p>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onMarkAsRead(notification.id)
+          }}
+          disabled={isMarkingRead}
+          className="flex items-center gap-1 mt-1 text-xs font-medium text-lime-600 dark:text-lime-400 hover:text-lime-700 dark:hover:text-lime-300 transition-colors cursor-pointer disabled:opacity-50"
+        >
+          <Check className="w-3 h-3" />
+          {t('actions.markAsRead')}
+        </button>
       </div>
     </div>
   )
@@ -63,7 +71,9 @@ export function NotificationDropdown({ children }: Readonly<NotificationDropdown
   const { t } = useTranslation('notifications')
   const navigate = useNavigate()
   const unreadCount = useNotificationStore((state) => state.unreadCount)
-  const { data } = useListNotifications({ limit: 5, offset: 0 })
+  const { data } = useListNotifications({ limit: 5, offset: 0, unread_only: true })
+  const markAsRead = useMarkAsRead()
+  const markAllAsRead = useMarkAllAsRead()
 
   const notifications = (data?.notifications ?? []).map((n) => ({
     id: n.getId(),
@@ -88,9 +98,13 @@ export function NotificationDropdown({ children }: Readonly<NotificationDropdown
             {t('dropdown.title')}
           </h3>
           {unreadCount > 0 && (
-            <Badge variant="info" size="sm">
-              {t('dropdown.newCount', { count: unreadCount })}
-            </Badge>
+            <button
+              onClick={() => markAllAsRead.mutate()}
+              disabled={markAllAsRead.isPending}
+              className="text-xs font-medium text-lime-600 dark:text-lime-400 hover:text-lime-700 dark:hover:text-lime-300 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              {t('actions.markAllAsRead')}
+            </button>
           )}
         </div>
 
@@ -107,6 +121,8 @@ export function NotificationDropdown({ children }: Readonly<NotificationDropdown
               <DropdownNotificationItem
                 key={notification.id}
                 notification={notification}
+                onMarkAsRead={(id) => markAsRead.mutate(id)}
+                isMarkingRead={markAsRead.isPending}
               />
             ))
           )}

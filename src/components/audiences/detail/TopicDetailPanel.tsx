@@ -85,7 +85,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const handleBrowseAll = () => {
     if (!topic) return
     setDeepDiveActive(true)
-    triggerDeepDive.mutate({ audienceId, topicId: topic.id })
+    setPatternsActive(false)
   }
 
   const handleRetry = () => {
@@ -96,7 +96,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const handlePatterns = () => {
     if (!topic) return
     setPatternsActive(true)
-    triggerPatterns.mutate({ audienceId, topicId: topic.id })
+    setDeepDiveActive(false)
   }
 
   const handlePatternsRetry = () => {

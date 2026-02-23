@@ -2,9 +2,32 @@ import { useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/modules/auth'
 import { toast } from '@/hooks/useToast'
+import { TOPIC_DEEP_DIVE_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicDeepDive'
+import { TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicBehavioralPatterns'
 import { NotificationSSEService } from '../../infra/services/sse.service'
+import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
 import { NOTIFICATIONS_QUERY_KEY, UNREAD_COUNT_QUERY_KEY } from './useNotifications'
+
+function invalidateAnalysisQueries(
+  queryClient: ReturnType<typeof useQueryClient>,
+  notification: Notification,
+) {
+  const metadata = notification.getMetadata()
+  const audienceId = metadata.audience_id
+  const topicId = metadata.topic_id
+  const type = notification.getType()
+
+  if (!audienceId || !topicId) return
+
+  if (type === 'deep_dive_complete' || type === 'deep_dive_failed') {
+    queryClient.invalidateQueries({ queryKey: TOPIC_DEEP_DIVE_QUERY_KEY(audienceId, topicId) })
+  }
+
+  if (type === 'behavioral_pattern_complete' || type === 'behavioral_pattern_failed') {
+    queryClient.invalidateQueries({ queryKey: TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY(audienceId, topicId) })
+  }
+}
 
 export function useNotificationSSE() {
   const sseRef = useRef<NotificationSSEService | null>(null)
@@ -33,6 +56,7 @@ export function useNotificationSSE() {
         incrementUnreadCount()
         queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEY })
         queryClient.invalidateQueries({ queryKey: UNREAD_COUNT_QUERY_KEY })
+        invalidateAnalysisQueries(queryClient, notification)
 
         toast({
           title: notification.getTitle(),

@@ -22,9 +22,9 @@ export function DeepDiveProductsSection({ products }: Readonly<DeepDiveProductsS
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{products.length}</span>
       </h4>
       <div className="space-y-3">
-        {products.map((product) => (
+        {products.map((product, index) => (
           <div
-            key={product.name}
+            key={`${product.name}-${index}`}
             className="p-3 rounded-lg bg-gray-50 dark:bg-zinc-800"
           >
             <div className="flex items-center gap-2 mb-1">
