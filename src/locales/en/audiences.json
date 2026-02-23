@@ -204,6 +204,12 @@
       "high": "high",
       "medium": "medium",
       "low": "low"
+    },
+    "sentimentLabel": {
+      "positive": "positive",
+      "negative": "negative",
+      "neutral": "neutral",
+      "mixed": "mixed"
     }
   },
   "topicSentiment": {
@@ -243,12 +249,16 @@
       "positive": "positive",
       "negative": "negative",
       "mixed": "mixed",
-      "neutral": "neutral"
+      "neutral": "neutral",
+      "dissatisfied": "dissatisfied"
     },
     "frequency": {
       "high": "high",
       "moderate": "moderate",
-      "low": "low"
+      "medium": "medium",
+      "low": "low",
+      "common": "common",
+      "rare": "rare"
     },
     "severity": {
       "high": "high",
@@ -259,13 +269,16 @@
       "pricing": "pricing",
       "usability": "usability",
       "performance": "performance",
-      "support": "support"
+      "support": "support",
+      "reliability": "reliability",
+      "limitations": "limitations"
     },
     "signalType": {
       "tool_request": "tool request",
       "feature_request": "feature request",
       "integration_request": "integration request",
-      "content_request": "content request"
+      "content_request": "content request",
+      "how_to": "how to"
     }
   },
   "toast": {

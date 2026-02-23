@@ -86,15 +86,15 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
 
   const deepDiveStatus = deepDiveResult?.status
   const deepDiveData = deepDiveResult?.data
-  const isProcessing = deepDiveStatus === 'processing'
+  const isProcessing = deepDiveActive && deepDiveStatus === 'processing'
 
   const patternsStatus = patternsResult?.status
   const patternsData = patternsResult?.data
-  const isPatternsProcessing = patternsStatus === 'processing'
+  const isPatternsProcessing = patternsActive && patternsStatus === 'processing'
 
   const sentimentStatus = sentimentResult?.status
   const sentimentData = sentimentResult?.data
-  const isSentimentProcessing = sentimentStatus === 'processing'
+  const isSentimentProcessing = sentimentActive && sentimentStatus === 'processing'
 
   // Reset when topic changes
   useEffect(() => {
@@ -227,7 +227,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
 
             <div className="flex flex-wrap justify-end gap-2 mb-6">
               <Button
-                variant="primary"
+                variant={deepDiveActive ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
                 onClick={handleBrowseAll}
@@ -241,7 +241,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 {browseAllLabel}
               </Button>
               <Button
-                variant="outline"
+                variant={patternsActive ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
                 onClick={handlePatterns}
@@ -255,7 +255,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 {patternsLabel}
               </Button>
               <Button
-                variant="outline"
+                variant={sentimentActive ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
                 onClick={handleSentiment}

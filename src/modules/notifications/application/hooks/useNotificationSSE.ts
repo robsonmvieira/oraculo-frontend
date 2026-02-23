@@ -4,6 +4,7 @@ import { useAuthStore } from '@/modules/auth'
 import { toast } from '@/hooks/useToast'
 import { TOPIC_DEEP_DIVE_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicDeepDive'
 import { TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicBehavioralPatterns'
+import { TOPIC_SENTIMENT_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicSentiment'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -26,6 +27,10 @@ function invalidateAnalysisQueries(
 
   if (type === 'behavioral_pattern_complete' || type === 'behavioral_pattern_failed') {
     queryClient.invalidateQueries({ queryKey: TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY(audienceId, topicId) })
+  }
+
+  if (type === 'sentiment_complete' || type === 'sentiment_failed') {
+    queryClient.invalidateQueries({ queryKey: TOPIC_SENTIMENT_QUERY_KEY(audienceId, topicId) })
   }
 }
 
