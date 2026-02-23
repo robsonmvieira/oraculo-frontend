@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ArrowRightLeft } from 'lucide-react'
 import type { ShiftPattern } from '@/modules/audience/domain/entities/TopicBehavioralPattern.entity'
 
@@ -6,12 +7,14 @@ export interface ShiftPatternsSectionProps {
 }
 
 export function ShiftPatternsSection({ patterns }: Readonly<ShiftPatternsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (patterns.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Migration Shifts
+        {t('topicDetail.migrationShifts')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{patterns.length}</span>
       </h4>
       <div className="space-y-3">

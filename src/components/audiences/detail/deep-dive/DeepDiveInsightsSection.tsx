@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Lightbulb } from 'lucide-react'
 import type { ActionableInsight } from '@/modules/audience/domain/entities/TopicDeepDive.entity'
 
@@ -19,12 +20,14 @@ const confidenceColors: Record<string, string> = {
 }
 
 export function DeepDiveInsightsSection({ insights }: Readonly<DeepDiveInsightsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (insights.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Actionable Insights
+        {t('deepDive.actionableInsights')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{insights.length}</span>
       </h4>
       <div className="space-y-3">
@@ -37,10 +40,10 @@ export function DeepDiveInsightsSection({ insights }: Readonly<DeepDiveInsightsS
               </p>
               <div className="flex items-center gap-2">
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${typeColors[item.type] ?? typeColors.trend}`}>
-                  {item.type}
+                  {t(`deepDive.insightType.${item.type}`)}
                 </span>
                 <span className={`text-[10px] ${confidenceColors[item.confidence] ?? confidenceColors.low}`}>
-                  {item.confidence} confidence
+                  {t('deepDive.confidence', { level: t(`deepDive.severity.${item.confidence}`) })}
                 </span>
               </div>
             </div>

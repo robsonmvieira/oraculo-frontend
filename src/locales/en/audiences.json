@@ -50,7 +50,7 @@
   },
   "subreddits": {
     "title": "Subreddits",
-    "members": "{{count}} members",
+    "members": "{{formattedCount}} members",
     "sortByLargest": "Largest",
     "sortBySmallest": "Smallest",
     "sortByMostActive": "Most Active",
@@ -166,6 +166,72 @@
     "noCommunitiesFound": "No communities found matching \"{{query}}\"",
     "communitiesSelected_one": "{{count}} community selected",
     "communitiesSelected_other": "{{count}} communities selected"
+  },
+  "topicsList": {
+    "postsAbout": "{{count}} posts about {{topic}}"
+  },
+  "deepDive": {
+    "summary": "Summary",
+    "subtopics": "Subtopics",
+    "posts": "{{count}} posts",
+    "commonQuestions": "Common Questions",
+    "sentiment": "Sentiment",
+    "positive": "Positive",
+    "negative": "Negative",
+    "neutral": "Neutral",
+    "highlights": "Highlights",
+    "mentionedProducts": "Mentioned Products",
+    "representativePosts": "Representative Posts",
+    "actionableInsights": "Actionable Insights",
+    "confidence": "{{level}} confidence",
+    "sentimentLabel": {
+      "positive": "positive",
+      "negative": "negative",
+      "neutral": "neutral",
+      "mixed": "mixed"
+    },
+    "insightType": {
+      "opportunity": "opportunity",
+      "gap": "gap",
+      "risk": "risk",
+      "trend": "trend"
+    },
+    "severity": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    }
+  },
+  "behavioralPatterns": {
+    "summary": "Summary",
+    "sentiment": {
+      "positive": "positive",
+      "negative": "negative",
+      "mixed": "mixed",
+      "neutral": "neutral"
+    },
+    "frequency": {
+      "high": "high",
+      "moderate": "moderate",
+      "low": "low"
+    },
+    "severity": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    },
+    "category": {
+      "pricing": "pricing",
+      "usability": "usability",
+      "performance": "performance",
+      "support": "support"
+    },
+    "signalType": {
+      "tool_request": "tool request",
+      "feature_request": "feature request",
+      "integration_request": "integration request",
+      "content_request": "content request"
+    }
   },
   "toast": {
     "created": "Audience created",

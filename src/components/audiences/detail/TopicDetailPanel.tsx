@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TrendingUp, Search, Sparkles, MessageSquare, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
@@ -43,6 +44,7 @@ export interface TopicDetailPanelProps {
 }
 
 export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPanelProps>) {
+  const { t } = useTranslation('audiences')
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -151,10 +153,10 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     }
   }, [prefersReducedMotion, topic])
 
-  const browseAllLabel = isProcessing ? 'Analyzing...' : 'Browse all'
+  const browseAllLabel = isProcessing ? t('topicDetail.analyzing') : t('topicDetail.browseAll')
   const browseAllDisabled = isProcessing || triggerDeepDive.isPending
 
-  const patternsLabel = isPatternsProcessing ? 'Analyzing...' : 'Patterns'
+  const patternsLabel = isPatternsProcessing ? t('topicDetail.analyzing') : t('topicDetail.patterns')
   const patternsDisabled = isPatternsProcessing || triggerPatterns.isPending
 
   return (
@@ -219,7 +221,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 className="gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                Sentiment
+                {t('topicDetail.sentiment')}
               </Button>
               <Button
                 variant="outline"
@@ -227,14 +229,14 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 className="gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                Ask
+                {t('topicDetail.ask')}
               </Button>
             </div>
 
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <h4 className="font-medium text-gray-900 dark:text-white text-sm">
-                  Subreddits
+                  {t('topicDetail.subreddits')}
                 </h4>
                 <span className="text-xs text-gray-500 dark:text-zinc-400">
                   {topic.subreddits.length}
@@ -279,10 +281,10 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <Loader2 className="w-6 h-6 text-lime animate-spin" />
                     <div className="text-center">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Analyzing topic...
+                        {t('topicDetail.analyzingTopic')}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                        This may take a couple of minutes
+                        {t('topicDetail.analyzingHelp')}
                       </p>
                     </div>
                   </div>
@@ -293,7 +295,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                   <div className="flex flex-col items-center py-8 gap-3">
                     <AlertCircle className="w-6 h-6 text-red-500" />
                     <p className="text-sm text-gray-600 dark:text-zinc-300">
-                      Analysis failed. Please try again.
+                      {t('topicDetail.analysisFailed')}
                     </p>
                     <Button
                       variant="outline"
@@ -303,7 +305,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                       disabled={triggerDeepDive.isPending}
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      Retry
+                      {t('topicDetail.retry')}
                     </Button>
                   </div>
                 )}
@@ -312,7 +314,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 {deepDiveStatus === 'no_analysis' && (
                   <div className="flex flex-col items-center py-8 gap-3">
                     <p className="text-sm text-gray-500 dark:text-zinc-400">
-                      No deep dive analysis found for this topic.
+                      {t('topicDetail.noAnalysis')}
                     </p>
                     <Button
                       variant="primary"
@@ -322,7 +324,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                       disabled={triggerDeepDive.isPending}
                     >
                       <Search className="w-3.5 h-3.5" />
-                      Start Analysis
+                      {t('topicDetail.startAnalysis')}
                     </Button>
                   </div>
                 )}
@@ -332,7 +334,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                   <div>
                     <div className="flex items-center justify-between pt-4 mb-2">
                       <h4 className="font-semibold text-sm text-gray-900 dark:text-white">
-                        Deep Dive
+                        {t('topicDetail.deepDive')}
                       </h4>
                       <Button
                         variant="ghost"
@@ -342,7 +344,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                         disabled={triggerDeepDive.isPending}
                       >
                         <RefreshCw className="w-3 h-3" />
-                        Refresh
+                        {t('topicDetail.refresh')}
                       </Button>
                     </div>
                     <DeepDiveSummarySection summary={deepDiveData.getSummary()} />
@@ -373,10 +375,10 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <Loader2 className="w-6 h-6 text-lime animate-spin" />
                     <div className="text-center">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Detecting behavioral patterns...
+                        {t('topicDetail.detectingPatterns')}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                        This may take 3-5 minutes
+                        {t('topicDetail.detectingPatternsHelp')}
                       </p>
                     </div>
                   </div>
@@ -387,7 +389,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                   <div className="flex flex-col items-center py-8 gap-3">
                     <AlertCircle className="w-6 h-6 text-red-500" />
                     <p className="text-sm text-gray-600 dark:text-zinc-300">
-                      Pattern detection failed. Please try again.
+                      {t('topicDetail.patternsFailed')}
                     </p>
                     <Button
                       variant="outline"
@@ -397,7 +399,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                       disabled={triggerPatterns.isPending}
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      Retry
+                      {t('topicDetail.retry')}
                     </Button>
                   </div>
                 )}
@@ -406,7 +408,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 {patternsStatus === 'no_analysis' && (
                   <div className="flex flex-col items-center py-8 gap-3">
                     <p className="text-sm text-gray-500 dark:text-zinc-400">
-                      No behavioral patterns analysis found for this topic.
+                      {t('topicDetail.noPatternsAnalysis')}
                     </p>
                     <Button
                       variant="primary"
@@ -416,7 +418,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                       disabled={triggerPatterns.isPending}
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      Start Analysis
+                      {t('topicDetail.startAnalysis')}
                     </Button>
                   </div>
                 )}
@@ -426,7 +428,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                   <div>
                     <div className="flex items-center justify-between pt-4 mb-2">
                       <h4 className="font-semibold text-sm text-gray-900 dark:text-white">
-                        Behavioral Patterns
+                        {t('topicDetail.behavioralPatterns')}
                       </h4>
                       <Button
                         variant="ghost"
@@ -436,7 +438,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                         disabled={triggerPatterns.isPending}
                       >
                         <RefreshCw className="w-3 h-3" />
-                        Refresh
+                        {t('topicDetail.refresh')}
                       </Button>
                     </div>
                     <BehavioralPatternsSummarySection summary={patternsData.getSummary()} />

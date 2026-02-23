@@ -1,4 +1,5 @@
 import { useState, type RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Sparkles } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
@@ -64,6 +65,7 @@ export function AudienceDetailTabs({
   isLoadingMoreTopics,
   audienceId,
 }: Readonly<AudienceDetailTabsProps>) {
+  const { t } = useTranslation('audiences')
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
@@ -85,25 +87,25 @@ export function AudienceDetailTabs({
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsList>
         <TabsTrigger value="search">
-          Search
+          {t('tabs.search')}
         </TabsTrigger>
         <TabsTrigger value="subreddits" count={communitiesCount}>
-          Subreddits
+          {t('tabs.subreddits')}
         </TabsTrigger>
         <TabsTrigger value="topics" count={totalTopics}>
-          Topics
+          {t('tabs.topics')}
         </TabsTrigger>
         <TabsTrigger value="themes">
           <Sparkles className="w-4 h-4" />
-          Themes
+          {t('tabs.themes')}
         </TabsTrigger>
         <TabsTrigger value="ask">
           <Sparkles className="w-4 h-4" />
-          Ask
+          {t('tabs.ask')}
         </TabsTrigger>
         <TabsTrigger value="products">
           <Sparkles className="w-4 h-4" />
-          Products
+          {t('tabs.products')}
         </TabsTrigger>
       </TabsList>
 
@@ -206,10 +208,10 @@ export function AudienceDetailTabs({
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
           <Sparkles className="w-8 h-8 text-lime mx-auto mb-3" />
           <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-            Ask AI
+            {t('tabs.askAI')}
           </h3>
           <p className="text-sm text-gray-500 dark:text-zinc-400">
-            Coming soon - Ask questions about this audience
+            {t('tabs.askComingSoon')}
           </p>
         </div>
       </TabsContent>
@@ -218,10 +220,10 @@ export function AudienceDetailTabs({
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
           <Sparkles className="w-8 h-8 text-lime mx-auto mb-3" />
           <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-            Products
+            {t('tabs.products')}
           </h3>
           <p className="text-sm text-gray-500 dark:text-zinc-400">
-            Coming soon - Discover products relevant to this audience
+            {t('tabs.productsComingSoon')}
           </p>
         </div>
       </TabsContent>

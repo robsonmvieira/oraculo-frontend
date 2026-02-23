@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
@@ -17,6 +18,7 @@ import type { SimilarCommunity } from '@/components/audiences/detail/SimilarComm
 import type { AudienceStats, RadarData } from '@/components/audiences/detail/AboutAudiencePanel'
 
 export function AudienceDetail() {
+  const { t } = useTranslation('audiences')
   const { id } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -83,9 +85,9 @@ export function AudienceDetail() {
   if (error || (!audienceTemplate && !userAudience)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-gray-500 dark:text-zinc-400">Audience not found</p>
+        <p className="text-gray-500 dark:text-zinc-400">{t('detail.notFound')}</p>
         <Button onClick={() => navigate('/audiences')} variant="outline">
-          Back to Audiences
+          {t('detail.backToAudiences')}
         </Button>
       </div>
     )
@@ -126,7 +128,7 @@ export function AudienceDetail() {
     : 0
 
   const audienceStats: AudienceStats = {
-    type: 'Curated Audience',
+    type: t('detail.curatedAudience') as AudienceStats['type'],
     totalMembers,
     monthlyGrowth,
   }
@@ -178,15 +180,15 @@ export function AudienceDetail() {
       {
         onSuccess: () => {
           toast({
-            title: 'Community added',
-            description: `${subredditName} has been added to your audience.`,
+            title: t('toast.communityAdded'),
+            description: t('toast.communityAddedDescription', { name: subredditName }),
             variant: 'success',
           })
         },
         onError: () => {
           toast({
-            title: 'Failed to add community',
-            description: 'Something went wrong. Please try again.',
+            title: t('toast.communityAddFailed'),
+            description: t('toast.genericError'),
             variant: 'destructive',
           })
         },
@@ -200,8 +202,8 @@ export function AudienceDetail() {
       {
         onError: () => {
           toast({
-            title: 'Failed to mark as not relevant',
-            description: 'Something went wrong. Please try again.',
+            title: t('toast.markNotRelevantFailed'),
+            description: t('toast.genericError'),
             variant: 'destructive',
           })
         },
@@ -216,16 +218,16 @@ export function AudienceDetail() {
         onSuccess: () => {
           setShowDeleteModal(false)
           toast({
-            title: 'Audience deleted',
-            description: 'Your audience has been permanently deleted.',
+            title: t('toast.deleted'),
+            description: t('toast.deletedDescription'),
             variant: 'success',
           })
           navigate('/audiences')
         },
         onError: () => {
           toast({
-            title: 'Failed to delete audience',
-            description: 'Something went wrong. Please try again.',
+            title: t('toast.deleteFailed'),
+            description: t('toast.genericError'),
             variant: 'destructive',
           })
         },
@@ -291,15 +293,15 @@ export function AudienceDetail() {
               onSuccess: () => {
                 closeModal()
                 toast({
-                  title: 'Audience updated',
-                  description: 'Your audience has been updated successfully.',
+                  title: t('toast.updated'),
+                  description: t('toast.updatedDescription'),
                   variant: 'success',
                 })
               },
               onError: () => {
                 toast({
-                  title: 'Failed to update audience',
-                  description: 'Something went wrong. Please try again.',
+                  title: t('toast.updateFailed'),
+                  description: t('toast.genericError'),
                   variant: 'destructive',
                 })
               },

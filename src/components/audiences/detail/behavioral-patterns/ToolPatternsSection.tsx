@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Wrench } from 'lucide-react'
 import type { ToolPattern } from '@/modules/audience/domain/entities/TopicBehavioralPattern.entity'
 
@@ -13,12 +14,14 @@ const satisfactionColors: Record<string, string> = {
 }
 
 export function ToolPatternsSection({ patterns }: Readonly<ToolPatternsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (patterns.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Tool Patterns
+        {t('topicDetail.toolPatterns')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{patterns.length}</span>
       </h4>
       <div className="space-y-3">
@@ -30,7 +33,7 @@ export function ToolPatternsSection({ patterns }: Readonly<ToolPatternsSectionPr
                 {pattern.tool}
               </span>
               <span className={`text-xs ml-auto ${satisfactionColors[pattern.satisfaction] ?? satisfactionColors.neutral}`}>
-                {pattern.satisfaction}
+                {t(`behavioralPatterns.sentiment.${pattern.satisfaction}`)}
               </span>
             </div>
             <p className="text-xs text-gray-600 dark:text-zinc-300 leading-relaxed mb-2">

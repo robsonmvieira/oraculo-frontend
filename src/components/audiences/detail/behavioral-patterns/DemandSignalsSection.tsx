@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Megaphone } from 'lucide-react'
 import type { DemandSignal } from '@/modules/audience/domain/entities/TopicBehavioralPattern.entity'
 
@@ -19,12 +20,14 @@ const signalTypeColors: Record<string, string> = {
 }
 
 export function DemandSignalsSection({ signals }: Readonly<DemandSignalsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (signals.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Demand Signals
+        {t('topicDetail.demandSignals')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{signals.length}</span>
       </h4>
       <div className="space-y-3">
@@ -36,12 +39,12 @@ export function DemandSignalsSection({ signals }: Readonly<DemandSignalsSectionP
                 {signal.signal}
               </p>
               <span className={`text-[10px] shrink-0 ${frequencyColors[signal.frequency] ?? frequencyColors.low}`}>
-                {signal.frequency}
+                {t(`behavioralPatterns.frequency.${signal.frequency}`)}
               </span>
             </div>
             <div className="flex items-center gap-2 ml-5.5 mb-2">
               <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${signalTypeColors[signal.signalType] ?? 'bg-gray-100 text-gray-600 dark:bg-zinc-700 dark:text-zinc-300'}`}>
-                {signal.signalType.replace(/_/g, ' ')}
+                {t(`behavioralPatterns.signalType.${signal.signalType}`)}
               </span>
             </div>
             <p className="text-[11px] text-gray-400 dark:text-zinc-500 leading-relaxed italic ml-5.5">

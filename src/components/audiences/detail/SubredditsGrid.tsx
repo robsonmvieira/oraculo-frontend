@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
@@ -24,16 +25,17 @@ export function SubredditsGrid({
   totalCount,
   onSubredditClick,
 }: Readonly<SubredditsGridProps>) {
+  const { t } = useTranslation('audiences')
   const gridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [sortBy, setSortBy] = useState<SortOption>('largest')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const sortOptions: { value: SortOption; label: string }[] = [
-    { value: 'largest', label: 'Largest' },
-    { value: 'smallest', label: 'Smallest' },
-    { value: 'most_active', label: 'Most Active' },
-    { value: 'newest', label: 'Newest' },
+    { value: 'largest', label: t('subreddits.sortByLargest') },
+    { value: 'smallest', label: t('subreddits.sortBySmallest') },
+    { value: 'most_active', label: t('subreddits.sortByMostActive') },
+    { value: 'newest', label: t('subreddits.sortByNewest') },
   ]
 
   const sortedSubreddits = [...subreddits].sort((a, b) => {
@@ -72,14 +74,14 @@ export function SubredditsGrid({
     <div className="flex-1">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-gray-900 dark:text-white">
-          Subreddits
+          {t('subreddits.title')}
         </h3>
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-white transition-colors"
           >
-            Sort by: {sortOptions.find((o) => o.value === sortBy)?.label}
+            {t('subreddits.sortBy', { label: sortOptions.find((o) => o.value === sortBy)?.label })}
             <ChevronDown className="w-4 h-4" />
           </button>
           {isDropdownOpen && (
@@ -127,7 +129,7 @@ export function SubredditsGrid({
       {totalCount > sortedSubreddits.length && (
         <div className="mt-4 text-center">
           <button className="text-sm text-gray-500 dark:text-zinc-400 hover:text-lime transition-colors">
-            Load more ({totalCount - sortedSubreddits.length} remaining)
+            {t('subreddits.loadMore', { count: totalCount - sortedSubreddits.length })}
           </button>
         </div>
       )}

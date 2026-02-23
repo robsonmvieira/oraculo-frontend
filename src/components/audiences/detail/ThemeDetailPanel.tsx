@@ -1,4 +1,5 @@
 import { useRef, useEffect, useLayoutEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Search, Sparkles, Copy, MessageSquare } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
@@ -34,6 +35,7 @@ export interface ThemeDetailPanelProps {
 }
 
 export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
+  const { t } = useTranslation('audiences')
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -104,19 +106,19 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
             <div className="flex flex-wrap justify-end gap-2 mb-6">
               <Button variant="primary" size="sm" className="gap-1.5">
                 <Search className="w-3.5 h-3.5" />
-                Browse all
+                {t('themes.browseAll')}
               </Button>
               <Button variant="outline" size="sm" className="gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                Patterns
+                {t('themes.patterns')}
               </Button>
               <Button variant="outline" size="sm" className="gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                Ask
+                {t('themes.ask')}
               </Button>
               <Button variant="outline" size="sm" className="gap-1.5">
                 <Copy className="w-3.5 h-3.5" />
-                Copy
+                {t('themes.copy')}
               </Button>
             </div>
 
@@ -125,7 +127,7 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <h4 className="font-medium text-gray-900 dark:text-white text-sm">
-                    Subcategories
+                    {t('themes.subcategories')}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-zinc-400">
                     {theme.subcategories.length}
@@ -155,7 +157,7 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <h4 className="font-medium text-gray-900 dark:text-white text-sm">
-                    Topics
+                    {t('themes.topics')}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-zinc-400">
                     {theme.topics.length}
@@ -185,7 +187,7 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <h4 className="font-medium text-gray-900 dark:text-white text-sm">
-                    Subreddits
+                    {t('themes.subreddits')}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-zinc-400">
                     {theme.subreddits.length}

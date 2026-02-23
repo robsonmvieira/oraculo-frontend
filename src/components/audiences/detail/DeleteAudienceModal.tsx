@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Trash2, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/shared'
@@ -17,20 +18,22 @@ export function DeleteAudienceModal({
   onClose,
   onConfirm,
 }: Readonly<DeleteAudienceModalProps>) {
+  const { t } = useTranslation(['audiences', 'common'])
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete Audience"
+      title={t('audiences:deleteModal.title')}
       icon={<AlertTriangle className="w-5 h-5 text-red-500" />}
       size="sm"
     >
       <div className="p-6 space-y-4">
         <p className="text-sm text-gray-600 dark:text-zinc-400">
-          Are you sure you want to delete <span className="font-semibold text-gray-900 dark:text-white">{audienceName}</span>?
+          {t('audiences:deleteModal.confirmMessage', { name: audienceName })}
         </p>
         <p className="text-sm text-red-500">
-          This action is irreversible. All data associated with this audience will be permanently removed.
+          {t('audiences:deleteModal.warning')}
         </p>
         <div className="flex justify-end gap-3 pt-2">
           <Button
@@ -39,7 +42,7 @@ export function DeleteAudienceModal({
             onClick={onClose}
             disabled={isPending}
           >
-            Cancel
+            {t('common:actions.cancel')}
           </Button>
           <Button
             variant="outline"
@@ -53,7 +56,7 @@ export function DeleteAudienceModal({
             ) : (
               <Trash2 className="w-4 h-4" />
             )}
-            {isPending ? 'Deleting...' : 'Delete'}
+            {isPending ? t('audiences:deleteModal.deleting') : t('common:actions.delete')}
           </Button>
         </div>
       </div>

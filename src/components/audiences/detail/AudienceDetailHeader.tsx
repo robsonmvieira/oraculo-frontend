@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ChevronLeft, Info, Pencil, Share2, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -16,6 +17,8 @@ export function AudienceDetailHeader({
   onEdit,
   onDelete,
 }: Readonly<AudienceDetailHeaderProps>) {
+  const { t } = useTranslation('audiences')
+
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-4">
@@ -33,21 +36,21 @@ export function AudienceDetailHeader({
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm">
           <Info className="w-4 h-4" />
-          Info
+          {t('detail.info')}
         </Button>
         {isUserAudience && (
           <Button variant="outline" size="sm" onClick={onEdit}>
             <Pencil className="w-4 h-4" />
-            Edit
+            {t('detail.edit')}
           </Button>
         )}
         <Button variant="outline" size="sm">
           <Share2 className="w-4 h-4" />
-          Share
+          {t('detail.share')}
         </Button>
         <Button variant="primary" size="sm">
           <Plus className="w-4 h-4" />
-          Add
+          {t('detail.add')}
         </Button>
         {isUserAudience && (
           <Button
@@ -57,7 +60,7 @@ export function AudienceDetailHeader({
             onClick={onDelete}
           >
             <Trash2 className="w-4 h-4" />
-            Delete
+            {t('detail.delete')}
           </Button>
         )}
       </div>

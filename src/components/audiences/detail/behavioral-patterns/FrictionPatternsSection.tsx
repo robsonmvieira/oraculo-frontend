@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle } from 'lucide-react'
 import type { FrictionPattern } from '@/modules/audience/domain/entities/TopicBehavioralPattern.entity'
 
@@ -19,12 +20,14 @@ const categoryColors: Record<string, string> = {
 }
 
 export function FrictionPatternsSection({ patterns }: Readonly<FrictionPatternsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (patterns.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Friction Points
+        {t('topicDetail.frictionPoints')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{patterns.length}</span>
       </h4>
       <div className="space-y-3">
@@ -38,10 +41,10 @@ export function FrictionPatternsSection({ patterns }: Readonly<FrictionPatternsS
             </div>
             <div className="flex items-center gap-2 ml-5.5 mb-2">
               <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${categoryColors[pattern.category] ?? 'bg-gray-100 text-gray-600 dark:bg-zinc-700 dark:text-zinc-300'}`}>
-                {pattern.category}
+                {t(`behavioralPatterns.category.${pattern.category}`)}
               </span>
               <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${severityColors[pattern.severity] ?? severityColors.low}`}>
-                {pattern.severity}
+                {t(`behavioralPatterns.severity.${pattern.severity}`)}
               </span>
             </div>
             {pattern.affectedTools.length > 0 && (

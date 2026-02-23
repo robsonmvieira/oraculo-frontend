@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Package } from 'lucide-react'
 import type { MentionedProduct } from '@/modules/audience/domain/entities/TopicDeepDive.entity'
 
@@ -13,12 +14,14 @@ const sentimentColors: Record<string, string> = {
 }
 
 export function DeepDiveProductsSection({ products }: Readonly<DeepDiveProductsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (products.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Mentioned Products
+        {t('deepDive.mentionedProducts')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{products.length}</span>
       </h4>
       <div className="space-y-3">
@@ -36,7 +39,7 @@ export function DeepDiveProductsSection({ products }: Readonly<DeepDiveProductsS
                 {product.category}
               </span>
               <span className={`text-xs ml-auto ${sentimentColors[product.sentiment] ?? sentimentColors.neutral}`}>
-                {product.sentiment}
+                {t(`deepDive.sentimentLabel.${product.sentiment}`)}
               </span>
             </div>
             <div className="flex items-center justify-between">

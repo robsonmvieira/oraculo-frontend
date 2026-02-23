@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { MoreVertical, TrendingUp, TrendingDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar } from '@/components/ui/avatar'
@@ -39,8 +40,23 @@ function getActivityLevel(growth: number): string {
 }
 
 export function SubredditCard({ subreddit, onClick }: Readonly<SubredditCardProps>) {
+  const { t } = useTranslation('audiences')
   const sizeCategory = subreddit.sizeCategory || getSizeCategory(subreddit.members)
   const activityLevel = subreddit.activityLevel || getActivityLevel(subreddit.monthlyGrowth)
+
+  const sizeLabels: Record<string, string> = {
+    Massive: t('subredditCard.massive'),
+    Huge: t('subredditCard.huge'),
+    Large: t('subredditCard.large'),
+    Medium: t('subredditCard.medium'),
+    Small: t('subredditCard.small'),
+  }
+  const activityLabels: Record<string, string> = {
+    'Super Active': t('subredditCard.superActive'),
+    'High Activity': t('subredditCard.highActivity'),
+    Active: t('subredditCard.active'),
+    Moderate: t('subredditCard.moderate'),
+  }
   const isPositiveGrowth = subreddit.monthlyGrowth >= 0
 
   return (
@@ -61,7 +77,7 @@ export function SubredditCard({ subreddit, onClick }: Readonly<SubredditCardProp
               {subreddit.name}
             </h4>
             <p className="text-xs text-gray-500 dark:text-zinc-400">
-              {formatNumber(subreddit.members)} members
+              {t('subreddits.members', { formattedCount: formatNumber(subreddit.members) })}
             </p>
           </div>
         </div>
@@ -80,7 +96,7 @@ export function SubredditCard({ subreddit, onClick }: Readonly<SubredditCardProp
             )}
             <span>
               {isPositiveGrowth ? '' : ''}
-              {Math.abs(subreddit.monthlyGrowth).toFixed(1)}% / month
+              {Math.abs(subreddit.monthlyGrowth).toFixed(1)}{t('subreddits.monthlyGrowth')}
             </span>
           </div>
           <button
@@ -96,17 +112,17 @@ export function SubredditCard({ subreddit, onClick }: Readonly<SubredditCardProp
 
       <div className="flex items-center gap-2 mb-3">
         <Badge variant="neutral" size="sm">
-          {sizeCategory}
+          {sizeLabels[sizeCategory] ?? sizeCategory}
         </Badge>
         <Badge variant="neutral" size="sm">
-          {activityLevel}
+          {activityLabels[activityLevel] ?? activityLevel}
         </Badge>
       </div>
 
       {subreddit.description && (
         <>
           <p className="text-[10px] font-medium text-gray-500 dark:text-zinc-500 uppercase tracking-wide mb-1">
-            Description
+            {t('subreddits.description')}
           </p>
           <p className="text-xs text-gray-600 dark:text-zinc-400 line-clamp-3">
             {subreddit.description}
