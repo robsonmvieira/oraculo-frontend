@@ -9,7 +9,6 @@ import {
   DeepDiveSummarySection,
   DeepDiveSubtopicsSection,
   DeepDiveQuestionsSection,
-  DeepDiveSentimentSection,
   DeepDiveProductsSection,
   DeepDivePostsSection,
   DeepDiveInsightsSection,
@@ -350,7 +349,6 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <DeepDiveSummarySection summary={deepDiveData.getSummary()} />
                     <DeepDiveSubtopicsSection subtopics={deepDiveData.getSubtopics()} />
                     <DeepDiveQuestionsSection questions={deepDiveData.getCommonQuestions()} />
-                    <DeepDiveSentimentSection sentiment={deepDiveData.getSentiment()} />
                     <DeepDiveProductsSection products={deepDiveData.getMentionedProducts()} />
                     <DeepDivePostsSection posts={deepDiveData.getRepresentativePosts()} />
                     <DeepDiveInsightsSection insights={deepDiveData.getActionableInsights()} />

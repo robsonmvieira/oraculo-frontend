@@ -125,13 +125,6 @@ interface TopicDeepDiveApiResponse {
   summary?: string
   subtopics?: Array<{ name: string; description: string; post_count: number }>
   common_questions?: Array<{ question: string; frequency: string; example_context: string }>
-  sentiment?: {
-    overall: string
-    positive_ratio: number
-    negative_ratio: number
-    neutral_ratio: number
-    highlights: Array<{ text: string; sentiment: string; source: string }>
-  }
   mentioned_products?: Array<{ name: string; category: string; sentiment: string; mention_count: number; context: string }>
   representative_posts?: Array<{ title: string; subreddit: string; score: number; permalink: string; excerpt: string }>
   actionable_insights?: Array<{ insight: string; type: string; confidence: string }>
@@ -413,17 +406,6 @@ export class AudienceRepository implements IAudienceRepository {
           frequency: q.frequency as 'high' | 'medium' | 'low',
           exampleContext: q.example_context,
         })),
-        sentiment: {
-          overall: (response.sentiment?.overall ?? 'neutral') as 'positive' | 'negative' | 'neutral' | 'mixed',
-          positiveRatio: response.sentiment?.positive_ratio ?? 0,
-          negativeRatio: response.sentiment?.negative_ratio ?? 0,
-          neutralRatio: response.sentiment?.neutral_ratio ?? 0,
-          highlights: (response.sentiment?.highlights ?? []).map((h) => ({
-            text: h.text,
-            sentiment: h.sentiment as 'positive' | 'negative' | 'neutral',
-            source: h.source,
-          })),
-        },
         mentionedProducts: (response.mentioned_products ?? []).map((p) => ({
           name: p.name,
           category: p.category,

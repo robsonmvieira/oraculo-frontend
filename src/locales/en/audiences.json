@@ -175,21 +175,10 @@
     "subtopics": "Subtopics",
     "posts": "{{count}} posts",
     "commonQuestions": "Common Questions",
-    "sentiment": "Sentiment",
-    "positive": "Positive",
-    "negative": "Negative",
-    "neutral": "Neutral",
-    "highlights": "Highlights",
     "mentionedProducts": "Mentioned Products",
     "representativePosts": "Representative Posts",
     "actionableInsights": "Actionable Insights",
     "confidence": "{{level}} confidence",
-    "sentimentLabel": {
-      "positive": "positive",
-      "negative": "negative",
-      "neutral": "neutral",
-      "mixed": "mixed"
-    },
     "insightType": {
       "opportunity": "opportunity",
       "gap": "gap",

@@ -10,20 +10,6 @@ export interface CommonQuestion {
   exampleContext: string
 }
 
-export interface SentimentHighlight {
-  text: string
-  sentiment: 'positive' | 'negative' | 'neutral'
-  source: string
-}
-
-export interface TopicSentiment {
-  overall: 'positive' | 'negative' | 'neutral' | 'mixed'
-  positiveRatio: number
-  negativeRatio: number
-  neutralRatio: number
-  highlights: SentimentHighlight[]
-}
-
 export interface MentionedProduct {
   name: string
   category: string
@@ -54,7 +40,6 @@ interface TopicDeepDiveProps {
   summary: string
   subtopics: Subtopic[]
   commonQuestions: CommonQuestion[]
-  sentiment: TopicSentiment
   mentionedProducts: MentionedProduct[]
   representativePosts: RepresentativePost[]
   actionableInsights: ActionableInsight[]
@@ -68,12 +53,11 @@ export class TopicDeepDive {
   private readonly summary: string
   private readonly subtopics: Subtopic[]
   private readonly commonQuestions: CommonQuestion[]
-  private readonly sentiment: TopicSentiment
   private readonly mentionedProducts: MentionedProduct[]
   private readonly representativePosts: RepresentativePost[]
   private readonly actionableInsights: ActionableInsight[]
 
-  constructor({ analysisId, topicId, topicName, completedAt, summary, subtopics, commonQuestions, sentiment, mentionedProducts, representativePosts, actionableInsights }: TopicDeepDiveProps) {
+  constructor({ analysisId, topicId, topicName, completedAt, summary, subtopics, commonQuestions, mentionedProducts, representativePosts, actionableInsights }: TopicDeepDiveProps) {
     this.analysisId = analysisId
     this.topicId = topicId
     this.topicName = topicName
@@ -81,7 +65,6 @@ export class TopicDeepDive {
     this.summary = summary
     this.subtopics = subtopics
     this.commonQuestions = commonQuestions
-    this.sentiment = sentiment
     this.mentionedProducts = mentionedProducts
     this.representativePosts = representativePosts
     this.actionableInsights = actionableInsights
@@ -115,10 +98,6 @@ export class TopicDeepDive {
     return this.commonQuestions
   }
 
-  getSentiment(): TopicSentiment {
-    return this.sentiment
-  }
-
   getMentionedProducts(): MentionedProduct[] {
     return this.mentionedProducts
   }
@@ -140,7 +119,6 @@ export class TopicDeepDive {
       summary: this.summary,
       subtopics: this.subtopics,
       commonQuestions: this.commonQuestions,
-      sentiment: this.sentiment,
       mentionedProducts: this.mentionedProducts,
       representativePosts: this.representativePosts,
       actionableInsights: this.actionableInsights,
