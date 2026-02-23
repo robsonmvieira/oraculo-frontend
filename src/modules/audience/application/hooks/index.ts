@@ -15,3 +15,5 @@ export { useGetTopicDeepDive, TOPIC_DEEP_DIVE_QUERY_KEY } from './useGetTopicDee
 export { useTriggerTopicDeepDive } from './useTriggerTopicDeepDive'
 export { useGetTopicBehavioralPatterns, TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY } from './useGetTopicBehavioralPatterns'
 export { useTriggerTopicBehavioralPatterns } from './useTriggerTopicBehavioralPatterns'
+export { useGetTopicSentiment, TOPIC_SENTIMENT_QUERY_KEY } from './useGetTopicSentiment'
+export { useTriggerTopicSentiment } from './useTriggerTopicSentiment'

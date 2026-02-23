@@ -15,3 +15,5 @@ export type { IGetTopicDeepDiveUseCase, GetTopicDeepDiveParams, GetTopicDeepDive
 export type { ITriggerTopicDeepDiveUseCase, TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from './trigger-topic-deep-dive.use-case'
 export type { IGetTopicBehavioralPatternsUseCase, GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult, TopicBehavioralPatternsStatus } from './get-topic-behavioral-patterns.use-case'
 export type { ITriggerTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from './trigger-topic-behavioral-patterns.use-case'
+export type { IGetTopicSentimentUseCase, GetTopicSentimentParams, GetTopicSentimentResult, TopicSentimentStatus } from './get-topic-sentiment.use-case'
+export type { ITriggerTopicSentimentUseCase, TriggerTopicSentimentParams, TriggerTopicSentimentResult } from './trigger-topic-sentiment.use-case'

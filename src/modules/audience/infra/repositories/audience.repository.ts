@@ -15,10 +15,13 @@ import type { GetTopicDeepDiveParams, GetTopicDeepDiveResult, TopicDeepDiveStatu
 import type { TriggerTopicDeepDiveParams, TriggerTopicDeepDiveResult } from '../../domain/use-cases/trigger-topic-deep-dive.use-case'
 import type { GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult, TopicBehavioralPatternsStatus } from '../../domain/use-cases/get-topic-behavioral-patterns.use-case'
 import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from '../../domain/use-cases/trigger-topic-behavioral-patterns.use-case'
+import type { GetTopicSentimentParams, GetTopicSentimentResult, TopicSentimentStatus } from '../../domain/use-cases/get-topic-sentiment.use-case'
+import type { TriggerTopicSentimentParams, TriggerTopicSentimentResult } from '../../domain/use-cases/trigger-topic-sentiment.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
 import { TopicBehavioralPattern } from '../../domain/entities/TopicBehavioralPattern.entity'
+import { TopicSentiment } from '../../domain/entities/TopicSentiment.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -184,6 +187,80 @@ interface TopicBehavioralPatternsApiResponse {
 }
 
 interface TriggerBehavioralPatternsApiResponse {
+  status: string
+  analysis_id: string
+  message?: string
+}
+
+interface TopicSentimentApiResponse {
+  status: string
+  analysis_id?: string
+  topic_id?: string
+  topic_name?: string
+  completed_at?: string
+  overall_sentiment?: {
+    score: string
+    positive_ratio: number
+    negative_ratio: number
+    neutral_ratio: number
+  }
+  emotional_map?: Array<{
+    emotion: string
+    intensity: string
+    percentage: number
+    example: string
+  }>
+  sentiment_by_community?: Array<{
+    community: string
+    positive: number
+    negative: number
+    neutral: number
+    dominant_emotion: string
+  }>
+  sentiment_by_subtopic?: Array<{
+    subtopic: string
+    sentiment: string
+    score: number
+    key_driver: string
+  }>
+  sentiment_drivers?: {
+    positive: Array<{
+      driver: string
+      frequency: string
+      mentions: number
+      example_quote: string
+    }>
+    negative: Array<{
+      driver: string
+      frequency: string
+      mentions: number
+      example_quote: string
+    }>
+  }
+  tension_points?: Array<{
+    topic: string
+    for_ratio: number
+    against_ratio: number
+    intensity: string
+    summary: string
+  }>
+  pain_points?: Array<{
+    pain: string
+    severity: string
+    frequency: string
+    communities: string[]
+    verbatim: string
+  }>
+  sentiment_opportunities?: Array<{
+    opportunity: string
+    based_on: string
+    confidence: string
+    target_audience: string
+  }>
+  message?: string
+}
+
+interface TriggerSentimentApiResponse {
   status: string
   analysis_id: string
   message?: string
@@ -501,6 +578,97 @@ export class AudienceRepository implements IAudienceRepository {
   async triggerTopicBehavioralPatterns(params: TriggerTopicBehavioralPatternsParams): Promise<TriggerTopicBehavioralPatternsResult> {
     const response = await this.httpClient.post<TriggerBehavioralPatternsApiResponse>(
       `audiences/${params.audienceId}/topics/${params.topicId}/behavioral-patterns/refresh`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
+    }
+  }
+
+  async getTopicSentiment(params: GetTopicSentimentParams): Promise<GetTopicSentimentResult> {
+    const response = await this.httpClient.get<TopicSentimentApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/sentiment`
+    )
+
+    const status = response.status as TopicSentimentStatus
+
+    if (status !== 'ready' || !response.overall_sentiment) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: new TopicSentiment({
+        analysisId: response.analysis_id ?? '',
+        topicId: response.topic_id ?? params.topicId,
+        topicName: response.topic_name ?? '',
+        completedAt: response.completed_at ?? '',
+        overallSentiment: {
+          score: response.overall_sentiment.score,
+          positiveRatio: response.overall_sentiment.positive_ratio,
+          negativeRatio: response.overall_sentiment.negative_ratio,
+          neutralRatio: response.overall_sentiment.neutral_ratio,
+        },
+        emotionalMap: (response.emotional_map ?? []).map((e) => ({
+          emotion: e.emotion,
+          intensity: e.intensity,
+          percentage: e.percentage,
+          example: e.example,
+        })),
+        sentimentByCommunity: (response.sentiment_by_community ?? []).map((c) => ({
+          community: c.community,
+          positive: c.positive,
+          negative: c.negative,
+          neutral: c.neutral,
+          dominantEmotion: c.dominant_emotion,
+        })),
+        sentimentBySubtopic: (response.sentiment_by_subtopic ?? []).map((s) => ({
+          subtopic: s.subtopic,
+          sentiment: s.sentiment,
+          score: s.score,
+          keyDriver: s.key_driver,
+        })),
+        sentimentDrivers: {
+          positive: (response.sentiment_drivers?.positive ?? []).map((d) => ({
+            driver: d.driver,
+            frequency: d.frequency,
+            mentions: d.mentions,
+            exampleQuote: d.example_quote,
+          })),
+          negative: (response.sentiment_drivers?.negative ?? []).map((d) => ({
+            driver: d.driver,
+            frequency: d.frequency,
+            mentions: d.mentions,
+            exampleQuote: d.example_quote,
+          })),
+        },
+        tensionPoints: (response.tension_points ?? []).map((t) => ({
+          topic: t.topic,
+          forRatio: t.for_ratio,
+          againstRatio: t.against_ratio,
+          intensity: t.intensity,
+          summary: t.summary,
+        })),
+        painPoints: (response.pain_points ?? []).map((p) => ({
+          pain: p.pain,
+          severity: p.severity,
+          frequency: p.frequency,
+          communities: p.communities,
+          verbatim: p.verbatim,
+        })),
+        sentimentOpportunities: (response.sentiment_opportunities ?? []).map((o) => ({
+          opportunity: o.opportunity,
+          basedOn: o.based_on,
+          confidence: o.confidence,
+          targetAudience: o.target_audience,
+        })),
+      }),
+    }
+  }
+
+  async triggerTopicSentiment(params: TriggerTopicSentimentParams): Promise<TriggerTopicSentimentResult> {
+    const response = await this.httpClient.post<TriggerSentimentApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/sentiment/refresh`
     )
     return {
       status: response.status,
