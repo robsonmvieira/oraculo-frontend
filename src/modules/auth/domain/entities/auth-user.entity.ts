@@ -7,6 +7,7 @@ interface AuthUserProps {
   bio?: string | null
   locale?: string | null
   phone_number?: string | null
+  preferred_language?: string | null
 }
 
 export class AuthUser {
@@ -18,8 +19,9 @@ export class AuthUser {
   private readonly bio: string | null
   private readonly locale: string | null
   private readonly phoneNumber: string | null
+  private readonly preferredLanguage: string | null
 
-  constructor({ id, email, full_name, is_active, is_superuser, bio, locale, phone_number }: AuthUserProps) {
+  constructor({ id, email, full_name, is_active, is_superuser, bio, locale, phone_number, preferred_language }: AuthUserProps) {
     this.id = id
     this.email = email
     this.fullName = full_name
@@ -28,6 +30,7 @@ export class AuthUser {
     this.bio = bio ?? null
     this.locale = locale ?? null
     this.phoneNumber = phone_number ?? null
+    this.preferredLanguage = preferred_language ?? null
   }
 
   getId(): string {
@@ -62,6 +65,10 @@ export class AuthUser {
     return this.phoneNumber
   }
 
+  getPreferredLanguage(): string | null {
+    return this.preferredLanguage
+  }
+
   toJSON() {
     return {
       id: this.id,
@@ -72,6 +79,7 @@ export class AuthUser {
       bio: this.bio,
       locale: this.locale,
       phone_number: this.phoneNumber,
+      preferred_language: this.preferredLanguage,
     }
   }
 }

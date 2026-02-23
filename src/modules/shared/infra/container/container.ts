@@ -11,8 +11,8 @@ import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-ca
 import type { IBrowseCommunitiesUseCase } from '@/modules/community/domain/use-cases'
 import { AuthRepository } from '@/modules/auth/infra/repositories'
 import type { IAuthRepository } from '@/modules/auth/domain/repositories'
-import { LoginUseCase, RegisterUseCase, RefreshTokenUseCase, GetMeUseCase, UpdateProfileUseCase } from '@/modules/auth/application/use-cases'
-import type { ILoginUseCase, IRegisterUseCase, IRefreshTokenUseCase, IGetMeUseCase, IUpdateProfileUseCase } from '@/modules/auth/domain/use-cases'
+import { LoginUseCase, RegisterUseCase, RefreshTokenUseCase, GetMeUseCase, UpdateProfileUseCase, UpdateLanguageUseCase } from '@/modules/auth/application/use-cases'
+import type { ILoginUseCase, IRegisterUseCase, IRefreshTokenUseCase, IGetMeUseCase, IUpdateProfileUseCase, IUpdateLanguageUseCase } from '@/modules/auth/domain/use-cases'
 
 const container = new Container()
 
@@ -136,6 +136,11 @@ container.bind<IGetMeUseCase>(TYPES.GetMeUseCase).toDynamicValue(() => {
 container.bind<IUpdateProfileUseCase>(TYPES.UpdateProfileUseCase).toDynamicValue(() => {
   const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
   return new UpdateProfileUseCase(authRepository)
+}).inSingletonScope()
+
+container.bind<IUpdateLanguageUseCase>(TYPES.UpdateLanguageUseCase).toDynamicValue(() => {
+  const authRepository = container.get<IAuthRepository>(TYPES.AuthRepository)
+  return new UpdateLanguageUseCase(authRepository)
 }).inSingletonScope()
 
 export { container }

@@ -19,6 +19,7 @@ interface AuthUserResponse {
   bio?: string | null
   locale?: string | null
   phone_number?: string | null
+  preferred_language?: string | null
 }
 
 export class AuthRepository implements IAuthRepository {
@@ -55,6 +56,13 @@ export class AuthRepository implements IAuthRepository {
 
   async updateProfile(input: UpdateProfileInput): Promise<AuthUser> {
     const response = await this.httpClient.patch<AuthUserResponse>('auth/me/profile', input)
+    return new AuthUser(response)
+  }
+
+  async updateLanguage(language: string): Promise<AuthUser> {
+    const response = await this.httpClient.patch<AuthUserResponse>('auth/me/language', {
+      preferred_language: language,
+    })
     return new AuthUser(response)
   }
 }

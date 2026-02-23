@@ -5,6 +5,7 @@ import { useAuthStore } from '@/modules/auth'
 import {
   ProfileCard,
   PersonalInfoCard,
+  LanguagePreferenceCard,
   ConnectedAccountsCard,
   RecentActivityCard,
   PublicProfileModal,
@@ -69,6 +70,7 @@ export function ProfilePage() {
 
         <div ref={rightColRef} className="space-y-6">
           {user && <PersonalInfoCard user={user} />}
+          {user && <LanguagePreferenceCard user={user} />}
           <ConnectedAccountsCard accounts={connectedAccounts} />
           <RecentActivityCard activities={recentActivity} />
         </div>

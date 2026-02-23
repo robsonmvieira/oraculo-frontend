@@ -8,4 +8,5 @@ export interface IAuthRepository {
   refreshToken(refreshToken: string): Promise<AuthTokens>
   getMe(): Promise<AuthUser>
   updateProfile(input: UpdateProfileInput): Promise<AuthUser>
+  updateLanguage(language: string): Promise<AuthUser>
 }
