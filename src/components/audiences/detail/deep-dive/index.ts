@@ -1,7 +1,6 @@
 export { DeepDiveSummarySection } from './DeepDiveSummarySection'
 export { DeepDiveSubtopicsSection } from './DeepDiveSubtopicsSection'
 export { DeepDiveQuestionsSection } from './DeepDiveQuestionsSection'
-export { DeepDiveSentimentSection } from './DeepDiveSentimentSection'
 export { DeepDiveProductsSection } from './DeepDiveProductsSection'
 export { DeepDivePostsSection } from './DeepDivePostsSection'
 export { DeepDiveInsightsSection } from './DeepDiveInsightsSection'
