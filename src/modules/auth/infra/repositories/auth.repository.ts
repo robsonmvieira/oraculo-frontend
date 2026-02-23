@@ -2,6 +2,7 @@ import type { HttpClient } from '@/modules/shared'
 import { AuthTokens } from '../../domain/entities/auth-tokens.entity'
 import { AuthUser } from '../../domain/entities/auth-user.entity'
 import type { IAuthRepository } from '../../domain/repositories/auth.repository'
+import type { UpdateProfileInput } from '../../domain/use-cases/update-profile.use-case'
 
 interface AuthTokensResponse {
   access_token: string
@@ -15,6 +16,9 @@ interface AuthUserResponse {
   full_name: string
   is_active: boolean
   is_superuser: boolean
+  bio?: string | null
+  locale?: string | null
+  phone_number?: string | null
 }
 
 export class AuthRepository implements IAuthRepository {
@@ -46,6 +50,11 @@ export class AuthRepository implements IAuthRepository {
 
   async getMe(): Promise<AuthUser> {
     const response = await this.httpClient.get<AuthUserResponse>('auth/me')
+    return new AuthUser(response)
+  }
+
+  async updateProfile(input: UpdateProfileInput): Promise<AuthUser> {
+    const response = await this.httpClient.patch<AuthUserResponse>('auth/me/profile', input)
     return new AuthUser(response)
   }
 }
