@@ -9,6 +9,8 @@ export type NotificationType =
   | 'keyword_analysis_failed'
   | 'topic_analysis_complete'
   | 'topic_analysis_failed'
+  | 'sentiment_complete'
+  | 'sentiment_failed'
 
 export interface NotificationMetadata {
   audience_id?: string
