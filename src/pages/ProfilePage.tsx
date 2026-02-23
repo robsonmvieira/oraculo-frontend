@@ -18,10 +18,13 @@ export function ProfilePage() {
   const prefersReducedMotion = useReducedMotion()
   const { user } = useAuthStore()
 
-  const currentUser = useMemo(() => ({
+  const profileCardUser = useMemo(() => ({
     ...profileUser,
     fullName: user?.getFullName() || profileUser.fullName,
     email: user?.getEmail() || profileUser.email,
+    bio: user?.getBio() || profileUser.bio,
+    location: user?.getLocale() || profileUser.location,
+    phone: user?.getPhoneNumber() || profileUser.phone,
     role: user?.getIsSuperuser() ? 'Admin' : 'Member',
   }), [user])
 
@@ -59,13 +62,13 @@ export function ProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6">
         <div ref={leftColRef}>
           <ProfileCard
-            user={currentUser}
+            user={profileCardUser}
             onViewPublicProfile={() => setIsPublicProfileOpen(true)}
           />
         </div>
 
         <div ref={rightColRef} className="space-y-6">
-          <PersonalInfoCard user={currentUser} />
+          {user && <PersonalInfoCard user={user} />}
           <ConnectedAccountsCard accounts={connectedAccounts} />
           <RecentActivityCard activities={recentActivity} />
         </div>
@@ -74,7 +77,7 @@ export function ProfilePage() {
       <PublicProfileModal
         isOpen={isPublicProfileOpen}
         onClose={() => setIsPublicProfileOpen(false)}
-        user={currentUser}
+        user={profileCardUser}
       />
     </>
   )

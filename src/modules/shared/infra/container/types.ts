@@ -23,4 +23,5 @@ export const TYPES = {
   RegisterUseCase: Symbol.for('RegisterUseCase'),
   RefreshTokenUseCase: Symbol.for('RefreshTokenUseCase'),
   GetMeUseCase: Symbol.for('GetMeUseCase'),
+  UpdateProfileUseCase: Symbol.for('UpdateProfileUseCase'),
 } as const
