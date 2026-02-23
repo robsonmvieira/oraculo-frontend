@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type { Subtopic } from '@/modules/audience/domain/entities/TopicDeepDive.entity'
 
 export interface DeepDiveSubtopicsSectionProps {
@@ -5,12 +6,14 @@ export interface DeepDiveSubtopicsSectionProps {
 }
 
 export function DeepDiveSubtopicsSection({ subtopics }: Readonly<DeepDiveSubtopicsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (subtopics.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Subtopics
+        {t('deepDive.subtopics')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{subtopics.length}</span>
       </h4>
       <div className="grid grid-cols-1 gap-3">
@@ -24,7 +27,7 @@ export function DeepDiveSubtopicsSection({ subtopics }: Readonly<DeepDiveSubtopi
                 {subtopic.name}
               </span>
               <span className="text-xs text-gray-500 dark:text-zinc-400">
-                {subtopic.postCount} posts
+                {t('deepDive.posts', { count: subtopic.postCount })}
               </span>
             </div>
             <p className="text-xs text-gray-600 dark:text-zinc-300 leading-relaxed">

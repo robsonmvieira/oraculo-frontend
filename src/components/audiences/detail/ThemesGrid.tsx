@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Flame,
   Trophy,
@@ -43,6 +44,7 @@ export function ThemesGrid({
   selectedThemeId,
   onThemeSelect,
 }: Readonly<ThemesGridProps>) {
+  const { t } = useTranslation('audiences')
   const scoringRef = useRef<HTMLDivElement>(null)
   const aiTaggedRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -92,7 +94,7 @@ export function ThemesGrid({
       {/* Scoring themes */}
       <div>
         <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-          Scoring themes
+          {t('themes.scoringThemes')}
         </h3>
         <div ref={scoringRef} className="grid grid-cols-2 gap-4">
           {scoringThemes.map((theme) => {
@@ -130,7 +132,7 @@ export function ThemesGrid({
       {/* AI-tagged themes */}
       <div>
         <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-          AI-tagged themes
+          {t('themes.aiTaggedThemes')}
         </h3>
         <div ref={aiTaggedRef} className="grid grid-cols-2 gap-4">
           {displayedAiThemes.map((theme) => {
@@ -170,7 +172,7 @@ export function ThemesGrid({
         </div>
         {remainingCount > 0 && (
           <button className="cursor-pointer w-full mt-4 py-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300 transition-colors">
-            + {remainingCount} more
+            {t('themes.showMore', { count: remainingCount })}
           </button>
         )}
       </div>
@@ -178,11 +180,11 @@ export function ThemesGrid({
       {/* Your Bookmarks */}
       <div>
         <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-          Your Bookmarks
+          {t('themes.yourBookmarks')}
         </h3>
         <div className="flex items-center gap-2 text-gray-500 dark:text-zinc-400">
           <Bookmark className="w-4 h-4" />
-          <span className="text-sm">No posts bookmarked yet</span>
+          <span className="text-sm">{t('themes.noBookmarks')}</span>
         </div>
       </div>
     </div>

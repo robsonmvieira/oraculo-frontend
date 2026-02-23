@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Search, ChevronDown, TrendingUp, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
@@ -81,6 +82,7 @@ export function TopicsTable({
   hasMore,
   isLoadingMore,
 }: Readonly<TopicsTableProps>) {
+  const { t } = useTranslation('audiences')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('growth')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -108,9 +110,9 @@ export function TopicsTable({
   }, [hasMore, isLoadingMore, onLoadMore])
 
   const sortOptions: { value: SortOption; label: string }[] = [
-    { value: 'growth', label: 'Growth' },
-    { value: 'frequency', label: 'Frequency' },
-    { value: 'name', label: 'Name' },
+    { value: 'growth', label: t('topics.sortByGrowth') },
+    { value: 'frequency', label: t('topics.sortByFrequency') },
+    { value: 'name', label: t('topics.sortByName') },
   ]
 
   const filteredTopics = topics.filter((topic) =>
@@ -152,7 +154,7 @@ export function TopicsTable({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-gray-900 dark:text-white">
-            Popular Topics
+            {t('topics.popularTopics')}
           </h3>
           <span className="text-sm text-gray-500 dark:text-zinc-400">
             {totalCount}
@@ -163,7 +165,7 @@ export function TopicsTable({
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="cursor-pointer flex items-center gap-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-white transition-colors"
           >
-            Sort by: {sortOptions.find((o) => o.value === sortBy)?.label}
+            {t('topics.sortBy', { label: sortOptions.find((o) => o.value === sortBy)?.label })}
             <ChevronDown className="w-4 h-4" />
           </button>
           {isDropdownOpen && (
@@ -200,7 +202,7 @@ export function TopicsTable({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-zinc-500" />
           <input
             type="text"
-            placeholder="Search topics"
+            placeholder={t('topics.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-lime/50 focus:border-lime transition-colors"
@@ -240,13 +242,13 @@ export function TopicsTable({
                     <span className="text-lime font-semibold">
                       {topic.frequency} / {topic.frequencyUnit}
                     </span>
-                    <span className="text-gray-500 dark:text-zinc-400"> in </span>
+                    <span className="text-gray-500 dark:text-zinc-400">{t('topics.in')}</span>
                     <span className="text-gray-700 dark:text-zinc-300">
                       {topic.subreddits.slice(0, 2).join(', ')}
                     </span>
                     {topic.subreddits.length > 2 && (
                       <span className="text-gray-400 dark:text-zinc-500">
-                        , and {topic.subreddits.length - 2} others
+                        {t('topics.andOthers', { count: topic.subreddits.length - 2 })}
                       </span>
                     )}
                   </div>
@@ -258,7 +260,7 @@ export function TopicsTable({
 
         {sortedTopics.length === 0 && (
           <div className="py-8 text-center text-gray-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700">
-            No topics found
+            {t('topics.noTopicsFound')}
           </div>
         )}
 

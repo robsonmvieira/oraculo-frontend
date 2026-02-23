@@ -1,4 +1,5 @@
 import { type RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { SubredditsList } from './SubredditsList'
@@ -36,16 +37,18 @@ export function SearchTabContent({
   totalTopics,
   onTopicClick,
 }: Readonly<SearchTabContentProps>) {
+  const { t } = useTranslation('audiences')
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-            Keyword Search
+            {t('search.keywordSearch')}
           </label>
           <Input
             icon
-            placeholder="Keyword search in audience"
+            placeholder={t('search.searchPlaceholder')}
             className="max-w-2xl"
           />
         </div>
@@ -61,7 +64,7 @@ export function SearchTabContent({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-gray-900 dark:text-white">
-                Subreddits
+                {t('subreddits.title')}
               </h3>
               <span className="text-sm text-gray-500 dark:text-zinc-400">
                 {communitiesCount}
@@ -73,7 +76,7 @@ export function SearchTabContent({
                 onClick={onAddCommunity}
               >
                 <Plus className="w-4 h-4" />
-                Add
+                {t('detail.add')}
               </button>
             )}
           </div>
@@ -87,7 +90,7 @@ export function SearchTabContent({
         <div className="flex flex-col">
           <div className="flex items-center gap-2 mb-3">
             <h3 className="font-semibold text-gray-900 dark:text-white">
-              Themes
+              {t('themes.title')}
             </h3>
             <span className="text-sm text-gray-500 dark:text-zinc-400">
               0
@@ -102,7 +105,7 @@ export function SearchTabContent({
         <div className="flex flex-col">
           <div className="flex items-center gap-2 mb-3">
             <h3 className="font-semibold text-gray-900 dark:text-white">
-              Topics
+              {t('topics.title')}
             </h3>
             <span className="text-sm text-gray-500 dark:text-zinc-400">
               {totalTopics}

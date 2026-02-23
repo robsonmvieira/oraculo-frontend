@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Flame,
   Trophy,
@@ -27,6 +28,7 @@ const themeIcons: Record<string, typeof Flame> = {
 }
 
 export function ThemesList({ themes, totalCount, showHeader = true }: Readonly<ThemesListProps>) {
+  const { t } = useTranslation('audiences')
   const listRef = useRef<HTMLUListElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -54,7 +56,7 @@ export function ThemesList({ themes, totalCount, showHeader = true }: Readonly<T
     <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 cursor-pointer hover:border-gray-200 dark:hover:border-zinc-700 border border-transparent transition-colors h-full flex flex-col">
       {showHeader && (
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="font-semibold text-gray-900 dark:text-white">Themes</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white">{t('themes.title')}</h3>
           <span className="text-sm text-gray-500 dark:text-zinc-400">
             {totalCount}
           </span>
@@ -87,7 +89,7 @@ export function ThemesList({ themes, totalCount, showHeader = true }: Readonly<T
 
       {remainingCount > 0 && (
         <button className="cursor-pointer w-full mt-3 py-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300 transition-colors">
-          + {remainingCount} more
+          {t('themes.showMore', { count: remainingCount })}
         </button>
       )}
     </div>

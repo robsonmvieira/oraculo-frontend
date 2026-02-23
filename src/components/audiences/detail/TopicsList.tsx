@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TrendingUp, Tag } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { cn } from '@/lib/utils'
@@ -13,6 +14,7 @@ export interface TopicsListProps {
 }
 
 export function TopicsList({ topics, totalCount, showHeader = true, onTopicClick }: Readonly<TopicsListProps>) {
+  const { t } = useTranslation('audiences')
   const listRef = useRef<HTMLUListElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -40,7 +42,7 @@ export function TopicsList({ topics, totalCount, showHeader = true, onTopicClick
     <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 cursor-pointer hover:border-gray-200 dark:hover:border-zinc-700 border border-transparent transition-colors h-full flex flex-col">
       {showHeader && (
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="font-semibold text-gray-900 dark:text-white">Topics</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white">{t('topics.title')}</h3>
           <span className="text-sm text-gray-500 dark:text-zinc-400">
             {totalCount}
           </span>
@@ -63,10 +65,7 @@ export function TopicsList({ topics, totalCount, showHeader = true, onTopicClick
                   {topic.getName()}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-zinc-400">
-                  {topic.getPostCount()} posts about{' '}
-                  <span className="font-semibold text-gray-700 dark:text-zinc-300">
-                    {topic.getName()}
-                  </span>
+                  {t('topicsList.postsAbout', { count: topic.getPostCount(), topic: topic.getName() })}
                 </p>
               </div>
               <div
@@ -88,7 +87,7 @@ export function TopicsList({ topics, totalCount, showHeader = true, onTopicClick
           onClick={onTopicClick}
           className="cursor-pointer w-full mt-3 py-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300 transition-colors"
         >
-          + {remainingCount} more
+          {t('topics.showMore', { count: remainingCount })}
         </button>
       )}
     </div>

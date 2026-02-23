@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Lightbulb } from 'lucide-react'
 import type { WorkaroundPattern } from '@/modules/audience/domain/entities/TopicBehavioralPattern.entity'
 
@@ -12,12 +13,14 @@ const frequencyColors: Record<string, string> = {
 }
 
 export function WorkaroundPatternsSection({ patterns }: Readonly<WorkaroundPatternsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (patterns.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Workarounds
+        {t('topicDetail.workarounds')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{patterns.length}</span>
       </h4>
       <div className="space-y-3">
@@ -34,7 +37,7 @@ export function WorkaroundPatternsSection({ patterns }: Readonly<WorkaroundPatte
                 </p>
               </div>
               <span className={`text-[10px] shrink-0 ${frequencyColors[pattern.frequency] ?? frequencyColors.low}`}>
-                {pattern.frequency}
+                {t(`behavioralPatterns.frequency.${pattern.frequency}`)}
               </span>
             </div>
             <p className="text-[11px] text-gray-400 dark:text-zinc-500 leading-relaxed italic mt-2 ml-5.5">

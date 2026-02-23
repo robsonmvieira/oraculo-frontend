@@ -50,7 +50,7 @@
   },
   "subreddits": {
     "title": "Subreddits",
-    "members": "{{count}} membros",
+    "members": "{{formattedCount}} membros",
     "sortByLargest": "Maiores",
     "sortBySmallest": "Menores",
     "sortByMostActive": "Mais Ativos",
@@ -166,6 +166,72 @@
     "noCommunitiesFound": "Nenhuma comunidade encontrada para \"{{query}}\"",
     "communitiesSelected_one": "{{count}} comunidade selecionada",
     "communitiesSelected_other": "{{count}} comunidades selecionadas"
+  },
+  "topicsList": {
+    "postsAbout": "{{count}} posts sobre {{topic}}"
+  },
+  "deepDive": {
+    "summary": "Resumo",
+    "subtopics": "Subtópicos",
+    "posts": "{{count}} posts",
+    "commonQuestions": "Perguntas Frequentes",
+    "sentiment": "Sentimento",
+    "positive": "Positivo",
+    "negative": "Negativo",
+    "neutral": "Neutro",
+    "highlights": "Destaques",
+    "mentionedProducts": "Produtos Mencionados",
+    "representativePosts": "Posts Representativos",
+    "actionableInsights": "Insights Acionáveis",
+    "confidence": "confiança {{level}}",
+    "sentimentLabel": {
+      "positive": "positivo",
+      "negative": "negativo",
+      "neutral": "neutro",
+      "mixed": "misto"
+    },
+    "insightType": {
+      "opportunity": "oportunidade",
+      "gap": "lacuna",
+      "risk": "risco",
+      "trend": "tendência"
+    },
+    "severity": {
+      "high": "alto",
+      "medium": "médio",
+      "low": "baixo"
+    }
+  },
+  "behavioralPatterns": {
+    "summary": "Resumo",
+    "sentiment": {
+      "positive": "positivo",
+      "negative": "negativo",
+      "mixed": "misto",
+      "neutral": "neutro"
+    },
+    "frequency": {
+      "high": "alto",
+      "moderate": "moderado",
+      "low": "baixo"
+    },
+    "severity": {
+      "high": "alto",
+      "medium": "médio",
+      "low": "baixo"
+    },
+    "category": {
+      "pricing": "preço",
+      "usability": "usabilidade",
+      "performance": "desempenho",
+      "support": "suporte"
+    },
+    "signalType": {
+      "tool_request": "solicitação de ferramenta",
+      "feature_request": "solicitação de recurso",
+      "integration_request": "solicitação de integração",
+      "content_request": "solicitação de conteúdo"
+    }
   },
   "toast": {
     "created": "Audiência criada",

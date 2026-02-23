@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TrendingUp, Plus } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { cn } from '@/lib/utils'
@@ -31,6 +32,7 @@ export function SubredditsList({
   onSubredditClick,
   showHeader = true,
 }: Readonly<SubredditsListProps>) {
+  const { t } = useTranslation('audiences')
   const listRef = useRef<HTMLUListElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -60,7 +62,7 @@ export function SubredditsList({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <h3 className="font-semibold text-gray-900 dark:text-white">
-              Subreddits
+              {t('subreddits.title')}
             </h3>
             <span className="text-sm text-gray-500 dark:text-zinc-400">
               {totalCount}
@@ -71,7 +73,7 @@ export function SubredditsList({
             className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 dark:text-zinc-400 hover:text-lime transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Add
+            {t('detail.add')}
           </button>
         </div>
       )}
@@ -94,7 +96,7 @@ export function SubredditsList({
                 {subreddit.name}
               </p>
               <p className="text-xs text-gray-500 dark:text-zinc-400">
-                {formatNumber(subreddit.members)} members
+                {t('subreddits.members', { formattedCount: formatNumber(subreddit.members) })}
               </p>
             </div>
             <div
@@ -106,7 +108,7 @@ export function SubredditsList({
               )}
             >
               <TrendingUp className="w-3 h-3" />
-              <span>{subreddit.monthlyGrowth.toFixed(1)}% / month</span>
+              <span>{subreddit.monthlyGrowth.toFixed(1)}{t('subreddits.monthlyGrowth')}</span>
             </div>
           </li>
         ))}
@@ -114,7 +116,7 @@ export function SubredditsList({
 
       {remainingCount > 0 && (
         <button className="cursor-pointer w-full mt-3 py-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300 transition-colors">
-          + {remainingCount} more
+          {t('subreddits.showMore', { count: remainingCount })}
         </button>
       )}
     </div>

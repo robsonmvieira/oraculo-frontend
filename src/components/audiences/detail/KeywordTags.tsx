@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Info } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
@@ -8,6 +9,8 @@ export interface KeywordTagsProps {
 }
 
 export function KeywordTags({ keywords, isLoading }: Readonly<KeywordTagsProps>) {
+  const { t } = useTranslation('audiences')
+
   return (
     <div className="flex items-center gap-2 flex-wrap">
       <Badge
@@ -16,7 +19,7 @@ export function KeywordTags({ keywords, isLoading }: Readonly<KeywordTagsProps>)
         className="cursor-pointer hover:bg-gray-200 dark:hover:bg-zinc-700"
       >
         <Info className="w-3 h-3" />
-        Search Tips
+        {t('search.searchTips')}
       </Badge>
       {isLoading ? (
         <div className="flex items-center gap-2">

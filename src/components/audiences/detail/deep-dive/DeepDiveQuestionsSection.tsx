@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { HelpCircle } from 'lucide-react'
 import type { CommonQuestion } from '@/modules/audience/domain/entities/TopicDeepDive.entity'
 
@@ -12,12 +13,14 @@ const frequencyColors: Record<string, string> = {
 }
 
 export function DeepDiveQuestionsSection({ questions }: Readonly<DeepDiveQuestionsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (questions.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Common Questions
+        {t('deepDive.commonQuestions')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{questions.length}</span>
       </h4>
       <ul className="space-y-3">
@@ -30,7 +33,7 @@ export function DeepDiveQuestionsSection({ questions }: Readonly<DeepDiveQuestio
                   {q.question}
                 </span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${frequencyColors[q.frequency] ?? frequencyColors.low}`}>
-                  {q.frequency}
+                  {t(`deepDive.severity.${q.frequency}`)}
                 </span>
               </div>
               {q.exampleContext && (

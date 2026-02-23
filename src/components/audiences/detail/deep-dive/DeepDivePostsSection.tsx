@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ExternalLink, ArrowUp } from 'lucide-react'
 import type { RepresentativePost } from '@/modules/audience/domain/entities/TopicDeepDive.entity'
 
@@ -6,12 +7,14 @@ export interface DeepDivePostsSectionProps {
 }
 
 export function DeepDivePostsSection({ posts }: Readonly<DeepDivePostsSectionProps>) {
+  const { t } = useTranslation('audiences')
+
   if (posts.length === 0) return null
 
   return (
     <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
       <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-3">
-        Representative Posts
+        {t('deepDive.representativePosts')}
         <span className="ml-2 text-xs text-gray-500 dark:text-zinc-400">{posts.length}</span>
       </h4>
       <div className="space-y-3">
