@@ -17,11 +17,13 @@ import type { GetTopicBehavioralPatternsParams, GetTopicBehavioralPatternsResult
 import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from '../../domain/use-cases/trigger-topic-behavioral-patterns.use-case'
 import type { GetTopicSentimentParams, GetTopicSentimentResult, TopicSentimentStatus } from '../../domain/use-cases/get-topic-sentiment.use-case'
 import type { TriggerTopicSentimentParams, TriggerTopicSentimentResult } from '../../domain/use-cases/trigger-topic-sentiment.use-case'
+import type { AskTopicParams, AskTopicResult } from '../../domain/use-cases/ask-topic.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
 import { TopicBehavioralPattern } from '../../domain/entities/TopicBehavioralPattern.entity'
 import { TopicSentiment } from '../../domain/entities/TopicSentiment.entity'
+import { TopicAskResponse } from '../../domain/entities/TopicAskResponse.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -264,6 +266,15 @@ interface TriggerSentimentApiResponse {
   status: string
   analysis_id: string
   message?: string
+}
+
+interface TopicAskApiResponse {
+  answer: string
+  context_quality: string
+  sources_used: string[]
+  cached: boolean
+  topic_name: string
+  suggestion: string | null
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -674,5 +685,21 @@ export class AudienceRepository implements IAudienceRepository {
       status: response.status,
       analysisId: response.analysis_id,
     }
+  }
+
+  async askTopic(params: AskTopicParams): Promise<AskTopicResult> {
+    const response = await this.httpClient.post<TopicAskApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/ask`,
+      { question: params.question }
+    )
+
+    return new TopicAskResponse({
+      answer: response.answer,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      sourcesUsed: response.sources_used,
+      cached: response.cached,
+      topicName: response.topic_name,
+      suggestion: response.suggestion,
+    })
   }
 }

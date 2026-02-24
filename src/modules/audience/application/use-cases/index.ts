@@ -17,3 +17,4 @@ export { GetTopicBehavioralPatternsUseCase } from './get-topic-behavioral-patter
 export { TriggerTopicBehavioralPatternsUseCase } from './trigger-topic-behavioral-patterns-use-case'
 export { GetTopicSentimentUseCase } from './get-topic-sentiment-use-case'
 export { TriggerTopicSentimentUseCase } from './trigger-topic-sentiment-use-case'
+export { AskTopicUseCase } from './ask-topic-use-case'

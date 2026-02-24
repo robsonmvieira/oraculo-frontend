@@ -149,7 +149,17 @@
     "negativeDrivers": "Negative Drivers",
     "tensionPoints": "Tension Points",
     "painPoints": "Pain Points",
-    "sentimentOpportunities": "Opportunities"
+    "sentimentOpportunities": "Opportunities",
+    "askTitle": "Ask about this topic",
+    "askPlaceholder": "Ask a question about this topic...",
+    "askSend": "Send",
+    "askSending": "Thinking...",
+    "askError": "Failed to get an answer. Please try again.",
+    "askContextRich": "Rich context",
+    "askContextLimited": "Limited context",
+    "askCached": "Cached",
+    "askSuggestion": "Suggestion",
+    "askMinLength": "Question must be at least 3 characters"
   },
   "tabs": {
     "search": "Search",

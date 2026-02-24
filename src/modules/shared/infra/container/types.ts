@@ -20,6 +20,7 @@ export const TYPES = {
   TriggerTopicBehavioralPatternsUseCase: Symbol.for('TriggerTopicBehavioralPatternsUseCase'),
   GetTopicSentimentUseCase: Symbol.for('GetTopicSentimentUseCase'),
   TriggerTopicSentimentUseCase: Symbol.for('TriggerTopicSentimentUseCase'),
+  AskTopicUseCase: Symbol.for('AskTopicUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),
