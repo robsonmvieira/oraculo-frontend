@@ -19,7 +19,7 @@ export function Audiences() {
   const { openModal, closeModal } = useCreateAudienceStore()
   const createAudienceMutation = useCreateAudience()
 
-  const { data: userAudiencesData } = useListUserAudiences()
+  const { data: userAudiencesData, isLoading: isLoadingUserAudiences } = useListUserAudiences()
   const { data: templates } = useFetchDefaultAudiences()
 
   const userAudiences = (userAudiencesData ?? []).map((audience) => ({
@@ -108,6 +108,7 @@ export function Audiences() {
       <UserAudiencesSection
         audiences={userAudiences}
         viewMode={viewMode}
+        isLoading={isLoadingUserAudiences}
         onAddClick={openModal}
         onSaveClick={handleSaveClick}
         onShareClick={handleShareClick}
@@ -120,7 +121,7 @@ export function Audiences() {
         onSaveClick={handleSaveClick}
         onShareClick={handleShareClick}
         gridRef={templatesGridRef}
-        showAddCard={userAudiences.length === 0}
+        showAddCard={!isLoadingUserAudiences && userAudiences.length === 0}
         onAddClick={openModal}
       />
 
