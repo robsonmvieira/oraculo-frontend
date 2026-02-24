@@ -23,55 +23,9 @@ export interface TopicsTableProps {
   isLoadingMore?: boolean
 }
 
+import { SparkLine } from './SparkLine'
+
 type SortOption = 'growth' | 'frequency' | 'name'
-
-function Sparkline({ growth }: { growth: number }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const width = canvas.width
-    const height = canvas.height
-
-    ctx.clearRect(0, 0, width, height)
-
-    // Generate sparkline data based on growth
-    const points = 20
-    const data: number[] = []
-    let value = 30 + Math.random() * 20
-
-    for (let i = 0; i < points; i++) {
-      const trend = growth > 200 ? 0.6 : growth > 100 ? 0.55 : 0.5
-      value = value + (Math.random() - (1 - trend)) * 10
-      value = Math.max(10, Math.min(90, value))
-      data.push(value)
-    }
-
-    // Draw line
-    ctx.beginPath()
-    ctx.strokeStyle = '#4ade80' // green-400
-    ctx.lineWidth = 2
-
-    data.forEach((val, i) => {
-      const x = (i / (points - 1)) * width
-      const y = height - (val / 100) * height
-      if (i === 0) {
-        ctx.moveTo(x, y)
-      } else {
-        ctx.lineTo(x, y)
-      }
-    })
-
-    ctx.stroke()
-  }, [growth])
-
-  return <canvas ref={canvasRef} width={70} height={28} />
-}
 
 export function TopicsTable({
   topics,
@@ -169,8 +123,8 @@ export function TopicsTable({
             <ChevronDown className="w-4 h-4" />
           </button>
           {isDropdownOpen && (
-            <>
-              <div
+            <div>
+              <button
                 className="fixed inset-0 z-10"
                 onClick={() => setIsDropdownOpen(false)}
               />
@@ -192,7 +146,7 @@ export function TopicsTable({
                   </button>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -230,7 +184,7 @@ export function TopicsTable({
 
                 <div className="flex items-center gap-4 flex-1 justify-end">
                   <div className="w-[70px] shrink-0">
-                    <Sparkline growth={topic.growth} />
+                    <SparkLine growth={topic.growth} />
                   </div>
 
                   <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-16 shrink-0">
@@ -239,10 +193,10 @@ export function TopicsTable({
                   </div>
 
                   <div className="text-sm text-right shrink-0 truncate mr-2">
-                    <span className="text-lime font-semibold">
+                    <span className="text-lime font-semibold mr-2">
                       {topic.frequency} / {topic.frequencyUnit}
                     </span>
-                    <span className="text-gray-500 dark:text-zinc-400">{t('topics.in')}</span>
+                    <span className="text-gray-500 dark:text-zinc-400 mr-2">{t('topics.in')}</span>
                     <span className="text-gray-700 dark:text-zinc-300">
                       {topic.subreddits.slice(0, 2).join(', ')}
                     </span>
