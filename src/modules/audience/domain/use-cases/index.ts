@@ -18,3 +18,8 @@ export type { ITriggerTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatt
 export type { IGetTopicSentimentUseCase, GetTopicSentimentParams, GetTopicSentimentResult, TopicSentimentStatus } from './get-topic-sentiment.use-case'
 export type { ITriggerTopicSentimentUseCase, TriggerTopicSentimentParams, TriggerTopicSentimentResult } from './trigger-topic-sentiment.use-case'
 export type { IAskTopicUseCase, AskTopicParams, AskTopicResult } from './ask-topic.use-case'
+export type { IStartTopicChatUseCase, StartTopicChatParams, StartTopicChatResult } from './start-topic-chat.use-case'
+export type { ISendTopicChatMessageUseCase, SendTopicChatMessageParams, SendTopicChatMessageResult } from './send-topic-chat-message.use-case'
+export type { IListTopicChatConversationsUseCase, ListTopicChatConversationsParams, ListTopicChatConversationsResult } from './list-topic-chat-conversations.use-case'
+export type { IGetTopicChatMessagesUseCase, GetTopicChatMessagesParams, GetTopicChatMessagesResult } from './get-topic-chat-messages.use-case'
+export type { IArchiveTopicChatUseCase, ArchiveTopicChatParams, ArchiveTopicChatResult } from './archive-topic-chat.use-case'

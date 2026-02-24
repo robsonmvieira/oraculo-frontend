@@ -18,12 +18,19 @@ import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatter
 import type { GetTopicSentimentParams, GetTopicSentimentResult, TopicSentimentStatus } from '../../domain/use-cases/get-topic-sentiment.use-case'
 import type { TriggerTopicSentimentParams, TriggerTopicSentimentResult } from '../../domain/use-cases/trigger-topic-sentiment.use-case'
 import type { AskTopicParams, AskTopicResult } from '../../domain/use-cases/ask-topic.use-case'
+import type { StartTopicChatParams, StartTopicChatResult } from '../../domain/use-cases/start-topic-chat.use-case'
+import type { SendTopicChatMessageParams, SendTopicChatMessageResult } from '../../domain/use-cases/send-topic-chat-message.use-case'
+import type { ListTopicChatConversationsParams, ListTopicChatConversationsResult } from '../../domain/use-cases/list-topic-chat-conversations.use-case'
+import type { GetTopicChatMessagesParams, GetTopicChatMessagesResult } from '../../domain/use-cases/get-topic-chat-messages.use-case'
+import type { ArchiveTopicChatParams, ArchiveTopicChatResult } from '../../domain/use-cases/archive-topic-chat.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
 import { TopicBehavioralPattern } from '../../domain/entities/TopicBehavioralPattern.entity'
 import { TopicSentiment } from '../../domain/entities/TopicSentiment.entity'
 import { TopicAskResponse } from '../../domain/entities/TopicAskResponse.entity'
+import { TopicConversation } from '../../domain/entities/TopicConversation.entity'
+import { TopicConversationMessage } from '../../domain/entities/TopicConversationMessage.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -275,6 +282,55 @@ interface TopicAskApiResponse {
   cached: boolean
   topic_name: string
   suggestion: string | null
+}
+
+interface StartTopicChatApiResponse {
+  conversation_id: string
+  topic_name: string
+  context_quality: string
+  suggestion: string | null
+}
+
+interface SendTopicChatMessageApiResponse {
+  answer: string
+  context_quality: string
+  message_id: string
+  conversation_id: string
+  suggestion: string | null
+}
+
+interface TopicConversationApiItem {
+  conversation_id: string
+  title: string
+  context_quality: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+interface ListTopicChatConversationsApiResponse {
+  conversations: TopicConversationApiItem[]
+}
+
+interface TopicConversationMessageApiItem {
+  message_id: string
+  role: string
+  content: string
+  context_quality: string | null
+  created_at: string
+}
+
+interface GetTopicChatMessagesApiResponse {
+  conversation_id: string
+  title: string
+  context_quality: string
+  is_active: boolean
+  messages: TopicConversationMessageApiItem[]
+}
+
+interface ArchiveTopicChatApiResponse {
+  status: string
+  conversation_id: string
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -701,5 +757,76 @@ export class AudienceRepository implements IAudienceRepository {
       topicName: response.topic_name,
       suggestion: response.suggestion,
     })
+  }
+
+  async startTopicChat(params: StartTopicChatParams): Promise<StartTopicChatResult> {
+    const response = await this.httpClient.post<StartTopicChatApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/chat`
+    )
+    return {
+      conversationId: response.conversation_id,
+      topicName: response.topic_name,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      suggestion: response.suggestion,
+    }
+  }
+
+  async sendTopicChatMessage(params: SendTopicChatMessageParams): Promise<SendTopicChatMessageResult> {
+    const response = await this.httpClient.post<SendTopicChatMessageApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/chat/${params.conversationId}/messages`,
+      { question: params.question }
+    )
+    return {
+      answer: response.answer,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      messageId: response.message_id,
+      conversationId: response.conversation_id,
+      suggestion: response.suggestion,
+    }
+  }
+
+  async listTopicChatConversations(params: ListTopicChatConversationsParams): Promise<ListTopicChatConversationsResult> {
+    const response = await this.httpClient.get<ListTopicChatConversationsApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/chat`
+    )
+    return {
+      conversations: response.conversations.map((c) => new TopicConversation({
+        conversationId: c.conversation_id,
+        title: c.title,
+        contextQuality: c.context_quality as 'rich' | 'limited',
+        isActive: c.is_active,
+        createdAt: c.created_at,
+        updatedAt: c.updated_at,
+      })),
+    }
+  }
+
+  async getTopicChatMessages(params: GetTopicChatMessagesParams): Promise<GetTopicChatMessagesResult> {
+    const response = await this.httpClient.get<GetTopicChatMessagesApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/chat/${params.conversationId}/messages`
+    )
+    return {
+      conversationId: response.conversation_id,
+      title: response.title,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      isActive: response.is_active,
+      messages: response.messages.map((m) => new TopicConversationMessage({
+        messageId: m.message_id,
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+        contextQuality: m.context_quality as 'rich' | 'limited' | null,
+        createdAt: m.created_at,
+      })),
+    }
+  }
+
+  async archiveTopicChat(params: ArchiveTopicChatParams): Promise<ArchiveTopicChatResult> {
+    const response = await this.httpClient.delete<ArchiveTopicChatApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/chat/${params.conversationId}`
+    )
+    return {
+      status: response.status,
+      conversationId: response.conversation_id,
+    }
   }
 }
