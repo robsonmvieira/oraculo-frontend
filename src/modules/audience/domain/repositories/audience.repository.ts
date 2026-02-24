@@ -16,6 +16,11 @@ import type { TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatter
 import type { GetTopicSentimentParams, GetTopicSentimentResult } from "../use-cases/get-topic-sentiment.use-case";
 import type { TriggerTopicSentimentParams, TriggerTopicSentimentResult } from "../use-cases/trigger-topic-sentiment.use-case";
 import type { AskTopicParams, AskTopicResult } from "../use-cases/ask-topic.use-case";
+import type { StartTopicChatParams, StartTopicChatResult } from "../use-cases/start-topic-chat.use-case";
+import type { SendTopicChatMessageParams, SendTopicChatMessageResult } from "../use-cases/send-topic-chat-message.use-case";
+import type { ListTopicChatConversationsParams, ListTopicChatConversationsResult } from "../use-cases/list-topic-chat-conversations.use-case";
+import type { GetTopicChatMessagesParams, GetTopicChatMessagesResult } from "../use-cases/get-topic-chat-messages.use-case";
+import type { ArchiveTopicChatParams, ArchiveTopicChatResult } from "../use-cases/archive-topic-chat.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -38,4 +43,9 @@ export interface IAudienceRepository {
   getTopicSentiment(params: GetTopicSentimentParams): Promise<GetTopicSentimentResult>
   triggerTopicSentiment(params: TriggerTopicSentimentParams): Promise<TriggerTopicSentimentResult>
   askTopic(params: AskTopicParams): Promise<AskTopicResult>
+  startTopicChat(params: StartTopicChatParams): Promise<StartTopicChatResult>
+  sendTopicChatMessage(params: SendTopicChatMessageParams): Promise<SendTopicChatMessageResult>
+  listTopicChatConversations(params: ListTopicChatConversationsParams): Promise<ListTopicChatConversationsResult>
+  getTopicChatMessages(params: GetTopicChatMessagesParams): Promise<GetTopicChatMessagesResult>
+  archiveTopicChat(params: ArchiveTopicChatParams): Promise<ArchiveTopicChatResult>
 }

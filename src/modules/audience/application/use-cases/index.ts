@@ -18,3 +18,8 @@ export { TriggerTopicBehavioralPatternsUseCase } from './trigger-topic-behaviora
 export { GetTopicSentimentUseCase } from './get-topic-sentiment-use-case'
 export { TriggerTopicSentimentUseCase } from './trigger-topic-sentiment-use-case'
 export { AskTopicUseCase } from './ask-topic-use-case'
+export { StartTopicChatUseCase } from './start-topic-chat-use-case'
+export { SendTopicChatMessageUseCase } from './send-topic-chat-message-use-case'
+export { ListTopicChatConversationsUseCase } from './list-topic-chat-conversations-use-case'
+export { GetTopicChatMessagesUseCase } from './get-topic-chat-messages-use-case'
+export { ArchiveTopicChatUseCase } from './archive-topic-chat-use-case'

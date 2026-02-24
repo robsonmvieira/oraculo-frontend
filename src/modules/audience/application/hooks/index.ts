@@ -18,3 +18,8 @@ export { useTriggerTopicBehavioralPatterns } from './useTriggerTopicBehavioralPa
 export { useGetTopicSentiment, TOPIC_SENTIMENT_QUERY_KEY } from './useGetTopicSentiment'
 export { useTriggerTopicSentiment } from './useTriggerTopicSentiment'
 export { useAskTopic } from './useAskTopic'
+export { useStartTopicChat } from './useStartTopicChat'
+export { useSendTopicChatMessage } from './useSendTopicChatMessage'
+export { useListTopicChatConversations, TOPIC_CHAT_CONVERSATIONS_QUERY_KEY } from './useListTopicChatConversations'
+export { useGetTopicChatMessages, TOPIC_CHAT_MESSAGES_QUERY_KEY } from './useGetTopicChatMessages'
+export { useArchiveTopicChat } from './useArchiveTopicChat'
