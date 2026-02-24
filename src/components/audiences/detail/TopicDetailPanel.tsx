@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TrendingUp, Search, Sparkles, Heart, MessageSquare, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import { TrendingUp, Search, Sparkles, Heart, MessageSquare, MessageCircleQuestion, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
@@ -31,6 +31,7 @@ import {
   PainPointsSection,
   SentimentOpportunitiesSection,
 } from './sentiment'
+import { TopicAskSection } from './ask'
 
 export interface TopicSubreddit {
   name: string
@@ -60,6 +61,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const [deepDiveActive, setDeepDiveActive] = useState(false)
   const [patternsActive, setPatternsActive] = useState(false)
   const [sentimentActive, setSentimentActive] = useState(false)
+  const [askActive, setAskActive] = useState(false)
   const [currentTopicId, setCurrentTopicId] = useState<string | null>(null)
 
   const triggerDeepDive = useTriggerTopicDeepDive()
@@ -102,6 +104,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
       setDeepDiveActive(false)
       setPatternsActive(false)
       setSentimentActive(false)
+      setAskActive(false)
       setCurrentTopicId(topic?.id ?? null)
     }
   }, [topic?.id, currentTopicId])
@@ -111,6 +114,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setDeepDiveActive(true)
     setPatternsActive(false)
     setSentimentActive(false)
+    setAskActive(false)
   }
 
   const handleRetry = () => {
@@ -123,6 +127,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setPatternsActive(true)
     setDeepDiveActive(false)
     setSentimentActive(false)
+    setAskActive(false)
   }
 
   const handlePatternsRetry = () => {
@@ -135,6 +140,15 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setSentimentActive(true)
     setDeepDiveActive(false)
     setPatternsActive(false)
+    setAskActive(false)
+  }
+
+  const handleAsk = () => {
+    if (!topic) return
+    setAskActive(true)
+    setDeepDiveActive(false)
+    setPatternsActive(false)
+    setSentimentActive(false)
   }
 
   const handleSentimentRetry = () => {
@@ -269,11 +283,12 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 {sentimentLabel}
               </Button>
               <Button
-                variant="outline"
+                variant={askActive ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
+                onClick={handleAsk}
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <MessageCircleQuestion className="w-3.5 h-3.5" />
                 {t('topicDetail.ask')}
               </Button>
             </div>
@@ -493,6 +508,13 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <DemandSignalsSection signals={patternsData.getDemandSignals()} />
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Ask Q&A Section */}
+            {askActive && (
+              <div className="mt-6 border-t border-gray-100 dark:border-zinc-800">
+                <TopicAskSection audienceId={audienceId} topicId={topic.id} />
               </div>
             )}
 

@@ -17,3 +17,4 @@ export { useGetTopicBehavioralPatterns, TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY } fr
 export { useTriggerTopicBehavioralPatterns } from './useTriggerTopicBehavioralPatterns'
 export { useGetTopicSentiment, TOPIC_SENTIMENT_QUERY_KEY } from './useGetTopicSentiment'
 export { useTriggerTopicSentiment } from './useTriggerTopicSentiment'
+export { useAskTopic } from './useAskTopic'

@@ -17,3 +17,4 @@ export type { IGetTopicBehavioralPatternsUseCase, GetTopicBehavioralPatternsPara
 export type { ITriggerTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsParams, TriggerTopicBehavioralPatternsResult } from './trigger-topic-behavioral-patterns.use-case'
 export type { IGetTopicSentimentUseCase, GetTopicSentimentParams, GetTopicSentimentResult, TopicSentimentStatus } from './get-topic-sentiment.use-case'
 export type { ITriggerTopicSentimentUseCase, TriggerTopicSentimentParams, TriggerTopicSentimentResult } from './trigger-topic-sentiment.use-case'
+export type { IAskTopicUseCase, AskTopicParams, AskTopicResult } from './ask-topic.use-case'

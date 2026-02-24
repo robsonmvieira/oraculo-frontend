@@ -149,7 +149,17 @@
     "negativeDrivers": "Drivers Negativos",
     "tensionPoints": "Pontos de Tensão",
     "painPoints": "Pontos de Dor",
-    "sentimentOpportunities": "Oportunidades"
+    "sentimentOpportunities": "Oportunidades",
+    "askTitle": "Perguntar sobre este tópico",
+    "askPlaceholder": "Faça uma pergunta sobre este tópico...",
+    "askSend": "Enviar",
+    "askSending": "Pensando...",
+    "askError": "Não foi possível obter uma resposta. Tente novamente.",
+    "askContextRich": "Contexto rico",
+    "askContextLimited": "Contexto limitado",
+    "askCached": "Em cache",
+    "askSuggestion": "Sugestão",
+    "askMinLength": "A pergunta deve ter pelo menos 3 caracteres"
   },
   "tabs": {
     "search": "Buscar",
