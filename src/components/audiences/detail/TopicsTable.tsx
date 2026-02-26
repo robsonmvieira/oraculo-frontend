@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Search, ChevronDown, TrendingUp, TrendingDown, Minus, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
 export interface TopicTableItem {
   id: string
@@ -202,13 +203,22 @@ export function TopicsTable({
                     <TrendIcon className="w-4 h-4" />
                     <span>{topic.growth}%</span>
                     {topic.growthSource && (
-                      <span className={`text-[9px] px-1 py-0.5 rounded-full leading-none ${
-                        topic.growthSource === 'calculated'
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                          : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                      }`}>
-                        {topic.growthSource === 'calculated' ? 'C' : 'E'}
-                      </span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className={`text-[9px] px-1 py-0.5 rounded-full leading-none cursor-help ${
+                            topic.growthSource === 'calculated'
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                              : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                          }`}>
+                            {topic.growthSource === 'calculated' ? 'C' : 'E'}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          {topic.growthSource === 'calculated'
+                            ? t('topicDetail.calculatedTooltip')
+                            : t('topicDetail.estimatedTooltip')}
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                   </div>
 

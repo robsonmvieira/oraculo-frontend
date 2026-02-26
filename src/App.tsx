@@ -4,6 +4,7 @@ import { QueryProvider } from '@/modules/shared'
 import { AppRouter } from '@/router'
 import { useAuthStore } from '@/modules/auth'
 import { Toaster } from '@/components/ui/toaster'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import '@/styles/globals.css'
 
 function App() {
@@ -24,8 +25,10 @@ function App() {
 
   return (
     <QueryProvider>
-      <AppRouter />
-      <Toaster />
+      <TooltipProvider>
+        <AppRouter />
+        <Toaster />
+      </TooltipProvider>
     </QueryProvider>
   )
 }
