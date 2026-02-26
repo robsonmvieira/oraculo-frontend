@@ -21,6 +21,7 @@ import type { SendTopicChatMessageParams, SendTopicChatMessageResult } from "../
 import type { ListTopicChatConversationsParams, ListTopicChatConversationsResult } from "../use-cases/list-topic-chat-conversations.use-case";
 import type { GetTopicChatMessagesParams, GetTopicChatMessagesResult } from "../use-cases/get-topic-chat-messages.use-case";
 import type { ArchiveTopicChatParams, ArchiveTopicChatResult } from "../use-cases/archive-topic-chat.use-case";
+import type { GetTopicGrowthHistoryParams, GetTopicGrowthHistoryResult } from "../use-cases/get-topic-growth-history.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -48,4 +49,5 @@ export interface IAudienceRepository {
   listTopicChatConversations(params: ListTopicChatConversationsParams): Promise<ListTopicChatConversationsResult>
   getTopicChatMessages(params: GetTopicChatMessagesParams): Promise<GetTopicChatMessagesResult>
   archiveTopicChat(params: ArchiveTopicChatParams): Promise<ArchiveTopicChatResult>
+  getTopicGrowthHistory(params: GetTopicGrowthHistoryParams): Promise<GetTopicGrowthHistoryResult>
 }

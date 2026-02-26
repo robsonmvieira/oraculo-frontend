@@ -3,6 +3,9 @@ interface TopicCommunity {
   postCount: number
 }
 
+export type GrowthSource = 'calculated' | 'estimated'
+export type GrowthTrend = 'up' | 'stable' | 'down'
+
 interface TopicProps {
   id: string
   name: string
@@ -13,6 +16,8 @@ interface TopicProps {
   postCount: number
   communities: TopicCommunity[]
   rank: number
+  growthSource: GrowthSource | null
+  growthTrend: GrowthTrend | null
 }
 
 export class Topic {
@@ -25,8 +30,10 @@ export class Topic {
   private readonly postCount: number
   private readonly communities: TopicCommunity[]
   private readonly rank: number
+  private readonly growthSource: GrowthSource | null
+  private readonly growthTrend: GrowthTrend | null
 
-  constructor({ id, name, description, growthPercentage, mentionFrequency, mentionPeriod, postCount, communities, rank }: TopicProps) {
+  constructor({ id, name, description, growthPercentage, mentionFrequency, mentionPeriod, postCount, communities, rank, growthSource, growthTrend }: TopicProps) {
     this.id = id
     this.name = name
     this.description = description
@@ -36,6 +43,8 @@ export class Topic {
     this.postCount = postCount
     this.communities = communities
     this.rank = rank
+    this.growthSource = growthSource
+    this.growthTrend = growthTrend
   }
 
   getId(): string {
@@ -74,6 +83,14 @@ export class Topic {
     return this.rank
   }
 
+  getGrowthSource(): GrowthSource | null {
+    return this.growthSource
+  }
+
+  getGrowthTrend(): GrowthTrend | null {
+    return this.growthTrend
+  }
+
   toJSON(): object {
     return {
       id: this.id,
@@ -85,6 +102,8 @@ export class Topic {
       postCount: this.postCount,
       communities: this.communities,
       rank: this.rank,
+      growthSource: this.growthSource,
+      growthTrend: this.growthTrend,
     }
   }
 }

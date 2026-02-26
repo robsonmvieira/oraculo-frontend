@@ -26,6 +26,7 @@ export const TYPES = {
   ListTopicChatConversationsUseCase: Symbol.for('ListTopicChatConversationsUseCase'),
   GetTopicChatMessagesUseCase: Symbol.for('GetTopicChatMessagesUseCase'),
   ArchiveTopicChatUseCase: Symbol.for('ArchiveTopicChatUseCase'),
+  GetTopicGrowthHistoryUseCase: Symbol.for('GetTopicGrowthHistoryUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TrendingUp, Search, Sparkles, Heart, MessageSquare, MessageCircleQuestion, MessageSquareText, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Search, Sparkles, Heart, MessageSquare, MessageCircleQuestion, MessageSquareText, LineChart, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
-import { useGetTopicDeepDive, useTriggerTopicDeepDive, useGetTopicBehavioralPatterns, useTriggerTopicBehavioralPatterns, useGetTopicSentiment, useTriggerTopicSentiment } from '@/modules/audience/application/hooks'
+import { useGetTopicDeepDive, useTriggerTopicDeepDive, useGetTopicBehavioralPatterns, useTriggerTopicBehavioralPatterns, useGetTopicSentiment, useTriggerTopicSentiment, useGetTopicGrowthHistory } from '@/modules/audience/application/hooks'
 import {
   DeepDiveSummarySection,
   DeepDiveSubtopicsSection,
@@ -33,6 +33,7 @@ import {
 } from './sentiment'
 import { TopicAskSection } from './ask'
 import { TopicChatSection } from './chat'
+import { TopicGrowthHistorySection } from './growth-history'
 
 export interface TopicSubreddit {
   name: string
@@ -47,6 +48,8 @@ export interface TopicDetail {
   growth: number
   description: string
   subreddits: TopicSubreddit[]
+  growthSource?: 'calculated' | 'estimated' | null
+  growthTrend?: 'up' | 'stable' | 'down' | null
 }
 
 export interface TopicDetailPanelProps {
@@ -64,6 +67,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const [sentimentActive, setSentimentActive] = useState(false)
   const [askActive, setAskActive] = useState(false)
   const [chatActive, setChatActive] = useState(false)
+  const [growthActive, setGrowthActive] = useState(false)
   const [currentTopicId, setCurrentTopicId] = useState<string | null>(null)
 
   const triggerDeepDive = useTriggerTopicDeepDive()
@@ -88,6 +92,12 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     sentimentActive && !!topic,
   )
 
+  const { data: growthResult, isLoading: isLoadingGrowth } = useGetTopicGrowthHistory(
+    audienceId,
+    topic?.id ?? '',
+    growthActive && !!topic,
+  )
+
   const deepDiveStatus = deepDiveResult?.status
   const deepDiveData = deepDiveResult?.data
   const isProcessing = deepDiveActive && deepDiveStatus === 'processing'
@@ -100,6 +110,8 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const sentimentData = sentimentResult?.data
   const isSentimentProcessing = sentimentActive && sentimentStatus === 'processing'
 
+  const growthData = growthResult?.data
+
   // Reset when topic changes
   useEffect(() => {
     if (topic?.id !== currentTopicId) {
@@ -108,6 +120,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
       setSentimentActive(false)
       setAskActive(false)
       setChatActive(false)
+      setGrowthActive(false)
       setCurrentTopicId(topic?.id ?? null)
     }
   }, [topic?.id, currentTopicId])
@@ -119,6 +132,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setSentimentActive(false)
     setAskActive(false)
     setChatActive(false)
+    setGrowthActive(false)
   }
 
   const handleRetry = () => {
@@ -133,6 +147,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setSentimentActive(false)
     setAskActive(false)
     setChatActive(false)
+    setGrowthActive(false)
   }
 
   const handlePatternsRetry = () => {
@@ -147,6 +162,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setPatternsActive(false)
     setAskActive(false)
     setChatActive(false)
+    setGrowthActive(false)
   }
 
   const handleAsk = () => {
@@ -156,6 +172,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setPatternsActive(false)
     setSentimentActive(false)
     setChatActive(false)
+    setGrowthActive(false)
   }
 
   const handleChat = () => {
@@ -165,6 +182,17 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
     setPatternsActive(false)
     setSentimentActive(false)
     setAskActive(false)
+    setGrowthActive(false)
+  }
+
+  const handleGrowth = () => {
+    if (!topic) return
+    setGrowthActive(true)
+    setDeepDiveActive(false)
+    setPatternsActive(false)
+    setSentimentActive(false)
+    setAskActive(false)
+    setChatActive(false)
   }
 
   const handleSentimentRetry = () => {
@@ -244,8 +272,14 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                 <span className="text-gray-500 dark:text-zinc-400">
                   {topic.frequency} / {topic.frequencyUnit}
                 </span>
-                <span className="flex items-center gap-1 text-green-500">
-                  <TrendingUp className="w-3 h-3" />
+                <span className={`flex items-center gap-1 ${
+                  topic.growthTrend === 'down' ? 'text-red-500'
+                    : topic.growthTrend === 'stable' ? 'text-yellow-500'
+                    : 'text-green-500'
+                }`}>
+                  {topic.growthTrend === 'down' ? <TrendingDown className="w-3 h-3" />
+                    : topic.growthTrend === 'stable' ? <Minus className="w-3 h-3" />
+                    : <TrendingUp className="w-3 h-3" />}
                   {topic.growth}%
                 </span>
               </div>
@@ -315,6 +349,15 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
               >
                 <MessageSquareText className="w-3.5 h-3.5" />
                 {t('topicDetail.chat')}
+              </Button>
+              <Button
+                variant={growthActive ? 'primary' : 'outline'}
+                size="sm"
+                className="gap-1.5"
+                onClick={handleGrowth}
+              >
+                <LineChart className="w-3.5 h-3.5" />
+                {t('topicDetail.growth')}
               </Button>
             </div>
 
@@ -640,6 +683,35 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
                     <TensionPointsSection tensions={sentimentData.getTensionPoints()} />
                     <PainPointsSection pains={sentimentData.getPainPoints()} />
                     <SentimentOpportunitiesSection opportunities={sentimentData.getSentimentOpportunities()} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Growth History Section */}
+            {growthActive && (
+              <div className="mt-6 border-t border-gray-100 dark:border-zinc-800">
+                {isLoadingGrowth && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-6 h-6 border-3 border-lime border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+
+                {!isLoadingGrowth && !growthData && (
+                  <div className="flex flex-col items-center py-8 gap-3">
+                    <LineChart className="w-6 h-6 text-gray-400 dark:text-zinc-500" />
+                    <p className="text-sm text-gray-500 dark:text-zinc-400 text-center">
+                      {t('topicDetail.noGrowthData')}
+                    </p>
+                  </div>
+                )}
+
+                {!isLoadingGrowth && growthData && (
+                  <div className="pt-4">
+                    <h4 className="font-semibold text-sm text-gray-900 dark:text-white mb-3">
+                      {t('topicDetail.growthHistory')}
+                    </h4>
+                    <TopicGrowthHistorySection data={growthData} />
                   </div>
                 )}
               </div>

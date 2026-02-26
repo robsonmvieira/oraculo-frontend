@@ -23,6 +23,7 @@ import type { SendTopicChatMessageParams, SendTopicChatMessageResult } from '../
 import type { ListTopicChatConversationsParams, ListTopicChatConversationsResult } from '../../domain/use-cases/list-topic-chat-conversations.use-case'
 import type { GetTopicChatMessagesParams, GetTopicChatMessagesResult } from '../../domain/use-cases/get-topic-chat-messages.use-case'
 import type { ArchiveTopicChatParams, ArchiveTopicChatResult } from '../../domain/use-cases/archive-topic-chat.use-case'
+import type { GetTopicGrowthHistoryParams, GetTopicGrowthHistoryResult } from '../../domain/use-cases/get-topic-growth-history.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -31,6 +32,7 @@ import { TopicSentiment } from '../../domain/entities/TopicSentiment.entity'
 import { TopicAskResponse } from '../../domain/entities/TopicAskResponse.entity'
 import { TopicConversation } from '../../domain/entities/TopicConversation.entity'
 import { TopicConversationMessage } from '../../domain/entities/TopicConversationMessage.entity'
+import { TopicGrowthHistory } from '../../domain/entities/TopicGrowthHistory.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -94,6 +96,23 @@ interface AudienceKeywordsApiResponse {
   keywords: AudienceKeywordApiItem[]
 }
 
+interface TopicGrowthSnapshotApiItem {
+  mention_frequency: number
+  post_count: number
+  growth_percentage: number
+  growth_source: 'calculated' | 'estimated'
+  snapshot_date: string
+}
+
+interface TopicGrowthHistoryApiResponse {
+  topic_id: string
+  topic_name: string
+  current: TopicGrowthSnapshotApiItem
+  history: TopicGrowthSnapshotApiItem[]
+  trend: 'up' | 'stable' | 'down' | null
+  total_snapshots: number
+}
+
 interface AudienceTopicCommunityApiItem {
   name: string
   post_count: number
@@ -109,6 +128,8 @@ interface AudienceTopicApiItem {
   post_count: number
   communities: AudienceTopicCommunityApiItem[]
   rank: number
+  growth_source: 'calculated' | 'estimated' | null
+  growth_trend: 'up' | 'stable' | 'down' | null
 }
 
 interface AudienceTopicsApiResponse {
@@ -508,6 +529,8 @@ export class AudienceRepository implements IAudienceRepository {
         postCount: c.post_count,
       })),
       rank: t.rank,
+      growthSource: t.growth_source ?? null,
+      growthTrend: t.growth_trend ?? null,
     }))
     return {
       status: response.status,
@@ -827,6 +850,35 @@ export class AudienceRepository implements IAudienceRepository {
     return {
       status: response.status,
       conversationId: response.conversation_id,
+    }
+  }
+
+  async getTopicGrowthHistory(params: GetTopicGrowthHistoryParams): Promise<GetTopicGrowthHistoryResult> {
+    const response = await this.httpClient.get<TopicGrowthHistoryApiResponse>(
+      `audiences/${params.audienceId}/topics/${params.topicId}/growth-history`
+    )
+
+    if (!response.current) {
+      return { data: null }
+    }
+
+    const mapSnapshot = (s: TopicGrowthSnapshotApiItem) => ({
+      mentionFrequency: s.mention_frequency,
+      postCount: s.post_count,
+      growthPercentage: s.growth_percentage,
+      growthSource: s.growth_source,
+      snapshotDate: s.snapshot_date,
+    })
+
+    return {
+      data: new TopicGrowthHistory({
+        topicId: response.topic_id,
+        topicName: response.topic_name,
+        current: mapSnapshot(response.current),
+        history: (response.history ?? []).map(mapSnapshot),
+        trend: response.trend,
+        totalSnapshots: response.total_snapshots,
+      }),
     }
   }
 }

@@ -177,7 +177,21 @@
     "chatBack": "Voltar às conversas",
     "chatStarting": "Iniciando conversa...",
     "chatSuggestion": "Sugestão",
-    "chatNoMessages": "Inicie a conversa enviando uma mensagem."
+    "chatNoMessages": "Inicie a conversa enviando uma mensagem.",
+    "growth": "Crescimento",
+    "growthHistory": "Histórico de Crescimento",
+    "growthTrend": "Tendência",
+    "calculated": "Calculado",
+    "estimated": "Estimado",
+    "noGrowthData": "Nenhum dado de crescimento disponível ainda. O histórico aparecerá após a segunda análise de tópicos.",
+    "mentions": "Menções",
+    "posts": "Posts",
+    "snapshotDate": "Data",
+    "totalSnapshots": "Total de Snapshots",
+    "growthPercentage": "Crescimento",
+    "trendUp": "Em alta",
+    "trendStable": "Estável",
+    "trendDown": "Em queda"
   },
   "tabs": {
     "search": "Buscar",

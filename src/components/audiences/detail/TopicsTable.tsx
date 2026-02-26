@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, ChevronDown, TrendingUp, Loader2 } from 'lucide-react'
+import { Search, ChevronDown, TrendingUp, TrendingDown, Minus, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 
@@ -11,6 +11,8 @@ export interface TopicTableItem {
   frequency: number
   frequencyUnit: 'day' | 'week' | 'mo'
   subreddits: string[]
+  growthSource?: 'calculated' | 'estimated' | null
+  growthTrend?: 'up' | 'stable' | 'down' | null
 }
 
 export interface TopicsTableProps {
@@ -166,7 +168,16 @@ export function TopicsTable({
 
       <div ref={scrollContainerRef} className="max-h-[900px] overflow-y-auto">
         <div ref={listRef} className="space-y-2">
-          {sortedTopics.map((topic) => (
+          {sortedTopics.map((topic) => {
+            const trendColorMap = { down: 'text-red-500', stable: 'text-yellow-500', up: 'text-green-500' }
+            const sparkColorMap = { down: '#ef4444', stable: '#eab308', up: '#4ade80' }
+            const trendIconMap = { down: TrendingDown, stable: Minus, up: TrendingUp }
+            const trendKey = topic.growthTrend ?? 'up'
+            const trendColor = trendColorMap[trendKey] ?? 'text-green-500'
+            const sparkColor = sparkColorMap[trendKey] ?? '#4ade80'
+            const TrendIcon = trendIconMap[trendKey] ?? TrendingUp
+
+            return (
             <button
               type="button"
               key={topic.id}
@@ -184,12 +195,21 @@ export function TopicsTable({
 
                 <div className="flex items-center gap-4 flex-1 justify-end">
                   <div className="w-[70px] shrink-0">
-                    <SparkLine growth={topic.growth} />
+                    <SparkLine growth={topic.growth} strokeColor={sparkColor} />
                   </div>
 
-                  <div className="flex items-center gap-1 text-green-500 text-sm font-medium w-16 shrink-0">
-                    <TrendingUp className="w-4 h-4" />
+                  <div className={`flex items-center gap-1 text-sm font-medium w-20 shrink-0 ${trendColor}`}>
+                    <TrendIcon className="w-4 h-4" />
                     <span>{topic.growth}%</span>
+                    {topic.growthSource && (
+                      <span className={`text-[9px] px-1 py-0.5 rounded-full leading-none ${
+                        topic.growthSource === 'calculated'
+                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                          : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      }`}>
+                        {topic.growthSource === 'calculated' ? 'C' : 'E'}
+                      </span>
+                    )}
                   </div>
 
                   <div className="text-sm text-right shrink-0 truncate mr-2">
@@ -209,7 +229,8 @@ export function TopicsTable({
                 </div>
               </div>
             </button>
-          ))}
+            )
+          })}
         </div>
 
         {sortedTopics.length === 0 && (
