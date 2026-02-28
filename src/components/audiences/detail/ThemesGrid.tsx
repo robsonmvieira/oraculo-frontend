@@ -39,6 +39,11 @@ const themeIcons: Record<string, typeof Flame> = {
   News: Newspaper,
 }
 
+const scoringI18nKeys: Record<string, { name: string; description: string }> = {
+  th1: { name: 'themes.hotDiscussions', description: 'themes.weekDescription' },
+  th2: { name: 'themes.topContent', description: 'themes.monthDescription' },
+}
+
 export function ThemesGrid({
   themes,
   selectedThemeId,
@@ -99,6 +104,7 @@ export function ThemesGrid({
         <div ref={scoringRef} className="grid grid-cols-2 gap-4">
           {scoringThemes.map((theme) => {
             const Icon = themeIcons[theme.name] ?? Flame
+            const i18nKeys = scoringI18nKeys[theme.id]
             return (
               <button
                 key={theme.id}
@@ -116,10 +122,10 @@ export function ThemesGrid({
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">
-                      {theme.name}
+                      {i18nKeys ? t(i18nKeys.name) : theme.name}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-zinc-400">
-                      {theme.description}
+                      {i18nKeys ? t(i18nKeys.description) : theme.description}
                     </p>
                   </div>
                 </div>

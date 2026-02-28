@@ -24,6 +24,8 @@ import type { ListTopicChatConversationsParams, ListTopicChatConversationsResult
 import type { GetTopicChatMessagesParams, GetTopicChatMessagesResult } from '../../domain/use-cases/get-topic-chat-messages.use-case'
 import type { ArchiveTopicChatParams, ArchiveTopicChatResult } from '../../domain/use-cases/archive-topic-chat.use-case'
 import type { GetTopicGrowthHistoryParams, GetTopicGrowthHistoryResult } from '../../domain/use-cases/get-topic-growth-history.use-case'
+import type { GetAudienceThemesParams, GetAudienceThemesResult, ThemeAnalysisStatus } from '../../domain/use-cases/get-audience-themes.use-case'
+import type { RefreshAudienceThemesParams, RefreshAudienceThemesResult } from '../../domain/use-cases/refresh-audience-themes.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -33,6 +35,7 @@ import { TopicAskResponse } from '../../domain/entities/TopicAskResponse.entity'
 import { TopicConversation } from '../../domain/entities/TopicConversation.entity'
 import { TopicConversationMessage } from '../../domain/entities/TopicConversationMessage.entity'
 import { TopicGrowthHistory } from '../../domain/entities/TopicGrowthHistory.entity'
+import { Theme } from '../../domain/entities/Theme.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -352,6 +355,31 @@ interface GetTopicChatMessagesApiResponse {
 interface ArchiveTopicChatApiResponse {
   status: string
   conversation_id: string
+}
+
+interface ThemeAnalysisApiResponse {
+  status: string
+  analysis_id?: string
+  completed_at?: string
+  error_message?: string
+  themes?: Array<{
+    name: string
+    summary: string
+    post_count: number
+    avg_score: number
+    avg_comments: number
+    engagement_score: number
+    rank: number
+    top_subreddits: Array<{ name: string; post_count: number; avg_score: number }>
+    top_keywords: Array<{ keyword: string; frequency: number }>
+    representative_posts: Array<{ title: string; subreddit: string; score: number; permalink: string }>
+  }>
+}
+
+interface RefreshThemeApiResponse {
+  status: string
+  analysis_id: string
+  message?: string
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -879,6 +907,56 @@ export class AudienceRepository implements IAudienceRepository {
         trend: response.trend,
         totalSnapshots: response.total_snapshots,
       }),
+    }
+  }
+
+  async getAudienceThemes(params: GetAudienceThemesParams): Promise<GetAudienceThemesResult> {
+    const response = await this.httpClient.get<ThemeAnalysisApiResponse>(
+      `audiences/${params.audienceId}/themes?window=${params.window}`
+    )
+
+    const status = response.status as ThemeAnalysisStatus
+
+    if (status !== 'ready' || !response.themes) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: response.themes.map((t) => new Theme({
+        name: t.name,
+        summary: t.summary,
+        postCount: t.post_count,
+        avgScore: t.avg_score,
+        avgComments: t.avg_comments,
+        engagementScore: t.engagement_score,
+        rank: t.rank,
+        topSubreddits: (t.top_subreddits ?? []).map((s) => ({
+          name: s.name,
+          postCount: s.post_count,
+          avgScore: s.avg_score,
+        })),
+        topKeywords: (t.top_keywords ?? []).map((k) => ({
+          keyword: k.keyword,
+          frequency: k.frequency,
+        })),
+        representativePosts: (t.representative_posts ?? []).map((p) => ({
+          title: p.title,
+          subreddit: p.subreddit,
+          score: p.score,
+          permalink: p.permalink,
+        })),
+      })),
+    }
+  }
+
+  async refreshAudienceThemes(params: RefreshAudienceThemesParams): Promise<RefreshAudienceThemesResult> {
+    const response = await this.httpClient.post<RefreshThemeApiResponse>(
+      `audiences/${params.audienceId}/themes/refresh?window=${params.window}`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
     }
   }
 }

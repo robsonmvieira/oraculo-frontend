@@ -92,7 +92,20 @@
     "copy": "Copy",
     "subcategories": "Subcategories",
     "topics": "Topics",
-    "subreddits": "Subreddits"
+    "subreddits": "Subreddits",
+    "weekDescription": "Popular discussions this week",
+    "monthDescription": "Best-performing content of past month",
+    "generate": "Generate Analysis",
+    "processing": "Analyzing...",
+    "themesFound": "{{count}} themes found",
+    "failed": "Analysis failed. Click to retry.",
+    "hotDiscussions": "Hot Discussions",
+    "topContent": "Top Content",
+    "posts": "posts",
+    "avgScore": "Avg score",
+    "avgComments": "Avg comments",
+    "keywords": "Keywords",
+    "representativePosts": "Representative Posts"
   },
   "topics": {
     "title": "Topics",

@@ -24,3 +24,5 @@ export { useListTopicChatConversations, TOPIC_CHAT_CONVERSATIONS_QUERY_KEY } fro
 export { useGetTopicChatMessages, TOPIC_CHAT_MESSAGES_QUERY_KEY } from './useGetTopicChatMessages'
 export { useArchiveTopicChat } from './useArchiveTopicChat'
 export { useGetTopicGrowthHistory, TOPIC_GROWTH_HISTORY_QUERY_KEY } from './useGetTopicGrowthHistory'
+export { useGetAudienceThemes, AUDIENCE_THEMES_QUERY_KEY } from './useGetAudienceThemes'
+export { useRefreshAudienceThemes } from './useRefreshAudienceThemes'
