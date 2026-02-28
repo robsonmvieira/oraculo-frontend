@@ -80,6 +80,8 @@ export function AudienceDetailTabs({
       frequency: topic.getMentionFrequency(),
       frequencyUnit,
       subreddits: topic.getCommunities().map((c) => c.name),
+      growthSource: topic.getGrowthSource(),
+      growthTrend: topic.getGrowthTrend(),
     }
   })
 
@@ -169,6 +171,8 @@ export function AudienceDetailTabs({
                       name: c.name,
                       postCount: c.postCount,
                     })),
+                    growthSource: fullTopic.getGrowthSource(),
+                    growthTrend: fullTopic.getGrowthTrend(),
                   })
                 }
               }}
