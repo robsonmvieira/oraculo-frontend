@@ -26,3 +26,6 @@ export type { IArchiveTopicChatUseCase, ArchiveTopicChatParams, ArchiveTopicChat
 export type { IGetTopicGrowthHistoryUseCase, GetTopicGrowthHistoryParams, GetTopicGrowthHistoryResult } from './get-topic-growth-history.use-case'
 export type { IGetAudienceThemesUseCase, GetAudienceThemesParams, GetAudienceThemesResult, ThemeAnalysisStatus, ThemeAnalysisWindow } from './get-audience-themes.use-case'
 export type { IRefreshAudienceThemesUseCase, RefreshAudienceThemesParams, RefreshAudienceThemesResult } from './refresh-audience-themes.use-case'
+export type { IGetAudienceIntentsUseCase, GetAudienceIntentsParams, GetAudienceIntentsResult, IntentAnalysisStatus } from './get-audience-intents.use-case'
+export type { IRefreshAudienceIntentsUseCase, RefreshAudienceIntentsParams, RefreshAudienceIntentsResult } from './refresh-audience-intents.use-case'
+export type { IGetIntentPostsUseCase, GetIntentPostsParams, GetIntentPostsResult } from './get-intent-posts.use-case'

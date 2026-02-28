@@ -10,15 +10,15 @@ import {
   SearchTabContent,
   SubredditsTabContent,
 } from '@/components/audiences/detail'
-import type { TopicDetail, ThemeDetail } from '@/components/audiences/detail'
+import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
 import type { AudienceStats, RadarData } from './AboutAudiencePanel'
 import type { SubredditDetail } from '@/data/audienceDetails'
 import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
 import type { Topic } from '@/modules/audience/domain/entities/Topic.entity'
 import type { Theme } from '@/modules/audience/domain/entities/Theme.entity'
-import { themesGridData, themesDetailData } from '@/data/audienceDetailMocks'
-import { useGetAudienceThemes, useRefreshAudienceThemes } from '@/modules/audience/application/hooks'
+import { useGetAudienceThemes, useRefreshAudienceThemes, useGetAudienceIntents, useRefreshAudienceIntents } from '@/modules/audience/application/hooks'
+import type { IntentCategory } from '@/modules/audience/domain/entities/IntentCategory.entity'
 
 export interface AudienceDetailTabsProps {
   contentRef: RefObject<HTMLDivElement | null>
@@ -43,6 +43,11 @@ export interface AudienceDetailTabsProps {
   isLoadingMoreTopics: boolean
   audienceId: string
 }
+
+const SCORING_THEMES: ThemeGridItem[] = [
+  { id: 'th1', name: 'Hot Discussions', description: 'Popular discussions this week', type: 'scoring' },
+  { id: 'th2', name: 'Top Content', description: 'Best-performing content of past month', type: 'scoring' },
+]
 
 function mapScoringThemesToDetail(
   id: string,
@@ -86,6 +91,35 @@ function mapScoringThemesToDetail(
   }
 }
 
+function translateWithFallback(t: (key: string) => string, prefix: string, value: string): string {
+  const key = `${prefix}.${value}`
+  const translated = t(key)
+  return translated === key ? value : translated
+}
+
+function mapIntentToDetail(intent: IntentCategory, t: (key: string) => string): ThemeDetail {
+  const subcategories = Object.entries(intent.getSubcategories()).map(([name, count]) => ({
+    name: translateWithFallback(t, 'themes.intents.sentiments', name),
+    count,
+  }))
+  const topics = Object.entries(intent.getTopicKeywords()).map(([name, count]) => ({
+    name: translateWithFallback(t, 'themes.intents.keywords', name),
+    count,
+  }))
+
+  return {
+    id: intent.getCategory(),
+    name: t(`themes.intents.${intent.getCategory()}`),
+    description: intent.getDescription(),
+    subcategories,
+    topics,
+    subreddits: intent.getTopSubreddits().map((s) => ({
+      name: s.name,
+      count: s.count,
+    })),
+  }
+}
+
 export function AudienceDetailTabs({
   contentRef,
   subredditsData,
@@ -113,10 +147,34 @@ export function AudienceDetailTabs({
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
+  const [selectedIntentCategory, setSelectedIntentCategory] = useState<string | null>(null)
 
-  const weekQuery = useGetAudienceThemes(audienceId, 'week', activeTab === 'themes')
-  const monthQuery = useGetAudienceThemes(audienceId, 'month', activeTab === 'themes')
+  const isThemesTab = activeTab === 'themes'
+
+  const weekQuery = useGetAudienceThemes(audienceId, 'week', isThemesTab)
+  const monthQuery = useGetAudienceThemes(audienceId, 'month', isThemesTab)
   const refreshMutation = useRefreshAudienceThemes()
+
+  const intentsQuery = useGetAudienceIntents(audienceId, 'week', isThemesTab)
+  const refreshIntentsMutation = useRefreshAudienceIntents()
+
+  const intentsStatus = intentsQuery.data?.status ?? 'no_analysis'
+
+  const intentsData = intentsQuery.data?.data
+  const aiTaggedThemes: ThemeGridItem[] = intentsStatus === 'ready' && intentsData
+    ? intentsData.map((intent) => ({
+        id: intent.getCategory(),
+        name: t(`themes.intents.${intent.getCategory()}`),
+        description: t(`themes.intents.${intent.getCategory()}_desc`),
+        count: intent.getPostCount(),
+        type: 'ai-tagged' as const,
+      }))
+    : []
+
+  const allThemes: ThemeGridItem[] = [
+    ...SCORING_THEMES,
+    ...aiTaggedThemes,
+  ]
 
   const topicTableItems = topics.map((topic) => {
     const period = topic.getMentionPeriod()
@@ -146,19 +204,21 @@ export function AudienceDetailTabs({
 
       if (query.data?.status === 'ready' && query.data.data) {
         setSelectedTheme(mapScoringThemesToDetail(theme.id, translatedName, query.data.data))
+        setSelectedIntentCategory(null)
       } else if (query.data?.status === 'no_analysis' || query.data?.status === 'failed') {
         refreshMutation.mutate({ audienceId, window })
       }
     } else {
-      const detailData = themesDetailData[theme.id]
-      if (detailData) {
-        setSelectedTheme({
-          id: theme.id,
-          name: theme.name,
-          ...detailData,
-        })
+      const intent = intentsQuery.data?.data?.find((i) => i.getCategory() === theme.id)
+      if (intent) {
+        setSelectedTheme(mapIntentToDetail(intent, t))
+        setSelectedIntentCategory(intent.getCategory())
       }
     }
+  }
+
+  const handleRefreshIntents = () => {
+    refreshIntentsMutation.mutate({ audienceId, window: 'week' })
   }
 
   return (
@@ -264,13 +324,20 @@ export function AudienceDetailTabs({
         <div className="flex gap-6">
           <div className="flex-1">
             <ThemesGrid
-              themes={themesGridData}
+              themes={allThemes}
               selectedThemeId={selectedTheme?.id}
               onThemeSelect={handleThemeSelect}
+              intentsStatus={intentsStatus}
+              onRefreshIntents={handleRefreshIntents}
+              isRefreshing={refreshIntentsMutation.isPending}
             />
           </div>
           <div className="w-1/2 shrink-0">
-            <ThemeDetailPanel theme={selectedTheme} />
+            <ThemeDetailPanel
+              theme={selectedTheme}
+              audienceId={audienceId}
+              intentCategory={selectedIntentCategory}
+            />
           </div>
         </div>
       </TabsContent>

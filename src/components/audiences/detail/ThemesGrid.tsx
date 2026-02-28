@@ -10,9 +10,13 @@ import {
   MessageSquare,
   Newspaper,
   Bookmark,
+  RefreshCw,
+  Loader2,
 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
+import { Button } from '@/components/ui/button'
+import type { IntentAnalysisStatus } from '@/modules/audience/domain/use-cases'
 
 export interface ThemeGridItem {
   id: string
@@ -26,6 +30,9 @@ export interface ThemesGridProps {
   themes: readonly ThemeGridItem[]
   selectedThemeId?: string | null
   onThemeSelect?: (theme: ThemeGridItem) => void
+  intentsStatus?: IntentAnalysisStatus
+  onRefreshIntents?: () => void
+  isRefreshing?: boolean
 }
 
 const themeIcons: Record<string, typeof Flame> = {
@@ -48,6 +55,9 @@ export function ThemesGrid({
   themes,
   selectedThemeId,
   onThemeSelect,
+  intentsStatus,
+  onRefreshIntents,
+  isRefreshing,
 }: Readonly<ThemesGridProps>) {
   const { t } = useTranslation('audiences')
   const scoringRef = useRef<HTMLDivElement>(null)
@@ -137,49 +147,91 @@ export function ThemesGrid({
 
       {/* AI-tagged themes */}
       <div>
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-          {t('themes.aiTaggedThemes')}
-        </h3>
-        <div ref={aiTaggedRef} className="grid grid-cols-2 gap-4">
-          {displayedAiThemes.map((theme) => {
-            const Icon = themeIcons[theme.name] ?? MessageSquare
-            return (
-              <button
-                key={theme.id}
-                type="button"
-                onClick={() => onThemeSelect?.(theme)}
-                className={`text-left p-4 rounded-xl transition-colors cursor-pointer bg-white dark:bg-zinc-800 border ${
-                  selectedThemeId === theme.id
-                    ? 'border-lime'
-                    : 'border-transparent hover:border-gray-200 dark:hover:border-zinc-700'
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-zinc-700 flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-gray-500 dark:text-zinc-400" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {theme.name}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-zinc-400">
-                      {theme.count !== undefined && (
-                        <span className="font-semibold text-gray-700 dark:text-zinc-200">
-                          {theme.count}{' '}
-                        </span>
-                      )}
-                      {theme.description}
-                    </p>
-                  </div>
-                </div>
-              </button>
-            )
-          })}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-gray-900 dark:text-white">
+            {t('themes.aiTaggedThemes')}
+          </h3>
+          {intentsStatus === 'no_analysis' && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={onRefreshIntents}
+              disabled={isRefreshing}
+            >
+              {isRefreshing ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <RefreshCw className="w-3.5 h-3.5" />
+              )}
+              {t('themes.generate')}
+            </Button>
+          )}
+          {intentsStatus === 'failed' && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-red-500"
+              onClick={onRefreshIntents}
+              disabled={isRefreshing}
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              {t('themes.failed')}
+            </Button>
+          )}
         </div>
-        {remainingCount > 0 && (
-          <button className="cursor-pointer w-full mt-4 py-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300 transition-colors">
-            {t('themes.showMore', { count: remainingCount })}
-          </button>
+
+        {intentsStatus === 'processing' && (
+          <div className="flex items-center gap-3 py-8 justify-center text-gray-500 dark:text-zinc-400">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-sm">{t('themes.processing')}</span>
+          </div>
+        )}
+
+        {intentsStatus === 'ready' && displayedAiThemes.length > 0 && (
+          <>
+            <div ref={aiTaggedRef} className="grid grid-cols-2 gap-4">
+              {displayedAiThemes.map((theme) => {
+                const Icon = themeIcons[theme.name] ?? MessageSquare
+                return (
+                  <button
+                    key={theme.id}
+                    type="button"
+                    onClick={() => onThemeSelect?.(theme)}
+                    className={`text-left p-4 rounded-xl transition-colors cursor-pointer bg-white dark:bg-zinc-800 border ${
+                      selectedThemeId === theme.id
+                        ? 'border-lime'
+                        : 'border-transparent hover:border-gray-200 dark:hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-zinc-700 flex items-center justify-center shrink-0">
+                        <Icon className="w-5 h-5 text-gray-500 dark:text-zinc-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          {theme.name}
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400">
+                          {theme.count !== undefined && (
+                            <span className="font-semibold text-gray-700 dark:text-zinc-200">
+                              {theme.count}{' '}
+                            </span>
+                          )}
+                          {theme.description}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+            {remainingCount > 0 && (
+              <button className="cursor-pointer w-full mt-4 py-2 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300 transition-colors">
+                {t('themes.showMore', { count: remainingCount })}
+              </button>
+            )}
+          </>
         )}
       </div>
 
