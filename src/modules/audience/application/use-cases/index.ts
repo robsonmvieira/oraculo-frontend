@@ -24,3 +24,5 @@ export { ListTopicChatConversationsUseCase } from './list-topic-chat-conversatio
 export { GetTopicChatMessagesUseCase } from './get-topic-chat-messages-use-case'
 export { ArchiveTopicChatUseCase } from './archive-topic-chat-use-case'
 export { GetTopicGrowthHistoryUseCase } from './get-topic-growth-history-use-case'
+export { GetAudienceThemesUseCase } from './get-audience-themes-use-case'
+export { RefreshAudienceThemesUseCase } from './refresh-audience-themes-use-case'

@@ -92,7 +92,20 @@
     "copy": "Copiar",
     "subcategories": "Subcategorias",
     "topics": "Tópicos",
-    "subreddits": "Subreddits"
+    "subreddits": "Subreddits",
+    "weekDescription": "Discussões populares desta semana",
+    "monthDescription": "Melhor conteúdo do mês passado",
+    "generate": "Gerar Análise",
+    "processing": "Analisando...",
+    "themesFound": "{{count}} temas encontrados",
+    "failed": "Análise falhou. Clique para tentar novamente.",
+    "hotDiscussions": "Discussões em Alta",
+    "topContent": "Top Conteúdo",
+    "posts": "posts",
+    "avgScore": "Score médio",
+    "avgComments": "Média de comentários",
+    "keywords": "Palavras-chave",
+    "representativePosts": "Posts Representativos"
   },
   "topics": {
     "title": "Tópicos",

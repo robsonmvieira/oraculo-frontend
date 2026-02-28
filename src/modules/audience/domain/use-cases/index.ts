@@ -24,3 +24,5 @@ export type { IListTopicChatConversationsUseCase, ListTopicChatConversationsPara
 export type { IGetTopicChatMessagesUseCase, GetTopicChatMessagesParams, GetTopicChatMessagesResult } from './get-topic-chat-messages.use-case'
 export type { IArchiveTopicChatUseCase, ArchiveTopicChatParams, ArchiveTopicChatResult } from './archive-topic-chat.use-case'
 export type { IGetTopicGrowthHistoryUseCase, GetTopicGrowthHistoryParams, GetTopicGrowthHistoryResult } from './get-topic-growth-history.use-case'
+export type { IGetAudienceThemesUseCase, GetAudienceThemesParams, GetAudienceThemesResult, ThemeAnalysisStatus, ThemeAnalysisWindow } from './get-audience-themes.use-case'
+export type { IRefreshAudienceThemesUseCase, RefreshAudienceThemesParams, RefreshAudienceThemesResult } from './refresh-audience-themes.use-case'

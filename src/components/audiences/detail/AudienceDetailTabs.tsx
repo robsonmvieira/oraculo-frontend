@@ -16,7 +16,9 @@ import type { AudienceStats, RadarData } from './AboutAudiencePanel'
 import type { SubredditDetail } from '@/data/audienceDetails'
 import type { Keyword } from '@/modules/audience/domain/entities/Keyword.entity'
 import type { Topic } from '@/modules/audience/domain/entities/Topic.entity'
+import type { Theme } from '@/modules/audience/domain/entities/Theme.entity'
 import { themesGridData, themesDetailData } from '@/data/audienceDetailMocks'
+import { useGetAudienceThemes, useRefreshAudienceThemes } from '@/modules/audience/application/hooks'
 
 export interface AudienceDetailTabsProps {
   contentRef: RefObject<HTMLDivElement | null>
@@ -40,6 +42,48 @@ export interface AudienceDetailTabsProps {
   hasMoreTopics: boolean
   isLoadingMoreTopics: boolean
   audienceId: string
+}
+
+function mapScoringThemesToDetail(
+  id: string,
+  name: string,
+  themes: Theme[],
+): ThemeDetail {
+  const topTheme = themes[0]
+
+  const subcategories = themes.map((theme) => ({
+    name: theme.getName(),
+    count: theme.getPostCount(),
+  }))
+
+  const keywordMap = new Map<string, number>()
+  for (const theme of themes) {
+    for (const kw of theme.getTopKeywords()) {
+      keywordMap.set(kw.keyword, (keywordMap.get(kw.keyword) ?? 0) + kw.frequency)
+    }
+  }
+  const topics = Array.from(keywordMap.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([keyword, count]) => ({ name: keyword, count }))
+
+  const subredditMap = new Map<string, number>()
+  for (const theme of themes) {
+    for (const sub of theme.getTopSubreddits()) {
+      subredditMap.set(sub.name, (subredditMap.get(sub.name) ?? 0) + sub.postCount)
+    }
+  }
+  const subreddits = Array.from(subredditMap.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([subredditName, count]) => ({ name: subredditName, count }))
+
+  return {
+    id,
+    name,
+    description: topTheme?.getSummary() ?? '',
+    subcategories,
+    topics,
+    subreddits,
+  }
 }
 
 export function AudienceDetailTabs({
@@ -70,6 +114,10 @@ export function AudienceDetailTabs({
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
 
+  const weekQuery = useGetAudienceThemes(audienceId, 'week', activeTab === 'themes')
+  const monthQuery = useGetAudienceThemes(audienceId, 'month', activeTab === 'themes')
+  const refreshMutation = useRefreshAudienceThemes()
+
   const topicTableItems = topics.map((topic) => {
     const period = topic.getMentionPeriod()
     const frequencyUnit: 'day' | 'week' | 'mo' = period === 'month' ? 'mo' : period === 'week' ? 'week' : 'day'
@@ -84,6 +132,34 @@ export function AudienceDetailTabs({
       growthTrend: topic.getGrowthTrend(),
     }
   })
+
+  const scoringNameKeys: Record<string, string> = {
+    th1: 'themes.hotDiscussions',
+    th2: 'themes.topContent',
+  }
+
+  const handleThemeSelect = (theme: { id: string; name: string; type: string }) => {
+    if (theme.type === 'scoring') {
+      const window = theme.id === 'th1' ? 'week' as const : 'month' as const
+      const query = window === 'week' ? weekQuery : monthQuery
+      const translatedName = scoringNameKeys[theme.id] ? t(scoringNameKeys[theme.id]) : theme.name
+
+      if (query.data?.status === 'ready' && query.data.data) {
+        setSelectedTheme(mapScoringThemesToDetail(theme.id, translatedName, query.data.data))
+      } else if (query.data?.status === 'no_analysis' || query.data?.status === 'failed') {
+        refreshMutation.mutate({ audienceId, window })
+      }
+    } else {
+      const detailData = themesDetailData[theme.id]
+      if (detailData) {
+        setSelectedTheme({
+          id: theme.id,
+          name: theme.name,
+          ...detailData,
+        })
+      }
+    }
+  }
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -190,16 +266,7 @@ export function AudienceDetailTabs({
             <ThemesGrid
               themes={themesGridData}
               selectedThemeId={selectedTheme?.id}
-              onThemeSelect={(theme) => {
-                const detailData = themesDetailData[theme.id]
-                if (detailData) {
-                  setSelectedTheme({
-                    id: theme.id,
-                    name: theme.name,
-                    ...detailData,
-                  })
-                }
-              }}
+              onThemeSelect={handleThemeSelect}
             />
           </div>
           <div className="w-1/2 shrink-0">
