@@ -53,6 +53,7 @@ function mapScoringThemesToDetail(
   id: string,
   name: string,
   themes: Theme[],
+  window: 'week' | 'month',
 ): ThemeDetail {
   const topTheme = themes[0]
 
@@ -81,6 +82,11 @@ function mapScoringThemesToDetail(
     .sort((a, b) => b[1] - a[1])
     .map(([subredditName, count]) => ({ name: subredditName, count }))
 
+  const summaryThemes = themes.map((theme) => ({
+    id: theme.getId(),
+    name: theme.getName(),
+  }))
+
   return {
     id,
     name,
@@ -88,6 +94,8 @@ function mapScoringThemesToDetail(
     subcategories,
     topics,
     subreddits,
+    summaryThemes,
+    window,
   }
 }
 
@@ -203,7 +211,7 @@ export function AudienceDetailTabs({
       const translatedName = scoringNameKeys[theme.id] ? t(scoringNameKeys[theme.id]) : theme.name
 
       if (query.data?.status === 'ready' && query.data.data) {
-        setSelectedTheme(mapScoringThemesToDetail(theme.id, translatedName, query.data.data))
+        setSelectedTheme(mapScoringThemesToDetail(theme.id, translatedName, query.data.data, window))
         setSelectedIntentCategory(null)
       } else if (query.data?.status === 'no_analysis' || query.data?.status === 'failed') {
         refreshMutation.mutate({ audienceId, window })

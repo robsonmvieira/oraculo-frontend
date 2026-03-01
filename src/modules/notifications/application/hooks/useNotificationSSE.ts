@@ -6,6 +6,7 @@ import { TOPIC_DEEP_DIVE_QUERY_KEY } from '@/modules/audience/application/hooks/
 import { TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicBehavioralPatterns'
 import { TOPIC_SENTIMENT_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicSentiment'
 import { AUDIENCE_INTENTS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetAudienceIntents'
+import { THEME_SUMMARY_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemeSummary'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -25,6 +26,14 @@ function invalidateAnalysisQueries(
   if (type === 'intent_classification_complete' || type === 'intent_classification_failed') {
     queryClient.invalidateQueries({ queryKey: AUDIENCE_INTENTS_QUERY_KEY(audienceId, 'week') })
     queryClient.invalidateQueries({ queryKey: AUDIENCE_INTENTS_QUERY_KEY(audienceId, 'month') })
+    return
+  }
+
+  const themeId = metadata.theme_id
+  if (type === 'theme_summary_complete' || type === 'theme_summary_failed') {
+    if (themeId) {
+      queryClient.invalidateQueries({ queryKey: THEME_SUMMARY_QUERY_KEY(audienceId, themeId) })
+    }
     return
   }
 

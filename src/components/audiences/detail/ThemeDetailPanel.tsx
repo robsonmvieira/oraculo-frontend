@@ -5,6 +5,8 @@ import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { useGetIntentPosts } from '@/modules/audience/application/hooks'
+import { ThemeSummaryCard } from './ThemeSummaryCard'
+import type { ThemeAnalysisWindow } from '@/modules/audience/domain/use-cases'
 
 export interface ThemeSubcategory {
   name: string
@@ -22,6 +24,11 @@ export interface ThemeSubreddit {
   count: number
 }
 
+export interface ThemeSummaryTheme {
+  id: string
+  name: string
+}
+
 export interface ThemeDetail {
   id: string
   name: string
@@ -29,6 +36,8 @@ export interface ThemeDetail {
   subcategories: ThemeSubcategory[]
   topics: ThemeTopic[]
   subreddits: ThemeSubreddit[]
+  summaryThemes?: ThemeSummaryTheme[]
+  window?: ThemeAnalysisWindow
 }
 
 export interface ThemeDetailPanelProps {
@@ -147,6 +156,27 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
                 {t('themes.copy')}
               </Button>
             </div>
+
+            {/* Narrative Summaries */}
+            {theme.summaryThemes && theme.summaryThemes.length > 0 && audienceId && (
+              <div className="mb-6">
+                <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-3">
+                  {t('themes.summary.title')}
+                </h4>
+                <div className="space-y-3">
+                  {theme.summaryThemes.map((st) => (
+                    <ThemeSummaryCard
+                      key={st.id}
+                      audienceId={audienceId}
+                      themeId={st.id}
+                      themeName={st.name}
+                      window={theme.window ?? 'week'}
+                      enabled={!!audienceId}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-3 gap-4">
               {/* Subcategories */}
@@ -267,7 +297,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
                             r/{post.getPostSubreddit()}
                           </span>
                           <span className="text-xs text-gray-400 dark:text-zinc-500">
-                            {Math.round(post.getConfidence() * 100)}%
+                            {post.getConfidence()}
                           </span>
                         </div>
                       </li>

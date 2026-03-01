@@ -106,6 +106,28 @@
     "avgComments": "Média de comentários",
     "keywords": "Palavras-chave",
     "representativePosts": "Posts Representativos",
+    "summary": {
+      "title": "Sumário Narrativo",
+      "generate": "Gerar Sumário",
+      "generating": "Gerando sumário...",
+      "noSummary": "Nenhum sumário disponível ainda. Gere um para obter insights com IA.",
+      "narrative": "Narrativa",
+      "highlights": "Destaques",
+      "keyThemes": "Temas-chave",
+      "weekDifferentiator": "O que tornou este período diferente",
+      "intentBreakdown": "Distribuição de Intenções",
+      "whyNotable": "Por que é notável",
+      "emotionalTone": {
+        "label": "Tom Emocional",
+        "positive": "Positivo",
+        "mixed": "Misto",
+        "tense": "Tenso",
+        "neutral": "Neutro",
+        "celebratory": "Celebratório",
+        "concerned": "Preocupado",
+        "supportive": "Solidário"
+      }
+    },
     "intents": {
       "advice_request": "Pedidos de Conselho",
       "advice_request_desc": "Pessoas pedindo conselhos e recursos",
