@@ -33,7 +33,10 @@
     "keyword_analysis_complete": "Keywords Prontas",
     "keyword_analysis_failed": "Keywords Falharam",
     "topic_analysis_complete": "Topicos Prontos",
-    "topic_analysis_failed": "Topicos Falharam"
+    "topic_analysis_failed": "Topicos Falharam",
+    "topic_alert_new_topic": "Novo Topico Detectado",
+    "topic_alert_growth_spike": "Pico de Crescimento Detectado",
+    "topic_alert_new_theme": "Novo Tema Detectado"
   },
   "time": {
     "justNow": "Agora mesmo",

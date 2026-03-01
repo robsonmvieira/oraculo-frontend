@@ -33,7 +33,10 @@
     "keyword_analysis_complete": "Keywords Ready",
     "keyword_analysis_failed": "Keywords Failed",
     "topic_analysis_complete": "Topics Ready",
-    "topic_analysis_failed": "Topics Failed"
+    "topic_analysis_failed": "Topics Failed",
+    "topic_alert_new_topic": "New Topic Detected",
+    "topic_alert_growth_spike": "Growth Spike Detected",
+    "topic_alert_new_theme": "New Theme Detected"
   },
   "time": {
     "justNow": "Just now",

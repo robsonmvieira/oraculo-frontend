@@ -50,4 +50,8 @@ export const TYPES = {
   GetUnreadCountUseCase: Symbol.for('GetUnreadCountUseCase'),
   MarkNotificationReadUseCase: Symbol.for('MarkNotificationReadUseCase'),
   MarkAllReadUseCase: Symbol.for('MarkAllReadUseCase'),
+  TopicAlertRepository: Symbol.for('TopicAlertRepository'),
+  ListAlertsUseCase: Symbol.for('ListAlertsUseCase'),
+  GetAlertsSummaryUseCase: Symbol.for('GetAlertsSummaryUseCase'),
+  DismissAlertUseCase: Symbol.for('DismissAlertUseCase'),
 } as const

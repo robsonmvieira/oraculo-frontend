@@ -1,4 +1,4 @@
-import { CheckCircle, AlertTriangle, Bell, Brain, Search, TrendingUp, Tag, MessageSquare, Heart } from 'lucide-react'
+import { CheckCircle, AlertTriangle, Bell, Brain, Search, TrendingUp, Tag, MessageSquare, Heart, Zap, Flame, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { NotificationType } from '@/modules/notifications'
 
@@ -15,6 +15,9 @@ const iconConfig: Record<string, { icon: React.ElementType; bgClass: string; ico
   topic_analysis_failed: { icon: MessageSquare, bgClass: 'bg-red-100 dark:bg-red-900/30', iconClass: 'text-red-600 dark:text-red-400' },
   sentiment_complete: { icon: Heart, bgClass: 'bg-green-100 dark:bg-green-900/30', iconClass: 'text-green-600 dark:text-green-400' },
   sentiment_failed: { icon: Heart, bgClass: 'bg-red-100 dark:bg-red-900/30', iconClass: 'text-red-600 dark:text-red-400' },
+  topic_alert_new_topic: { icon: Zap, bgClass: 'bg-blue-100 dark:bg-blue-900/30', iconClass: 'text-blue-600 dark:text-blue-400' },
+  topic_alert_growth_spike: { icon: Flame, bgClass: 'bg-orange-100 dark:bg-orange-900/30', iconClass: 'text-orange-600 dark:text-orange-400' },
+  topic_alert_new_theme: { icon: Sparkles, bgClass: 'bg-purple-100 dark:bg-purple-900/30', iconClass: 'text-purple-600 dark:text-purple-400' },
 }
 
 const defaultConfig = { icon: Bell, bgClass: 'bg-gray-100 dark:bg-zinc-800', iconClass: 'text-gray-500 dark:text-zinc-400' }

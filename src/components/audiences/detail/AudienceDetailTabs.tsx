@@ -1,6 +1,6 @@
 import { useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Bell } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   TopicsTable,
@@ -9,6 +9,7 @@ import {
   ThemeDetailPanel,
   SearchTabContent,
   SubredditsTabContent,
+  AlertsTabContent,
 } from '@/components/audiences/detail'
 import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
@@ -19,6 +20,7 @@ import type { Topic } from '@/modules/audience/domain/entities/Topic.entity'
 import type { Theme } from '@/modules/audience/domain/entities/Theme.entity'
 import { useGetAudienceThemes, useRefreshAudienceThemes, useGetAudienceIntents, useRefreshAudienceIntents } from '@/modules/audience/application/hooks'
 import type { IntentCategory } from '@/modules/audience/domain/entities/IntentCategory.entity'
+import { useAlertsSummary } from '@/modules/topic-alerts'
 
 export interface AudienceDetailTabsProps {
   contentRef: RefObject<HTMLDivElement | null>
@@ -157,6 +159,9 @@ export function AudienceDetailTabs({
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
   const [selectedIntentCategory, setSelectedIntentCategory] = useState<string | null>(null)
 
+  const { data: alertsSummary } = useAlertsSummary(audienceId)
+  const alertsCount = alertsSummary?.total ?? 0
+
   const isThemesTab = activeTab === 'themes'
 
   const weekQuery = useGetAudienceThemes(audienceId, 'week', isThemesTab)
@@ -244,6 +249,10 @@ export function AudienceDetailTabs({
         <TabsTrigger value="themes">
           <Sparkles className="w-4 h-4" />
           {t('tabs.themes')}
+        </TabsTrigger>
+        <TabsTrigger value="alerts" count={alertsCount > 0 ? alertsCount : undefined}>
+          <Bell className="w-4 h-4" />
+          {t('tabs.alerts')}
         </TabsTrigger>
         <TabsTrigger value="ask">
           <Sparkles className="w-4 h-4" />
@@ -348,6 +357,10 @@ export function AudienceDetailTabs({
             />
           </div>
         </div>
+      </TabsContent>
+
+      <TabsContent value="alerts" className="mt-6">
+        <AlertsTabContent audienceId={audienceId} />
       </TabsContent>
 
       <TabsContent value="ask" className="mt-6">
