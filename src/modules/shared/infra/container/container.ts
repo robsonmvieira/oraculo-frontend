@@ -17,6 +17,10 @@ import { NotificationRepository } from '@/modules/notifications/infra/repositori
 import type { INotificationRepository } from '@/modules/notifications/domain/repositories'
 import { ListNotificationsUseCase, GetUnreadCountUseCase, MarkNotificationReadUseCase, MarkAllReadUseCase } from '@/modules/notifications/application/use-cases'
 import type { IListNotificationsUseCase, IGetUnreadCountUseCase, IMarkNotificationReadUseCase, IMarkAllReadUseCase } from '@/modules/notifications/domain/use-cases'
+import { TopicAlertRepository } from '@/modules/topic-alerts/infra/repositories'
+import type { ITopicAlertRepository } from '@/modules/topic-alerts/domain/repositories'
+import { ListAlertsUseCase, GetAlertsSummaryUseCase, DismissAlertUseCase } from '@/modules/topic-alerts/application/use-cases'
+import type { IListAlertsUseCase, IGetAlertsSummaryUseCase, IDismissAlertUseCase } from '@/modules/topic-alerts/domain/use-cases'
 
 const container = new Container()
 
@@ -270,6 +274,26 @@ container.bind<IMarkNotificationReadUseCase>(TYPES.MarkNotificationReadUseCase).
 container.bind<IMarkAllReadUseCase>(TYPES.MarkAllReadUseCase).toDynamicValue(() => {
   const notificationRepository = container.get<INotificationRepository>(TYPES.NotificationRepository)
   return new MarkAllReadUseCase(notificationRepository)
+}).inSingletonScope()
+
+container.bind<ITopicAlertRepository>(TYPES.TopicAlertRepository).toDynamicValue(() => {
+  const httpClient = container.get<HttpClient>(TYPES.HttpClient)
+  return new TopicAlertRepository(httpClient)
+}).inSingletonScope()
+
+container.bind<IListAlertsUseCase>(TYPES.ListAlertsUseCase).toDynamicValue(() => {
+  const topicAlertRepository = container.get<ITopicAlertRepository>(TYPES.TopicAlertRepository)
+  return new ListAlertsUseCase(topicAlertRepository)
+}).inSingletonScope()
+
+container.bind<IGetAlertsSummaryUseCase>(TYPES.GetAlertsSummaryUseCase).toDynamicValue(() => {
+  const topicAlertRepository = container.get<ITopicAlertRepository>(TYPES.TopicAlertRepository)
+  return new GetAlertsSummaryUseCase(topicAlertRepository)
+}).inSingletonScope()
+
+container.bind<IDismissAlertUseCase>(TYPES.DismissAlertUseCase).toDynamicValue(() => {
+  const topicAlertRepository = container.get<ITopicAlertRepository>(TYPES.TopicAlertRepository)
+  return new DismissAlertUseCase(topicAlertRepository)
 }).inSingletonScope()
 
 export { container }

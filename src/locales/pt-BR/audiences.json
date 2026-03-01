@@ -286,11 +286,36 @@
     "subreddits": "Subreddits",
     "topics": "Tópicos",
     "themes": "Temas",
+    "alerts": "Alertas",
     "ask": "Perguntar",
     "products": "Produtos",
     "askAI": "Perguntar à IA",
     "askComingSoon": "Em breve - Faça perguntas sobre esta audiência",
     "productsComingSoon": "Em breve - Descubra produtos relevantes para esta audiência"
+  },
+  "alerts": {
+    "title": "Alertas",
+    "empty": "Nenhum alerta para esta audiência ainda.",
+    "emptyFiltered": "Nenhum alerta corresponde aos filtros selecionados.",
+    "dismiss": "Descartar",
+    "dismissed": "Alerta descartado",
+    "dismissError": "Falha ao descartar alerta",
+    "filters": {
+      "allTypes": "Todos os tipos",
+      "allSeverities": "Todas as severidades",
+      "showDismissed": "Mostrar descartados",
+      "hideDismissed": "Apenas ativos"
+    },
+    "type": {
+      "new_topic": "Novo Tópico",
+      "growth_spike": "Pico de Crescimento",
+      "new_theme": "Novo Tema"
+    },
+    "severity": {
+      "info": "Info",
+      "warning": "Alerta",
+      "critical": "Crítico"
+    }
   },
   "search": {
     "keywordSearch": "Busca por Palavra-chave",

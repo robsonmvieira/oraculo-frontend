@@ -17,6 +17,9 @@ export type NotificationType =
   | 'theme_summary_failed'
   | 'theme_panel_complete'
   | 'theme_panel_failed'
+  | 'topic_alert_new_topic'
+  | 'topic_alert_growth_spike'
+  | 'topic_alert_new_theme'
 
 export interface NotificationMetadata {
   audience_id?: string
@@ -24,6 +27,9 @@ export interface NotificationMetadata {
   topic_name?: string
   theme_id?: string
   analysis_id?: string
+  alert_id?: string
+  severity?: string
+  alert_type?: string
   [key: string]: unknown
 }
 

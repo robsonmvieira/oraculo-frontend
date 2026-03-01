@@ -286,11 +286,36 @@
     "subreddits": "Subreddits",
     "topics": "Topics",
     "themes": "Themes",
+    "alerts": "Alerts",
     "ask": "Ask",
     "products": "Products",
     "askAI": "Ask AI",
     "askComingSoon": "Coming soon - Ask questions about this audience",
     "productsComingSoon": "Coming soon - Discover products relevant to this audience"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "empty": "No alerts for this audience yet.",
+    "emptyFiltered": "No alerts match the selected filters.",
+    "dismiss": "Dismiss",
+    "dismissed": "Alert dismissed",
+    "dismissError": "Failed to dismiss alert",
+    "filters": {
+      "allTypes": "All types",
+      "allSeverities": "All severities",
+      "showDismissed": "Show dismissed",
+      "hideDismissed": "Active only"
+    },
+    "type": {
+      "new_topic": "New Topic",
+      "growth_spike": "Growth Spike",
+      "new_theme": "New Theme"
+    },
+    "severity": {
+      "info": "Info",
+      "warning": "Warning",
+      "critical": "Critical"
+    }
   },
   "search": {
     "keywordSearch": "Keyword Search",

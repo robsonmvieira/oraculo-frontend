@@ -8,6 +8,7 @@ import { TOPIC_SENTIMENT_QUERY_KEY } from '@/modules/audience/application/hooks/
 import { AUDIENCE_INTENTS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetAudienceIntents'
 import { THEME_SUMMARY_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemeSummary'
 import { THEME_PANEL_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemePanel'
+import { ALERTS_QUERY_KEY, ALERTS_SUMMARY_QUERY_KEY } from '@/modules/topic-alerts'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -23,6 +24,12 @@ function invalidateAnalysisQueries(
   const type = notification.getType()
 
   if (!audienceId) return
+
+  if (type === 'topic_alert_new_topic' || type === 'topic_alert_growth_spike' || type === 'topic_alert_new_theme') {
+    queryClient.invalidateQueries({ queryKey: ALERTS_QUERY_KEY(audienceId) })
+    queryClient.invalidateQueries({ queryKey: ALERTS_SUMMARY_QUERY_KEY(audienceId) })
+    return
+  }
 
   if (type === 'intent_classification_complete' || type === 'intent_classification_failed') {
     queryClient.invalidateQueries({ queryKey: AUDIENCE_INTENTS_QUERY_KEY(audienceId, 'week') })
@@ -89,10 +96,11 @@ export function useNotificationSSE() {
         queryClient.invalidateQueries({ queryKey: UNREAD_COUNT_QUERY_KEY })
         invalidateAnalysisQueries(queryClient, notification)
 
+        const isAlert = notification.getType().startsWith('topic_alert_')
         toast({
           title: notification.getTitle(),
           description: notification.getMessage(),
-          variant: notification.isSuccess() ? 'success' : 'destructive',
+          variant: isAlert || notification.isSuccess() ? 'success' : 'destructive',
         })
       },
       onOpen: () => {

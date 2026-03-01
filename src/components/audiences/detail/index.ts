@@ -51,3 +51,9 @@ export type { SubredditsTabContentProps } from './SubredditsTabContent'
 
 export { AudienceDetailTabs } from './AudienceDetailTabs'
 export type { AudienceDetailTabsProps } from './AudienceDetailTabs'
+
+export { AlertCard } from './AlertCard'
+export type { AlertCardProps } from './AlertCard'
+
+export { AlertsTabContent } from './AlertsTabContent'
+export type { AlertsTabContentProps } from './AlertsTabContent'
