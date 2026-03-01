@@ -427,8 +427,8 @@ interface RefreshIntentApiResponse {
 
 interface IntentPostApiItem {
   post_reddit_id: string
-  post_title: string
-  post_subreddit: string
+  title: string
+  subreddit: string
   primary_intent: string
   secondary_intent: string | null
   confidence: string
@@ -1121,8 +1121,8 @@ export class AudienceRepository implements IAudienceRepository {
     )
     const posts = response.posts.map((p) => new IntentPost({
       postRedditId: p.post_reddit_id,
-      postTitle: p.post_title,
-      postSubreddit: p.post_subreddit,
+      postTitle: p.title,
+      postSubreddit: p.subreddit,
       primaryIntent: p.primary_intent,
       secondaryIntent: p.secondary_intent,
       confidence: p.confidence,
