@@ -15,6 +15,8 @@ export type NotificationType =
   | 'intent_classification_failed'
   | 'theme_summary_complete'
   | 'theme_summary_failed'
+  | 'theme_panel_complete'
+  | 'theme_panel_failed'
 
 export interface NotificationMetadata {
   audience_id?: string

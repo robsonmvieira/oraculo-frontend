@@ -31,6 +31,8 @@ import type { RefreshAudienceIntentsParams, RefreshAudienceIntentsResult } from 
 import type { GetIntentPostsParams, GetIntentPostsResult } from '../../domain/use-cases/get-intent-posts.use-case'
 import type { GetThemeSummaryParams, GetThemeSummaryResult, ThemeSummaryStatus } from '../../domain/use-cases/get-theme-summary.use-case'
 import type { RefreshThemeSummaryParams, RefreshThemeSummaryResult } from '../../domain/use-cases/refresh-theme-summary.use-case'
+import type { GetThemePanelParams, GetThemePanelResult, ThemePanelStatus } from '../../domain/use-cases/get-theme-panel.use-case'
+import type { RefreshThemePanelParams, RefreshThemePanelResult } from '../../domain/use-cases/refresh-theme-panel.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -45,6 +47,7 @@ import { IntentCategory } from '../../domain/entities/IntentCategory.entity'
 import { IntentPost } from '../../domain/entities/IntentPost.entity'
 import { ThemeSummary } from '../../domain/entities/ThemeSummary.entity'
 import type { EmotionalTone } from '../../domain/entities/ThemeSummary.entity'
+import { ThemePanel } from '../../domain/entities/ThemePanel.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -455,6 +458,31 @@ interface RefreshThemeSummaryApiResponse {
   status: string
   theme_id: string
   summary_id?: string
+  message?: string
+}
+
+interface ThemePanelApiResponse {
+  status: string
+  panel_id?: string
+  subcategories?: {
+    total: number
+    items: Array<{ name: string; count: number; description: string }>
+  }
+  related_topics?: {
+    total: number
+    items: Array<{ name: string; count: number; topic_id: string | null }>
+  }
+  subreddit_distribution?: {
+    total: number
+    items: Array<{ name: string; post_count: number; avg_score: number }>
+  }
+  created_at?: string
+}
+
+interface RefreshThemePanelApiResponse {
+  status: string
+  theme_id: string
+  panel_id?: string
   message?: string
 }
 
@@ -1153,6 +1181,55 @@ export class AudienceRepository implements IAudienceRepository {
       status: response.status,
       themeId: response.theme_id,
       summaryId: response.summary_id,
+    }
+  }
+
+  async getThemePanel(params: GetThemePanelParams): Promise<GetThemePanelResult> {
+    const response = await this.httpClient.get<ThemePanelApiResponse>(
+      `audiences/${params.audienceId}/themes/${params.themeId}/panel`
+    )
+
+    const status = response.status as ThemePanelStatus
+
+    if (status !== 'ready' || !response.subcategories) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: new ThemePanel({
+        id: response.panel_id ?? '',
+        themeId: params.themeId,
+        subcategories: (response.subcategories?.items ?? []).map((s) => ({
+          name: s.name,
+          count: s.count,
+          description: s.description,
+        })),
+        relatedTopics: (response.related_topics?.items ?? []).map((t) => ({
+          name: t.name,
+          count: t.count,
+          topicId: t.topic_id,
+        })),
+        subredditDistribution: (response.subreddit_distribution?.items ?? []).map((s) => ({
+          name: s.name,
+          postCount: s.post_count,
+          avgScore: s.avg_score,
+        })),
+        createdAt: response.created_at ?? '',
+      }),
+    }
+  }
+
+  async refreshThemePanel(params: RefreshThemePanelParams): Promise<RefreshThemePanelResult> {
+    const response = await this.httpClient.post<RefreshThemePanelApiResponse>(
+      `audiences/${params.audienceId}/themes/${params.themeId}/panel/refresh?window=${params.window}`,
+      {}
+    )
+
+    return {
+      status: response.status,
+      themeId: response.theme_id,
+      panelId: response.panel_id,
     }
   }
 }

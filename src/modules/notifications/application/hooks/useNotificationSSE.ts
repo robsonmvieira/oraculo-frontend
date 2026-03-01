@@ -7,6 +7,7 @@ import { TOPIC_BEHAVIORAL_PATTERNS_QUERY_KEY } from '@/modules/audience/applicat
 import { TOPIC_SENTIMENT_QUERY_KEY } from '@/modules/audience/application/hooks/useGetTopicSentiment'
 import { AUDIENCE_INTENTS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetAudienceIntents'
 import { THEME_SUMMARY_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemeSummary'
+import { THEME_PANEL_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemePanel'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -33,6 +34,13 @@ function invalidateAnalysisQueries(
   if (type === 'theme_summary_complete' || type === 'theme_summary_failed') {
     if (themeId) {
       queryClient.invalidateQueries({ queryKey: THEME_SUMMARY_QUERY_KEY(audienceId, themeId) })
+    }
+    return
+  }
+
+  if (type === 'theme_panel_complete' || type === 'theme_panel_failed') {
+    if (themeId) {
+      queryClient.invalidateQueries({ queryKey: THEME_PANEL_QUERY_KEY(audienceId, themeId) })
     }
     return
   }

@@ -5,6 +5,8 @@ import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { useGetIntentPosts } from '@/modules/audience/application/hooks'
+import { useGetThemePanel } from '@/modules/audience/application/hooks/useGetThemePanel'
+import { useRefreshThemePanel } from '@/modules/audience/application/hooks/useRefreshThemePanel'
 import { ThemeSummaryCard } from './ThemeSummaryCard'
 import type { ThemeAnalysisWindow } from '@/modules/audience/domain/use-cases'
 
@@ -62,6 +64,45 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
     0,
   )
 
+  const isScoringTheme = !intentCategory && !!theme?.summaryThemes?.length
+  const panelThemeId = theme?.summaryThemes?.[0]?.id ?? ''
+  const panelWindow = theme?.window ?? 'week'
+
+  const panelQuery = useGetThemePanel(
+    audienceId ?? '',
+    panelThemeId,
+    isScoringTheme && !!audienceId && !!panelThemeId,
+  )
+
+  const refreshPanelMutation = useRefreshThemePanel()
+
+  useEffect(() => {
+    if (
+      isScoringTheme &&
+      audienceId &&
+      panelThemeId &&
+      panelQuery.data?.status === 'no_panel' &&
+      !refreshPanelMutation.isPending
+    ) {
+      refreshPanelMutation.mutate({ audienceId, themeId: panelThemeId, window: panelWindow })
+    }
+  }, [isScoringTheme, audienceId, panelThemeId, panelQuery.data?.status])
+
+  const panelData = panelQuery.data?.data
+  const hasPanelData = panelQuery.data?.status === 'ready' && !!panelData
+
+  const subcategories: ThemeSubcategory[] = hasPanelData
+    ? panelData.getSubcategories().map((s) => ({ name: s.name, count: s.count }))
+    : theme?.subcategories ?? []
+
+  const topics: ThemeTopic[] = hasPanelData
+    ? panelData.getRelatedTopics().map((t) => ({ name: t.name, count: t.count }))
+    : theme?.topics ?? []
+
+  const subreddits: ThemeSubreddit[] = hasPanelData
+    ? panelData.getSubredditDistribution().map((s) => ({ name: `r/${s.name}`, count: s.postCount }))
+    : theme?.subreddits ?? []
+
   useLayoutEffect(() => {
     if (!containerRef.current || !panelRef.current) return
 
@@ -116,6 +157,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
   const isIntentTheme = !!intentCategory
   const posts = postsQuery.data?.posts
   const isLoadingPosts = postsQuery.isLoading
+  const isPanelLoading = isScoringTheme && (panelQuery.isLoading || refreshPanelMutation.isPending)
 
   return (
     <div ref={containerRef} className="h-full">
@@ -178,6 +220,15 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
               </div>
             )}
 
+            {isPanelLoading && (
+              <div className="flex items-center justify-center py-6 mb-4">
+                <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500 dark:text-zinc-400">
+                  {t('themes.panel.generating')}
+                </span>
+              </div>
+            )}
+
             <div className="grid grid-cols-3 gap-4">
               {/* Subcategories */}
               <div>
@@ -186,11 +237,11 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
                     {t('themes.subcategories')}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-zinc-400">
-                    {theme.subcategories.length}
+                    {subcategories.length}
                   </span>
                 </div>
                 <ul className="space-y-1">
-                  {theme.subcategories.map((sub) => (
+                  {subcategories.map((sub) => (
                     <li
                       key={sub.name}
                       className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
@@ -216,11 +267,11 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
                     {t('themes.topics')}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-zinc-400">
-                    {theme.topics.length}
+                    {topics.length}
                   </span>
                 </div>
                 <ul className="space-y-1">
-                  {theme.topics.map((topic) => (
+                  {topics.map((topic) => (
                     <li
                       key={topic.name}
                       className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
@@ -246,11 +297,11 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
                     {t('themes.subreddits')}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-zinc-400">
-                    {theme.subreddits.length}
+                    {subreddits.length}
                   </span>
                 </div>
                 <ul className="space-y-1 max-h-[400px] overflow-y-auto">
-                  {theme.subreddits.map((subreddit) => (
+                  {subreddits.map((subreddit) => (
                     <li
                       key={subreddit.name}
                       className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
