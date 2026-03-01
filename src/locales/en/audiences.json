@@ -106,6 +106,28 @@
     "avgComments": "Avg comments",
     "keywords": "Keywords",
     "representativePosts": "Representative Posts",
+    "summary": {
+      "title": "Narrative Summary",
+      "generate": "Generate Summary",
+      "generating": "Generating summary...",
+      "noSummary": "No summary available yet. Generate one to get AI-powered insights.",
+      "narrative": "Narrative",
+      "highlights": "Highlights",
+      "keyThemes": "Key Themes",
+      "weekDifferentiator": "What made this period different",
+      "intentBreakdown": "Intent Breakdown",
+      "whyNotable": "Why notable",
+      "emotionalTone": {
+        "label": "Emotional Tone",
+        "positive": "Positive",
+        "mixed": "Mixed",
+        "tense": "Tense",
+        "neutral": "Neutral",
+        "celebratory": "Celebratory",
+        "concerned": "Concerned",
+        "supportive": "Supportive"
+      }
+    },
     "intents": {
       "advice_request": "Advice Requests",
       "advice_request_desc": "People asking for advice & resources",

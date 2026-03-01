@@ -17,6 +17,7 @@ export interface ThemeRepresentativePost {
 }
 
 interface ThemeProps {
+  id: string
   name: string
   summary: string
   postCount: number
@@ -30,6 +31,7 @@ interface ThemeProps {
 }
 
 export class Theme {
+  private readonly id: string
   private readonly name: string
   private readonly summary: string
   private readonly postCount: number
@@ -41,7 +43,8 @@ export class Theme {
   private readonly topKeywords: ThemeKeyword[]
   private readonly representativePosts: ThemeRepresentativePost[]
 
-  constructor({ name, summary, postCount, avgScore, avgComments, engagementScore, rank, topSubreddits, topKeywords, representativePosts }: ThemeProps) {
+  constructor({ id, name, summary, postCount, avgScore, avgComments, engagementScore, rank, topSubreddits, topKeywords, representativePosts }: ThemeProps) {
+    this.id = id
     this.name = name
     this.summary = summary
     this.postCount = postCount
@@ -52,6 +55,10 @@ export class Theme {
     this.topSubreddits = topSubreddits
     this.topKeywords = topKeywords
     this.representativePosts = representativePosts
+  }
+
+  getId(): string {
+    return this.id
   }
 
   getName(): string {

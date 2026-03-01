@@ -32,6 +32,8 @@ export const TYPES = {
   GetAudienceIntentsUseCase: Symbol.for('GetAudienceIntentsUseCase'),
   RefreshAudienceIntentsUseCase: Symbol.for('RefreshAudienceIntentsUseCase'),
   GetIntentPostsUseCase: Symbol.for('GetIntentPostsUseCase'),
+  GetThemeSummaryUseCase: Symbol.for('GetThemeSummaryUseCase'),
+  RefreshThemeSummaryUseCase: Symbol.for('RefreshThemeSummaryUseCase'),
   CommunityRepository: Symbol.for('CommunityRepository'),
   BrowseCommunitiesUseCase: Symbol.for('BrowseCommunitiesUseCase'),
   AuthRepository: Symbol.for('AuthRepository'),

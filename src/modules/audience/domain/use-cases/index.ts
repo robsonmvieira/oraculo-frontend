@@ -29,3 +29,5 @@ export type { IRefreshAudienceThemesUseCase, RefreshAudienceThemesParams, Refres
 export type { IGetAudienceIntentsUseCase, GetAudienceIntentsParams, GetAudienceIntentsResult, IntentAnalysisStatus } from './get-audience-intents.use-case'
 export type { IRefreshAudienceIntentsUseCase, RefreshAudienceIntentsParams, RefreshAudienceIntentsResult } from './refresh-audience-intents.use-case'
 export type { IGetIntentPostsUseCase, GetIntentPostsParams, GetIntentPostsResult } from './get-intent-posts.use-case'
+export type { IGetThemeSummaryUseCase, GetThemeSummaryParams, GetThemeSummaryResult, ThemeSummaryStatus } from './get-theme-summary.use-case'
+export type { IRefreshThemeSummaryUseCase, RefreshThemeSummaryParams, RefreshThemeSummaryResult } from './refresh-theme-summary.use-case'

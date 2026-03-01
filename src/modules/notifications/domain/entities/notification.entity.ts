@@ -11,11 +11,16 @@ export type NotificationType =
   | 'topic_analysis_failed'
   | 'sentiment_complete'
   | 'sentiment_failed'
+  | 'intent_classification_complete'
+  | 'intent_classification_failed'
+  | 'theme_summary_complete'
+  | 'theme_summary_failed'
 
 export interface NotificationMetadata {
   audience_id?: string
   topic_id?: string
   topic_name?: string
+  theme_id?: string
   analysis_id?: string
   [key: string]: unknown
 }

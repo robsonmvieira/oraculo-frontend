@@ -29,6 +29,8 @@ import type { RefreshAudienceThemesParams, RefreshAudienceThemesResult } from '.
 import type { GetAudienceIntentsParams, GetAudienceIntentsResult, IntentAnalysisStatus } from '../../domain/use-cases/get-audience-intents.use-case'
 import type { RefreshAudienceIntentsParams, RefreshAudienceIntentsResult } from '../../domain/use-cases/refresh-audience-intents.use-case'
 import type { GetIntentPostsParams, GetIntentPostsResult } from '../../domain/use-cases/get-intent-posts.use-case'
+import type { GetThemeSummaryParams, GetThemeSummaryResult, ThemeSummaryStatus } from '../../domain/use-cases/get-theme-summary.use-case'
+import type { RefreshThemeSummaryParams, RefreshThemeSummaryResult } from '../../domain/use-cases/refresh-theme-summary.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -41,6 +43,8 @@ import { TopicGrowthHistory } from '../../domain/entities/TopicGrowthHistory.ent
 import { Theme } from '../../domain/entities/Theme.entity'
 import { IntentCategory } from '../../domain/entities/IntentCategory.entity'
 import { IntentPost } from '../../domain/entities/IntentPost.entity'
+import { ThemeSummary } from '../../domain/entities/ThemeSummary.entity'
+import type { EmotionalTone } from '../../domain/entities/ThemeSummary.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -368,6 +372,7 @@ interface ThemeAnalysisApiResponse {
   completed_at?: string
   error_message?: string
   themes?: Array<{
+    id: string
     name: string
     summary: string
     post_count: number
@@ -431,6 +436,26 @@ interface IntentPostsApiResponse {
   total: number
   limit: number
   offset: number
+}
+
+interface ThemeSummaryApiResponse {
+  status: string
+  theme_id?: string
+  narrative?: string
+  highlights?: Array<{ title: string; subreddit: string; score: number; why_notable: string }>
+  emotional_tone?: string
+  tone_description?: string
+  key_themes?: Array<{ theme: string; description: string }>
+  intent_breakdown?: Record<string, number> | null
+  week_differentiator?: string | null
+  created_at?: string
+}
+
+interface RefreshThemeSummaryApiResponse {
+  status: string
+  theme_id: string
+  summary_id?: string
+  message?: string
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -975,6 +1000,7 @@ export class AudienceRepository implements IAudienceRepository {
     return {
       status,
       data: response.themes.map((t) => new Theme({
+        id: t.id,
         name: t.name,
         summary: t.summary,
         postCount: t.post_count,
@@ -1079,6 +1105,54 @@ export class AudienceRepository implements IAudienceRepository {
       limit: response.limit,
       offset: response.offset,
       hasMore: offset + posts.length < response.total,
+    }
+  }
+
+  async getThemeSummary(params: GetThemeSummaryParams): Promise<GetThemeSummaryResult> {
+    const response = await this.httpClient.get<ThemeSummaryApiResponse>(
+      `audiences/${params.audienceId}/themes/${params.themeId}/summary`
+    )
+
+    const status = response.status as ThemeSummaryStatus
+
+    if (status !== 'ready' || !response.narrative) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: new ThemeSummary({
+        themeId: response.theme_id ?? params.themeId,
+        narrative: response.narrative,
+        highlights: (response.highlights ?? []).map((h) => ({
+          title: h.title,
+          subreddit: h.subreddit,
+          score: h.score,
+          whyNotable: h.why_notable,
+        })),
+        emotionalTone: (response.emotional_tone ?? 'neutral') as EmotionalTone,
+        toneDescription: response.tone_description ?? '',
+        keyThemes: (response.key_themes ?? []).map((k) => ({
+          theme: k.theme,
+          description: k.description,
+        })),
+        intentBreakdown: response.intent_breakdown ?? null,
+        weekDifferentiator: response.week_differentiator ?? null,
+        createdAt: response.created_at ?? '',
+      }),
+    }
+  }
+
+  async refreshThemeSummary(params: RefreshThemeSummaryParams): Promise<RefreshThemeSummaryResult> {
+    const response = await this.httpClient.post<RefreshThemeSummaryApiResponse>(
+      `audiences/${params.audienceId}/themes/${params.themeId}/summary/refresh?window=${params.window}`,
+      {}
+    )
+
+    return {
+      status: response.status,
+      themeId: response.theme_id,
+      summaryId: response.summary_id,
     }
   }
 }
