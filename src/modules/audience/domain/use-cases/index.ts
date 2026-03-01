@@ -31,3 +31,5 @@ export type { IRefreshAudienceIntentsUseCase, RefreshAudienceIntentsParams, Refr
 export type { IGetIntentPostsUseCase, GetIntentPostsParams, GetIntentPostsResult } from './get-intent-posts.use-case'
 export type { IGetThemeSummaryUseCase, GetThemeSummaryParams, GetThemeSummaryResult, ThemeSummaryStatus } from './get-theme-summary.use-case'
 export type { IRefreshThemeSummaryUseCase, RefreshThemeSummaryParams, RefreshThemeSummaryResult } from './refresh-theme-summary.use-case'
+export type { IGetThemePanelUseCase, GetThemePanelParams, GetThemePanelResult, ThemePanelStatus } from './get-theme-panel.use-case'
+export type { IRefreshThemePanelUseCase, RefreshThemePanelParams, RefreshThemePanelResult } from './refresh-theme-panel.use-case'

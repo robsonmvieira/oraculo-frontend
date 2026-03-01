@@ -31,3 +31,5 @@ export { RefreshAudienceIntentsUseCase } from './refresh-audience-intents-use-ca
 export { GetIntentPostsUseCase } from './get-intent-posts-use-case'
 export { GetThemeSummaryUseCase } from './get-theme-summary-use-case'
 export { RefreshThemeSummaryUseCase } from './refresh-theme-summary-use-case'
+export { GetThemePanelUseCase } from './get-theme-panel-use-case'
+export { RefreshThemePanelUseCase } from './refresh-theme-panel-use-case'

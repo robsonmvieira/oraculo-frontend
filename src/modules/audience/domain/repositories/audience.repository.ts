@@ -29,6 +29,8 @@ import type { RefreshAudienceIntentsParams, RefreshAudienceIntentsResult } from 
 import type { GetIntentPostsParams, GetIntentPostsResult } from "../use-cases/get-intent-posts.use-case";
 import type { GetThemeSummaryParams, GetThemeSummaryResult } from "../use-cases/get-theme-summary.use-case";
 import type { RefreshThemeSummaryParams, RefreshThemeSummaryResult } from "../use-cases/refresh-theme-summary.use-case";
+import type { GetThemePanelParams, GetThemePanelResult } from "../use-cases/get-theme-panel.use-case";
+import type { RefreshThemePanelParams, RefreshThemePanelResult } from "../use-cases/refresh-theme-panel.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -64,4 +66,6 @@ export interface IAudienceRepository {
   getIntentPosts(params: GetIntentPostsParams): Promise<GetIntentPostsResult>
   getThemeSummary(params: GetThemeSummaryParams): Promise<GetThemeSummaryResult>
   refreshThemeSummary(params: RefreshThemeSummaryParams): Promise<RefreshThemeSummaryResult>
+  getThemePanel(params: GetThemePanelParams): Promise<GetThemePanelResult>
+  refreshThemePanel(params: RefreshThemePanelParams): Promise<RefreshThemePanelResult>
 }
