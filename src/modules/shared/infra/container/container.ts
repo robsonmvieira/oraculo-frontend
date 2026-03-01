@@ -3,8 +3,8 @@ import { TYPES } from './types'
 import { KyHttpClient, type HttpClient } from '../http'
 import { AudienceRepository } from '@/modules/audience/infra/repositories'
 import type { IAudienceRepository } from '@/modules/audience/domain/repositories'
-import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase, GetAudienceSuggestionsUseCase, DeleteAudienceUseCase, GetAudienceKeywordsUseCase, MarkCommunityNotRelevantUseCase, GetAudienceTopicsUseCase, GetTopicDeepDiveUseCase, TriggerTopicDeepDiveUseCase, GetTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsUseCase, GetTopicSentimentUseCase, TriggerTopicSentimentUseCase, AskTopicUseCase, StartTopicChatUseCase, SendTopicChatMessageUseCase, ListTopicChatConversationsUseCase, GetTopicChatMessagesUseCase, ArchiveTopicChatUseCase, GetTopicGrowthHistoryUseCase, GetAudienceThemesUseCase, RefreshAudienceThemesUseCase } from '@/modules/audience/application/use-cases'
-import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase, IGetAudienceSuggestionsUseCase, IDeleteAudienceUseCase, IGetAudienceKeywordsUseCase, IMarkCommunityNotRelevantUseCase, IGetAudienceTopicsUseCase, IGetTopicDeepDiveUseCase, ITriggerTopicDeepDiveUseCase, IGetTopicBehavioralPatternsUseCase, ITriggerTopicBehavioralPatternsUseCase, IGetTopicSentimentUseCase, ITriggerTopicSentimentUseCase, IAskTopicUseCase, IStartTopicChatUseCase, ISendTopicChatMessageUseCase, IListTopicChatConversationsUseCase, IGetTopicChatMessagesUseCase, IArchiveTopicChatUseCase, IGetTopicGrowthHistoryUseCase, IGetAudienceThemesUseCase, IRefreshAudienceThemesUseCase } from '@/modules/audience/domain/use-cases'
+import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase, GetAudienceSuggestionsUseCase, DeleteAudienceUseCase, GetAudienceKeywordsUseCase, MarkCommunityNotRelevantUseCase, GetAudienceTopicsUseCase, GetTopicDeepDiveUseCase, TriggerTopicDeepDiveUseCase, GetTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsUseCase, GetTopicSentimentUseCase, TriggerTopicSentimentUseCase, AskTopicUseCase, StartTopicChatUseCase, SendTopicChatMessageUseCase, ListTopicChatConversationsUseCase, GetTopicChatMessagesUseCase, ArchiveTopicChatUseCase, GetTopicGrowthHistoryUseCase, GetAudienceThemesUseCase, RefreshAudienceThemesUseCase, GetAudienceIntentsUseCase, RefreshAudienceIntentsUseCase, GetIntentPostsUseCase } from '@/modules/audience/application/use-cases'
+import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase, IGetAudienceSuggestionsUseCase, IDeleteAudienceUseCase, IGetAudienceKeywordsUseCase, IMarkCommunityNotRelevantUseCase, IGetAudienceTopicsUseCase, IGetTopicDeepDiveUseCase, ITriggerTopicDeepDiveUseCase, IGetTopicBehavioralPatternsUseCase, ITriggerTopicBehavioralPatternsUseCase, IGetTopicSentimentUseCase, ITriggerTopicSentimentUseCase, IAskTopicUseCase, IStartTopicChatUseCase, ISendTopicChatMessageUseCase, IListTopicChatConversationsUseCase, IGetTopicChatMessagesUseCase, IArchiveTopicChatUseCase, IGetTopicGrowthHistoryUseCase, IGetAudienceThemesUseCase, IRefreshAudienceThemesUseCase, IGetAudienceIntentsUseCase, IRefreshAudienceIntentsUseCase, IGetIntentPostsUseCase } from '@/modules/audience/domain/use-cases'
 import { CommunityRepository } from '@/modules/community/infra/repositories'
 import type { ICommunityRepository } from '@/modules/community/domain/repositories'
 import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-cases'
@@ -165,6 +165,21 @@ container.bind<IGetAudienceThemesUseCase>(TYPES.GetAudienceThemesUseCase).toDyna
 container.bind<IRefreshAudienceThemesUseCase>(TYPES.RefreshAudienceThemesUseCase).toDynamicValue(() => {
   const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
   return new RefreshAudienceThemesUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IGetAudienceIntentsUseCase>(TYPES.GetAudienceIntentsUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new GetAudienceIntentsUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IRefreshAudienceIntentsUseCase>(TYPES.RefreshAudienceIntentsUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new RefreshAudienceIntentsUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IGetIntentPostsUseCase>(TYPES.GetIntentPostsUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new GetIntentPostsUseCase(audienceRepository)
 }).inSingletonScope()
 
 container.bind<ICommunityRepository>(TYPES.CommunityRepository).toDynamicValue(() => {

@@ -26,6 +26,9 @@ import type { ArchiveTopicChatParams, ArchiveTopicChatResult } from '../../domai
 import type { GetTopicGrowthHistoryParams, GetTopicGrowthHistoryResult } from '../../domain/use-cases/get-topic-growth-history.use-case'
 import type { GetAudienceThemesParams, GetAudienceThemesResult, ThemeAnalysisStatus } from '../../domain/use-cases/get-audience-themes.use-case'
 import type { RefreshAudienceThemesParams, RefreshAudienceThemesResult } from '../../domain/use-cases/refresh-audience-themes.use-case'
+import type { GetAudienceIntentsParams, GetAudienceIntentsResult, IntentAnalysisStatus } from '../../domain/use-cases/get-audience-intents.use-case'
+import type { RefreshAudienceIntentsParams, RefreshAudienceIntentsResult } from '../../domain/use-cases/refresh-audience-intents.use-case'
+import type { GetIntentPostsParams, GetIntentPostsResult } from '../../domain/use-cases/get-intent-posts.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -36,6 +39,8 @@ import { TopicConversation } from '../../domain/entities/TopicConversation.entit
 import { TopicConversationMessage } from '../../domain/entities/TopicConversationMessage.entity'
 import { TopicGrowthHistory } from '../../domain/entities/TopicGrowthHistory.entity'
 import { Theme } from '../../domain/entities/Theme.entity'
+import { IntentCategory } from '../../domain/entities/IntentCategory.entity'
+import { IntentPost } from '../../domain/entities/IntentPost.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -380,6 +385,52 @@ interface RefreshThemeApiResponse {
   status: string
   analysis_id: string
   message?: string
+}
+
+interface IntentAnalysisApiResponse {
+  status: string
+  analysis_id?: string
+  audience_id?: string
+  time_window?: string
+  completed_at?: string
+  total_posts_classified?: number
+  error_message?: string
+  intents?: Array<{
+    category: string
+    label: string
+    icon: string
+    post_count: number
+    percentage: number
+    description: string
+    subcategories: Record<string, number>
+    topic_keywords: Record<string, number>
+    top_subreddits: Array<{ name: string; count: number }>
+    sample_posts: Array<{ title: string; subreddit: string; score: number }>
+    rank: number
+  }>
+  message?: string
+}
+
+interface RefreshIntentApiResponse {
+  status: string
+  analysis_id: string
+  message?: string
+}
+
+interface IntentPostApiItem {
+  post_reddit_id: string
+  post_title: string
+  post_subreddit: string
+  primary_intent: string
+  secondary_intent: string | null
+  confidence: string
+}
+
+interface IntentPostsApiResponse {
+  posts: IntentPostApiItem[]
+  total: number
+  limit: number
+  offset: number
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -957,6 +1008,77 @@ export class AudienceRepository implements IAudienceRepository {
     return {
       status: response.status,
       analysisId: response.analysis_id,
+    }
+  }
+
+  async getAudienceIntents(params: GetAudienceIntentsParams): Promise<GetAudienceIntentsResult> {
+    const response = await this.httpClient.get<IntentAnalysisApiResponse>(
+      `audiences/${params.audienceId}/themes/intents?window=${params.window}`
+    )
+
+    const status = response.status as IntentAnalysisStatus
+
+    if (status !== 'ready' || !response.intents) {
+      return { status, analysisId: response.analysis_id ?? null, totalPostsClassified: null, data: null }
+    }
+
+    return {
+      status,
+      analysisId: response.analysis_id ?? null,
+      totalPostsClassified: response.total_posts_classified ?? null,
+      data: response.intents.map((i) => new IntentCategory({
+        category: i.category,
+        label: i.label,
+        icon: i.icon,
+        postCount: i.post_count,
+        percentage: i.percentage,
+        description: i.description,
+        subcategories: i.subcategories ?? {},
+        topicKeywords: i.topic_keywords ?? {},
+        topSubreddits: (i.top_subreddits ?? []).map((s) => ({
+          name: s.name,
+          count: s.count,
+        })),
+        samplePosts: (i.sample_posts ?? []).map((p) => ({
+          title: p.title,
+          subreddit: p.subreddit,
+          score: p.score,
+        })),
+        rank: i.rank,
+      })),
+    }
+  }
+
+  async refreshAudienceIntents(params: RefreshAudienceIntentsParams): Promise<RefreshAudienceIntentsResult> {
+    const response = await this.httpClient.post<RefreshIntentApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/refresh?window=${params.window}`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id,
+    }
+  }
+
+  async getIntentPosts(params: GetIntentPostsParams): Promise<GetIntentPostsResult> {
+    const limit = params.limit ?? 20
+    const offset = params.offset ?? 0
+    const response = await this.httpClient.get<IntentPostsApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/posts?window=${params.window}&limit=${limit}&offset=${offset}`
+    )
+    const posts = response.posts.map((p) => new IntentPost({
+      postRedditId: p.post_reddit_id,
+      postTitle: p.post_title,
+      postSubreddit: p.post_subreddit,
+      primaryIntent: p.primary_intent,
+      secondaryIntent: p.secondary_intent,
+      confidence: p.confidence,
+    }))
+    return {
+      posts,
+      total: response.total,
+      limit: response.limit,
+      offset: response.offset,
+      hasMore: offset + posts.length < response.total,
     }
   }
 }

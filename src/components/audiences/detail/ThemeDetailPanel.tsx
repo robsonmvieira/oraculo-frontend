@@ -1,9 +1,10 @@
-import { useRef, useEffect, useLayoutEffect } from 'react'
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, Sparkles, Copy, MessageSquare } from 'lucide-react'
+import { Search, Sparkles, Copy, MessageSquare, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
+import { useGetIntentPosts } from '@/modules/audience/application/hooks'
 
 export interface ThemeSubcategory {
   name: string
@@ -32,13 +33,25 @@ export interface ThemeDetail {
 
 export interface ThemeDetailPanelProps {
   theme: ThemeDetail | null
+  audienceId?: string
+  intentCategory?: string | null
 }
 
-export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
+export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly<ThemeDetailPanelProps>) {
   const { t } = useTranslation('audiences')
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
+  const [showPosts, setShowPosts] = useState(false)
+
+  const postsQuery = useGetIntentPosts(
+    audienceId ?? '',
+    intentCategory ?? '',
+    'week',
+    showPosts && !!audienceId && !!intentCategory,
+    20,
+    0,
+  )
 
   useLayoutEffect(() => {
     if (!containerRef.current || !panelRef.current) return
@@ -87,6 +100,14 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
     }
   }, [prefersReducedMotion, theme])
 
+  useEffect(() => {
+    setShowPosts(false)
+  }, [theme?.id, intentCategory])
+
+  const isIntentTheme = !!intentCategory
+  const posts = postsQuery.data?.posts
+  const isLoadingPosts = postsQuery.isLoading
+
   return (
     <div ref={containerRef} className="h-full">
       <div
@@ -104,7 +125,12 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
             </p>
 
             <div className="flex flex-wrap justify-end gap-2 mb-6">
-              <Button variant="primary" size="sm" className="gap-1.5">
+              <Button
+                variant="primary"
+                size="sm"
+                className="gap-1.5"
+                onClick={isIntentTheme ? () => setShowPosts(!showPosts) : undefined}
+              >
                 <Search className="w-3.5 h-3.5" />
                 {t('themes.browseAll')}
               </Button>
@@ -215,6 +241,46 @@ export function ThemeDetailPanel({ theme }: Readonly<ThemeDetailPanelProps>) {
                 </ul>
               </div>
             </div>
+
+            {showPosts && isIntentTheme && (
+              <div className="mt-6">
+                <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-3">
+                  {t('themes.posts')}
+                </h4>
+                {isLoadingPosts && (
+                  <div className="flex items-center justify-center py-6">
+                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                  </div>
+                )}
+                {posts && posts.length > 0 && (
+                  <ul className="space-y-2 max-h-[300px] overflow-y-auto">
+                    {posts.map((post) => (
+                      <li
+                        key={post.getPostRedditId()}
+                        className="py-2 px-3 rounded-lg bg-gray-50 dark:bg-zinc-800"
+                      >
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          {post.getPostTitle()}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-gray-500 dark:text-zinc-400">
+                            r/{post.getPostSubreddit()}
+                          </span>
+                          <span className="text-xs text-gray-400 dark:text-zinc-500">
+                            {Math.round(post.getConfidence() * 100)}%
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {posts?.length === 0 && !isLoadingPosts && (
+                  <p className="text-sm text-gray-500 dark:text-zinc-400 text-center py-4">
+                    {t('themes.noBookmarks')}
+                  </p>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
