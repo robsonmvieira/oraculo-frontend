@@ -30,7 +30,7 @@ export function MainLayout() {
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
       <Sidebar />
 
-      <div className="ml-20">
+      <div className="md:ml-20">
         <Topbar />
 
         <main

@@ -90,7 +90,7 @@ export function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className="fixed left-0 top-0 h-screen w-20 bg-dark rounded-r-3xl flex flex-col items-center py-6 z-50"
+      className="fixed left-0 top-0 h-screen w-20 bg-dark rounded-r-3xl hidden md:flex flex-col items-center py-6 z-50"
     >
       <div className="w-12 h-12 bg-lime rounded-xl flex items-center justify-center mb-8">
         <span className="text-black font-bold text-xl">S</span>

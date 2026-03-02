@@ -36,7 +36,7 @@ export function Tabs({ defaultValue, value, onValueChange, children, className }
 
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      <div className={className}>{children}</div>
+      <div className={cn('min-w-0 overflow-hidden', className)}>{children}</div>
     </TabsContext.Provider>
   )
 }
@@ -50,7 +50,7 @@ export function TabsList({ children, className }: Readonly<TabsListProps>) {
   return (
     <div
       className={cn(
-        'flex items-center gap-6 border-b border-gray-200 dark:border-zinc-800',
+        'flex items-center gap-6 border-b border-gray-200 dark:border-zinc-800 overflow-x-auto max-w-full [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
         className
       )}
     >
@@ -79,7 +79,7 @@ export function TabsTrigger({
     <button
       onClick={() => setActiveTab(value)}
       className={cn(
-        'cursor-pointer relative pb-3 text-sm font-medium transition-colors duration-200',
+        'cursor-pointer relative pb-3 text-sm font-medium whitespace-nowrap shrink-0 transition-colors duration-200',
         isActive
           ? 'text-gray-900 dark:text-white'
           : 'text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-300',

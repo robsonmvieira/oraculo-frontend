@@ -55,9 +55,10 @@ export interface TopicDetail {
 export interface TopicDetailPanelProps {
   topic: TopicDetail | null
   audienceId: string
+  embedded?: boolean
 }
 
-export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPanelProps>) {
+export function TopicDetailPanel({ topic, audienceId, embedded = false }: Readonly<TopicDetailPanelProps>) {
   const { t } = useTranslation('audiences')
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -201,15 +202,15 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   }
 
   useLayoutEffect(() => {
-    if (!containerRef.current || !panelRef.current) return
+    if (embedded || !containerRef.current || !panelRef.current) return
 
     if (!topic) {
       gsap.set(panelRef.current, { opacity: 0, x: 50, display: 'none' })
     }
-  }, [])
+  }, [embedded])
 
   useEffect(() => {
-    if (!containerRef.current || !panelRef.current) return
+    if (embedded || !containerRef.current || !panelRef.current) return
 
     if (topic) {
       gsap.set(panelRef.current, { display: 'block' })
@@ -245,7 +246,7 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
         })
       }
     }
-  }, [prefersReducedMotion, topic])
+  }, [embedded, prefersReducedMotion, topic])
 
   const browseAllLabel = isProcessing ? t('topicDetail.analyzing') : t('topicDetail.browseAll')
   const browseAllDisabled = isProcessing || triggerDeepDive.isPending
@@ -257,37 +258,44 @@ export function TopicDetailPanel({ topic, audienceId }: Readonly<TopicDetailPane
   const sentimentDisabled = isSentimentProcessing || triggerSentiment.isPending
 
   return (
-    <div ref={containerRef} className="h-full">
+    <div ref={containerRef} className={embedded ? '' : 'h-full'}>
       <div
         ref={panelRef}
-        className="bg-white dark:bg-zinc-900 rounded-2xl p-6 hidden max-h-[80vh] overflow-y-auto"
+        className={embedded
+          ? ''
+          : 'bg-white dark:bg-zinc-900 rounded-2xl p-6 hidden max-h-[80vh] overflow-y-auto'
+        }
       >
         {topic && (
           <>
-            <div className="flex items-start justify-between mb-4">
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
-                {topic.name}
-              </h3>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-gray-500 dark:text-zinc-400">
-                  {topic.frequency} / {topic.frequencyUnit}
-                </span>
-                <span className={`flex items-center gap-1 ${
-                  topic.growthTrend === 'down' ? 'text-red-500'
-                    : topic.growthTrend === 'stable' ? 'text-yellow-500'
-                    : 'text-green-500'
-                }`}>
-                  {topic.growthTrend === 'down' ? <TrendingDown className="w-3 h-3" />
-                    : topic.growthTrend === 'stable' ? <Minus className="w-3 h-3" />
-                    : <TrendingUp className="w-3 h-3" />}
-                  {topic.growth}%
-                </span>
-              </div>
-            </div>
+            {!embedded && (
+              <>
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
+                    {topic.name}
+                  </h3>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-500 dark:text-zinc-400">
+                      {topic.frequency} / {topic.frequencyUnit}
+                    </span>
+                    <span className={`flex items-center gap-1 ${
+                      topic.growthTrend === 'down' ? 'text-red-500'
+                        : topic.growthTrend === 'stable' ? 'text-yellow-500'
+                        : 'text-green-500'
+                    }`}>
+                      {topic.growthTrend === 'down' ? <TrendingDown className="w-3 h-3" />
+                        : topic.growthTrend === 'stable' ? <Minus className="w-3 h-3" />
+                        : <TrendingUp className="w-3 h-3" />}
+                      {topic.growth}%
+                    </span>
+                  </div>
+                </div>
 
-            <p className="text-sm text-gray-600 dark:text-zinc-300 mb-6 leading-relaxed">
-              {topic.description}
-            </p>
+                <p className="text-sm text-gray-600 dark:text-zinc-300 mb-6 leading-relaxed">
+                  {topic.description}
+                </p>
+              </>
+            )}
 
             <div className="flex flex-wrap justify-end gap-2 mb-6">
               <Button
