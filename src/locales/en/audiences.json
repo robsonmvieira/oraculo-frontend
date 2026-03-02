@@ -131,6 +131,14 @@
     "panel": {
       "generating": "Generating panel data..."
     },
+    "painPatterns": {
+      "title": "Patterns",
+      "empty": "No patterns identified for this category.",
+      "generate": "Generate Patterns",
+      "generating": "Analyzing...",
+      "bookmark": "Bookmark {{count}} submissions",
+      "browse": "Browse {{count}} submissions"
+    },
     "intents": {
       "advice_request": "Advice Requests",
       "advice_request_desc": "People asking for advice & resources",

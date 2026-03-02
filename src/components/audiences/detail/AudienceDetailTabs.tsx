@@ -130,6 +130,7 @@ function mapIntentToDetail(intent: IntentCategory, t: (key: string) => string): 
       name: s.name,
       count: s.count,
     })),
+    painPatterns: intent.getPainPatterns(),
   }
 }
 

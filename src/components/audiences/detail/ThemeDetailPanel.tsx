@@ -4,11 +4,13 @@ import { Search, Sparkles, Copy, MessageSquare, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
-import { useGetIntentPosts } from '@/modules/audience/application/hooks'
+import { useGetIntentPosts, useRefreshAudienceIntents } from '@/modules/audience/application/hooks'
 import { useGetThemePanel } from '@/modules/audience/application/hooks/useGetThemePanel'
 import { useRefreshThemePanel } from '@/modules/audience/application/hooks/useRefreshThemePanel'
 import { ThemeSummaryCard } from './ThemeSummaryCard'
+import { PainPatternsSection } from './PainPatternsSection'
 import type { ThemeAnalysisWindow } from '@/modules/audience/domain/use-cases'
+import type { PainPattern } from '@/modules/audience/domain/entities/IntentCategory.entity'
 
 export interface ThemeSubcategory {
   name: string
@@ -39,6 +41,7 @@ export interface ThemeDetail {
   topics: ThemeTopic[]
   subreddits: ThemeSubreddit[]
   summaryThemes?: ThemeSummaryTheme[]
+  painPatterns?: PainPattern[]
   window?: ThemeAnalysisWindow
 }
 
@@ -55,6 +58,15 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
   const panelRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [showPosts, setShowPosts] = useState(false)
+  const [showPatterns, setShowPatterns] = useState(false)
+
+  const refreshIntentsMutation = useRefreshAudienceIntents()
+
+  const handleRefreshPatterns = () => {
+    if (audienceId) {
+      refreshIntentsMutation.mutate({ audienceId, window: 'week' })
+    }
+  }
 
   const postsQuery = useGetIntentPosts(
     audienceId ?? '',
@@ -153,6 +165,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
 
   useEffect(() => {
     setShowPosts(false)
+    setShowPatterns(false)
   }, [theme?.id, intentCategory])
 
   const isIntentTheme = !!intentCategory
@@ -185,15 +198,20 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
 
             <div className="flex flex-wrap justify-end gap-2 mb-6">
               <Button
-                variant="primary"
+                variant={showPosts ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
-                onClick={isIntentTheme ? () => setShowPosts(!showPosts) : undefined}
+                onClick={isIntentTheme ? () => { setShowPosts(!showPosts); setShowPatterns(false) } : undefined}
               >
                 <Search className="w-3.5 h-3.5" />
                 {t('themes.browseAll')}
               </Button>
-              <Button variant="outline" size="sm" className="gap-1.5">
+              <Button
+                variant={showPatterns ? 'primary' : 'outline'}
+                size="sm"
+                className="gap-1.5"
+                onClick={isIntentTheme ? () => { setShowPatterns(!showPatterns); setShowPosts(false) } : undefined}
+              >
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('themes.patterns')}
               </Button>
@@ -237,7 +255,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-4">
+            {!showPatterns && <div className="grid grid-cols-3 gap-4">
               {/* Subcategories */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -329,7 +347,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                   ))}
                 </ul>
               </div>
-            </div>
+            </div>}
 
             {showPosts && isIntentTheme && (
               <div className="mt-6">
@@ -369,6 +387,14 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                   </p>
                 )}
               </div>
+            )}
+
+            {showPatterns && isIntentTheme && (
+              <PainPatternsSection
+                patterns={theme.painPatterns ?? []}
+                onRefresh={handleRefreshPatterns}
+                isRefreshing={refreshIntentsMutation.isPending}
+              />
             )}
           </>
         )}

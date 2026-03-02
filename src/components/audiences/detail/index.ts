@@ -66,3 +66,6 @@ export type { ContentSuggestionDrawerProps } from './ContentSuggestionDrawer'
 
 export { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
 export type { ContentSuggestionsTabContentProps } from './ContentSuggestionsTabContent'
+
+export { PainPatternsSection } from './PainPatternsSection'
+export type { PainPatternsSectionProps } from './PainPatternsSection'
