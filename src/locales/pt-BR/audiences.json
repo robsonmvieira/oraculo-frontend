@@ -287,6 +287,7 @@
     "topics": "Tópicos",
     "themes": "Temas",
     "alerts": "Alertas",
+    "content": "Conteúdo",
     "ask": "Perguntar",
     "products": "Produtos",
     "askAI": "Perguntar à IA",
@@ -451,5 +452,71 @@
     "communityAddFailed": "Falha ao adicionar comunidade",
     "markNotRelevantFailed": "Falha ao marcar como não relevante",
     "genericError": "Algo deu errado. Por favor, tente novamente."
+  },
+  "contentSuggestions": {
+    "title": "Sugestões de Conteúdo",
+    "subtitle": "Ideias de conteúdo baseadas em inteligência real da sua audiência",
+    "generate": "Gerar Sugestões",
+    "regenerate": "Regenerar",
+    "processing": "Gerando sugestões de conteúdo...",
+    "processingDescription": "Analisando dados de todos os módulos disponíveis para criar recomendações estratégicas de conteúdo. Isso pode levar 1-2 minutos.",
+    "empty": "Nenhuma sugestão de conteúdo ainda.",
+    "emptyDescription": "Gere sugestões baseadas nos tópicos, sentimentos e padrões comportamentais da sua audiência.",
+    "failed": "Falha ao gerar sugestões",
+    "failedDescription": "Algo deu errado durante a geração das sugestões. Por favor, tente novamente.",
+    "retry": "Tentar Novamente",
+    "alreadyExists": "Sugestões estão atualizadas. Execute novas análises primeiro para obter sugestões atualizadas.",
+    "rank": "Ranking #{{rank}}",
+    "whyNow": "Por que agora",
+    "approach": "Abordagem",
+    "evidence": "Evidências",
+    "outline": "Estrutura do Conteúdo",
+    "keywords": "Palavras-chave",
+    "researchNotes": "Notas de Pesquisa",
+    "imagePrompt": "Prompt de Imagem",
+    "differentiation": "Diferenciação",
+    "accuracyNotes": "Validação de Acurácia",
+    "sourceTopics": "Tópicos Fonte",
+    "sourceModules": "Fontes de Dados",
+    "modulesUsed": "Módulos utilizados",
+    "priority": {
+      "label": "Prioridade",
+      "all": "Todas",
+      "high": "Alta",
+      "medium": "Média",
+      "low": "Baixa"
+    },
+    "format": {
+      "label": "Formato",
+      "thread": "Thread",
+      "carrossel": "Carrossel",
+      "artigo": "Artigo",
+      "video_script": "Roteiro de Vídeo",
+      "newsletter": "Newsletter",
+      "infographic": "Infográfico"
+    },
+    "tone": {
+      "label": "Tom",
+      "educativo": "Educativo",
+      "urgente": "Urgente",
+      "empatico": "Empático",
+      "provocativo": "Provocativo",
+      "inspirador": "Inspirador",
+      "analitico": "Analítico",
+      "educativo_com_urgencia": "Educativo + Urgente"
+    },
+    "feedback": {
+      "title": "Isso foi útil?",
+      "useful": "Útil",
+      "not_useful": "Não útil",
+      "used": "Eu usei",
+      "sent": "Feedback enviado!",
+      "error": "Falha ao enviar feedback"
+    },
+    "drawer": {
+      "title": "Detalhes da Sugestão",
+      "close": "Fechar"
+    },
+    "growth": "+{{value}}% crescimento"
   }
 }

@@ -33,3 +33,7 @@ export type { IGetThemeSummaryUseCase, GetThemeSummaryParams, GetThemeSummaryRes
 export type { IRefreshThemeSummaryUseCase, RefreshThemeSummaryParams, RefreshThemeSummaryResult } from './refresh-theme-summary.use-case'
 export type { IGetThemePanelUseCase, GetThemePanelParams, GetThemePanelResult, ThemePanelStatus } from './get-theme-panel.use-case'
 export type { IRefreshThemePanelUseCase, RefreshThemePanelParams, RefreshThemePanelResult } from './refresh-theme-panel.use-case'
+export type { IGetContentSuggestionsUseCase, GetContentSuggestionsParams, GetContentSuggestionsResult } from './get-content-suggestions.use-case'
+export type { IRefreshContentSuggestionsUseCase, RefreshContentSuggestionsParams, RefreshContentSuggestionsResult } from './refresh-content-suggestions.use-case'
+export type { IGetContentSuggestionDetailUseCase, GetContentSuggestionDetailParams, GetContentSuggestionDetailResult } from './get-content-suggestion-detail.use-case'
+export type { ISendContentSuggestionFeedbackUseCase, SendContentSuggestionFeedbackParams, SendContentSuggestionFeedbackResult } from './send-content-suggestion-feedback.use-case'

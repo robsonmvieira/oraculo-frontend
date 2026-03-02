@@ -57,3 +57,12 @@ export type { AlertCardProps } from './AlertCard'
 
 export { AlertsTabContent } from './AlertsTabContent'
 export type { AlertsTabContentProps } from './AlertsTabContent'
+
+export { ContentSuggestionCard } from './ContentSuggestionCard'
+export type { ContentSuggestionCardProps } from './ContentSuggestionCard'
+
+export { ContentSuggestionDrawer } from './ContentSuggestionDrawer'
+export type { ContentSuggestionDrawerProps } from './ContentSuggestionDrawer'
+
+export { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
+export type { ContentSuggestionsTabContentProps } from './ContentSuggestionsTabContent'
