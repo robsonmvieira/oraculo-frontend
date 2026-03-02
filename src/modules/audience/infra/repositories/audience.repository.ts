@@ -420,6 +420,21 @@ interface IntentAnalysisApiResponse {
     topic_keywords: Record<string, number>
     top_subreddits: Array<{ name: string; count: number }>
     sample_posts: Array<{ title: string; subreddit: string; score: number }>
+    pain_patterns?: Array<{
+      name: string
+      emoji: string
+      post_count: number
+      total_upvotes: number
+      total_comments: number
+      submissions: Array<{
+        title: string
+        body: string
+        subreddit: string
+        score: number
+        num_comments: number
+        permalink: string
+      }>
+    }>
     rank: number
   }>
   message?: string
@@ -1163,6 +1178,21 @@ export class AudienceRepository implements IAudienceRepository {
           title: p.title,
           subreddit: p.subreddit,
           score: p.score,
+        })),
+        painPatterns: (i.pain_patterns ?? []).map((pp) => ({
+          name: pp.name,
+          emoji: pp.emoji,
+          postCount: pp.post_count,
+          totalUpvotes: pp.total_upvotes,
+          totalComments: pp.total_comments,
+          submissions: pp.submissions.map((s) => ({
+            title: s.title,
+            body: s.body,
+            subreddit: s.subreddit,
+            score: s.score,
+            numComments: s.num_comments,
+            permalink: s.permalink,
+          })),
         })),
         rank: i.rank,
       })),

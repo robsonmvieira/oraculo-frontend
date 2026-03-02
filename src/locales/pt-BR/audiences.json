@@ -131,6 +131,14 @@
     "panel": {
       "generating": "Gerando dados do painel..."
     },
+    "painPatterns": {
+      "title": "Padrões",
+      "empty": "Nenhum padrão identificado para esta categoria.",
+      "generate": "Gerar Padrões",
+      "generating": "Analisando...",
+      "bookmark": "Salvar {{count}} submissions",
+      "browse": "Explorar {{count}} submissions"
+    },
     "intents": {
       "advice_request": "Pedidos de Conselho",
       "advice_request_desc": "Pessoas pedindo conselhos e recursos",

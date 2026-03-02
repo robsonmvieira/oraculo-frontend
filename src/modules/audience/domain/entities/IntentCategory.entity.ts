@@ -9,6 +9,24 @@ export interface IntentSubreddit {
   count: number
 }
 
+export interface PainPatternSubmission {
+  title: string
+  body: string
+  subreddit: string
+  score: number
+  numComments: number
+  permalink: string
+}
+
+export interface PainPattern {
+  name: string
+  emoji: string
+  postCount: number
+  totalUpvotes: number
+  totalComments: number
+  submissions: PainPatternSubmission[]
+}
+
 interface IntentCategoryProps {
   category: string
   label: string
@@ -20,6 +38,7 @@ interface IntentCategoryProps {
   topicKeywords: Record<string, number>
   topSubreddits: IntentSubreddit[]
   samplePosts: IntentSamplePost[]
+  painPatterns: PainPattern[]
   rank: number
 }
 
@@ -34,9 +53,10 @@ export class IntentCategory {
   private readonly topicKeywords: Record<string, number>
   private readonly topSubreddits: IntentSubreddit[]
   private readonly samplePosts: IntentSamplePost[]
+  private readonly painPatterns: PainPattern[]
   private readonly rank: number
 
-  constructor({ category, label, icon, postCount, percentage, description, subcategories, topicKeywords, topSubreddits, samplePosts, rank }: IntentCategoryProps) {
+  constructor({ category, label, icon, postCount, percentage, description, subcategories, topicKeywords, topSubreddits, samplePosts, painPatterns, rank }: IntentCategoryProps) {
     this.category = category
     this.label = label
     this.icon = icon
@@ -47,6 +67,7 @@ export class IntentCategory {
     this.topicKeywords = topicKeywords
     this.topSubreddits = topSubreddits
     this.samplePosts = samplePosts
+    this.painPatterns = painPatterns
     this.rank = rank
   }
 
@@ -88,6 +109,10 @@ export class IntentCategory {
 
   getSamplePosts(): IntentSamplePost[] {
     return this.samplePosts
+  }
+
+  getPainPatterns(): PainPattern[] {
+    return this.painPatterns
   }
 
   getRank(): number {
