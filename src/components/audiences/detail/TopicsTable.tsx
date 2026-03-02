@@ -107,10 +107,10 @@ export function TopicsTable({
   }, [prefersReducedMotion, sortBy, searchQuery])
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 min-w-0 px-1 md:px-0">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white">
             {t('topics.popularTopics')}
           </h3>
           <span className="text-sm text-gray-500 dark:text-zinc-400">
@@ -162,7 +162,7 @@ export function TopicsTable({
             placeholder={t('topics.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-lime/50 focus:border-lime transition-colors"
+            className="w-full pl-10 pr-4 py-2 md:py-2.5 text-sm md:text-base bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-lime/50 focus:border-lime transition-colors"
           />
         </div>
       </div>
@@ -183,23 +183,23 @@ export function TopicsTable({
               type="button"
               key={topic.id}
               onClick={() => onTopicSelect?.(topic)}
-              className={`w-full text-left bg-white dark:bg-zinc-800 border rounded-xl p-4 transition-colors cursor-pointer ${
+              className={`w-full text-left bg-white dark:bg-zinc-800 border rounded-xl p-3 md:p-4 transition-colors cursor-pointer ${
                 selectedTopicId === topic.id
                   ? 'border-lime'
                   : 'border-gray-200 dark:border-zinc-700 hover:border-lime dark:hover:border-lime'
               }`}
             >
-              <div className="flex items-center gap-4">
-                <p className="font-semibold text-gray-900 dark:text-white truncate  shrink-0">
+              <div className="flex items-center gap-2 md:gap-4">
+                <p className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate shrink-0">
                   {topic.name}
                 </p>
 
-                <div className="flex items-center gap-4 flex-1 justify-end">
-                  <div className="w-[70px] shrink-0">
+                <div className="flex items-center gap-2 md:gap-4 flex-1 justify-end">
+                  <div className="w-[70px] shrink-0 hidden lg:block">
                     <SparkLine growth={topic.growth} strokeColor={sparkColor} />
                   </div>
 
-                  <div className={`flex items-center gap-1 text-sm font-medium w-20 shrink-0 ${trendColor}`}>
+                  <div className={`flex items-center gap-1 text-xs md:text-sm font-medium w-16 md:w-20 shrink-0 ${trendColor}`}>
                     <TrendIcon className="w-4 h-4" />
                     <span>{topic.growth}%</span>
                     {topic.growthSource && (
@@ -222,16 +222,16 @@ export function TopicsTable({
                     )}
                   </div>
 
-                  <div className="text-sm text-right shrink-0 truncate mr-2">
+                  <div className="text-xs md:text-sm text-right shrink-0 truncate mr-2">
                     <span className="text-lime font-semibold mr-2">
                       {topic.frequency} / {topic.frequencyUnit}
                     </span>
-                    <span className="text-gray-500 dark:text-zinc-400 mr-2">{t('topics.in')}</span>
-                    <span className="text-gray-700 dark:text-zinc-300">
+                    <span className="hidden lg:inline text-gray-500 dark:text-zinc-400 mr-2">{t('topics.in')}</span>
+                    <span className="hidden lg:inline text-gray-700 dark:text-zinc-300">
                       {topic.subreddits.slice(0, 2).join(', ')}
                     </span>
                     {topic.subreddits.length > 2 && (
-                      <span className="text-gray-400 dark:text-zinc-500">
+                      <span className="hidden lg:inline text-gray-400 dark:text-zinc-500">
                         {t('topics.andOthers', { count: topic.subreddits.length - 2 })}
                       </span>
                     )}

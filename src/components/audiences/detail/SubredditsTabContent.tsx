@@ -30,12 +30,12 @@ export function SubredditsTabContent({
 }: Readonly<SubredditsTabContentProps>) {
   return (
     <div className="space-y-8">
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         <SubredditsGrid
           subreddits={subredditsData}
           totalCount={communitiesCount}
         />
-        <div className="w-[280px] shrink-0">
+        <div className="w-full lg:w-[280px] lg:shrink-0">
           <AboutAudiencePanel
             stats={audienceStats}
             radarData={radarData}

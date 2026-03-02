@@ -2,6 +2,7 @@ import { useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Sparkles, Bell, Lightbulb } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import {
   TopicsTable,
   TopicDetailPanel,
@@ -12,6 +13,7 @@ import {
   AlertsTabContent,
 } from '@/components/audiences/detail'
 import { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
 import type { AudienceStats, RadarData } from './AboutAudiencePanel'
@@ -155,6 +157,7 @@ export function AudienceDetailTabs({
   audienceId,
 }: Readonly<AudienceDetailTabsProps>) {
   const { t } = useTranslation('audiences')
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
   const [activeTab, setActiveTab] = useState('search')
   const [selectedTopic, setSelectedTopic] = useState<TopicDetail | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<ThemeDetail | null>(null)
@@ -335,9 +338,23 @@ export function AudienceDetailTabs({
                 }
               }}
             />
-            <div className="w-1/2 shrink-0">
-              <TopicDetailPanel topic={selectedTopic} audienceId={audienceId} />
-            </div>
+            {isDesktop ? (
+              <div className="w-1/2 shrink-0">
+                <TopicDetailPanel topic={selectedTopic} audienceId={audienceId} />
+              </div>
+            ) : (
+              <Sheet open={!!selectedTopic} onOpenChange={(open) => { if (!open) setSelectedTopic(null) }}>
+                <SheetContent side="right" className="sm:max-w-lg overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>{selectedTopic?.name}</SheetTitle>
+                    <SheetDescription>{selectedTopic?.description}</SheetDescription>
+                  </SheetHeader>
+                  <div className="px-4">
+                    <TopicDetailPanel topic={selectedTopic} audienceId={audienceId} embedded />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
           </div>
         )}
       </TabsContent>
@@ -354,13 +371,32 @@ export function AudienceDetailTabs({
               isRefreshing={refreshIntentsMutation.isPending}
             />
           </div>
-          <div className="w-1/2 shrink-0">
-            <ThemeDetailPanel
-              theme={selectedTheme}
-              audienceId={audienceId}
-              intentCategory={selectedIntentCategory}
-            />
-          </div>
+          {isDesktop ? (
+            <div className="w-1/2 shrink-0">
+              <ThemeDetailPanel
+                theme={selectedTheme}
+                audienceId={audienceId}
+                intentCategory={selectedIntentCategory}
+              />
+            </div>
+          ) : (
+            <Sheet open={!!selectedTheme} onOpenChange={(open) => { if (!open) setSelectedTheme(null) }}>
+              <SheetContent side="right" className="sm:max-w-lg overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>{selectedTheme?.name}</SheetTitle>
+                  <SheetDescription>{selectedTheme?.description}</SheetDescription>
+                </SheetHeader>
+                <div className="px-4">
+                  <ThemeDetailPanel
+                    theme={selectedTheme}
+                    audienceId={audienceId}
+                    intentCategory={selectedIntentCategory}
+                    embedded
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </TabsContent>
 

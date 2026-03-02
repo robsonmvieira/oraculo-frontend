@@ -46,9 +46,10 @@ export interface ThemeDetailPanelProps {
   theme: ThemeDetail | null
   audienceId?: string
   intentCategory?: string | null
+  embedded?: boolean
 }
 
-export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly<ThemeDetailPanelProps>) {
+export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded = false }: Readonly<ThemeDetailPanelProps>) {
   const { t } = useTranslation('audiences')
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -104,15 +105,15 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
     : theme?.subreddits ?? []
 
   useLayoutEffect(() => {
-    if (!containerRef.current || !panelRef.current) return
+    if (embedded || !containerRef.current || !panelRef.current) return
 
     if (!theme) {
       gsap.set(panelRef.current, { opacity: 0, x: 50, display: 'none' })
     }
-  }, [])
+  }, [embedded])
 
   useEffect(() => {
-    if (!containerRef.current || !panelRef.current) return
+    if (embedded || !containerRef.current || !panelRef.current) return
 
     if (theme) {
       gsap.set(panelRef.current, { display: 'block' })
@@ -148,7 +149,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
         })
       }
     }
-  }, [prefersReducedMotion, theme])
+  }, [embedded, prefersReducedMotion, theme])
 
   useEffect(() => {
     setShowPosts(false)
@@ -160,20 +161,27 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory }: Readonly
   const isPanelLoading = isScoringTheme && (panelQuery.isLoading || refreshPanelMutation.isPending)
 
   return (
-    <div ref={containerRef} className="h-full">
+    <div ref={containerRef} className={embedded ? '' : 'h-full'}>
       <div
         ref={panelRef}
-        className="bg-white dark:bg-zinc-900 rounded-2xl p-6 hidden"
+        className={embedded
+          ? ''
+          : 'bg-white dark:bg-zinc-900 rounded-2xl p-6 hidden'
+        }
       >
         {theme && (
           <>
-            <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-4">
-              {theme.name}
-            </h3>
+            {!embedded && (
+              <>
+                <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-4">
+                  {theme.name}
+                </h3>
 
-            <p className="text-sm text-gray-600 dark:text-zinc-300 mb-6 leading-relaxed">
-              {theme.description}
-            </p>
+                <p className="text-sm text-gray-600 dark:text-zinc-300 mb-6 leading-relaxed">
+                  {theme.description}
+                </p>
+              </>
+            )}
 
             <div className="flex flex-wrap justify-end gap-2 mb-6">
               <Button

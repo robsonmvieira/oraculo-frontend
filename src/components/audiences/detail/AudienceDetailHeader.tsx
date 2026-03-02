@@ -20,20 +20,20 @@ export function AudienceDetailHeader({
   const { t } = useTranslation('audiences')
 
   return (
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div className="flex items-center gap-4 min-w-0">
         <button
           onClick={onBack}
-          className="cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+          className="cursor-pointer w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate">
           {audienceName}
         </h1>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Button variant="outline" size="sm">
           <Info className="w-4 h-4" />
           {t('detail.info')}

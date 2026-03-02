@@ -1,6 +1,9 @@
-import { useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { Bell, Sun, Moon, Plus, ChevronDown, User, LogOut, Settings, HelpCircle } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, NavLink } from 'react-router-dom'
+import {
+  Bell, Sun, Moon, Plus, ChevronDown, User, LogOut, Settings, HelpCircle, Menu,
+  Home, FileText, Package, Briefcase, ShoppingBag, Clock, Link2, Smartphone,
+} from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { Button, Input, Avatar } from '@/components/ui'
 import {
@@ -12,11 +15,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { cn } from '@/lib/utils'
 import { useThemeStore } from '@/modules/shared'
 import { useAuthStore, useLogout } from '@/modules/auth'
 import { useUnreadCount, useNotificationStore } from '@/modules/notifications'
 import { NotificationDropdown } from '@/components/notifications'
 import { useReducedMotion } from '@/hooks'
+
+const mobileNavItems = [
+  { icon: Home, path: '/dashboard', label: 'Dashboard' },
+  { icon: FileText, path: '/orders', label: 'Orders' },
+  { icon: Package, path: '/audiences', label: 'Audiences' },
+  { icon: Briefcase, path: '/campaigns', label: 'Campaigns' },
+  { icon: ShoppingBag, path: '/cart', label: 'Cart' },
+  { icon: Clock, path: '/analytics', label: 'Analytics' },
+  { icon: User, path: '/customers', label: 'Customers' },
+  { icon: Link2, path: '/integrations', label: 'Integrations' },
+  { icon: Smartphone, path: '/mobile', label: 'Mobile' },
+  { icon: Bell, path: '/notifications', label: 'Notifications' },
+]
 
 const pageNames: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -43,6 +61,7 @@ export function Topbar() {
   const { theme, toggleTheme } = useThemeStore()
   const { user } = useAuthStore()
   const handleLogout = useLogout()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   useUnreadCount()
   const unreadCount = useNotificationStore((state) => state.unreadCount)
@@ -111,16 +130,24 @@ export function Topbar() {
   return (
     <header
       ref={topbarRef}
-      className="sticky top-0 z-40 flex items-center justify-between h-16 px-8 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800"
+      className="sticky top-0 z-40 flex items-center justify-between h-16 px-4 md:px-8 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800"
     >
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{pageName}</h1>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden cursor-pointer w-10 h-10 rounded-full flex items-center justify-center text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white">{pageName}</h1>
+      </div>
 
-      <div className="flex-1 max-w-md mx-8">
+      <div className="hidden md:block flex-1 max-w-md mx-8">
         <Input icon placeholder="Search..." className="w-full" />
       </div>
 
-      <div className="flex items-center gap-4">
-        <Button variant="primary" size="md" className="gap-2">
+      <div className="flex items-center gap-2 md:gap-4">
+        <Button variant="primary" size="md" className="gap-2 hidden sm:flex">
           <Plus className="w-4 h-4" />
           Create Audience
         </Button>
@@ -215,6 +242,73 @@ export function Topbar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetContent side="left" className="w-72 p-0 bg-dark border-none" showCloseButton={false}>
+          <div className="flex flex-col h-full py-6">
+            <div className="flex items-center justify-center mb-8">
+              <div className="w-12 h-12 bg-lime rounded-xl flex items-center justify-center">
+                <span className="text-black font-bold text-xl">S</span>
+              </div>
+            </div>
+
+            <nav className="flex-1 flex flex-col gap-1 px-4">
+              {mobileNavItems.map(({ icon: Icon, path, label }) => (
+                <NavLink
+                  key={path}
+                  to={path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200',
+                    location.pathname === path
+                      ? 'bg-lime text-black font-medium'
+                      : 'text-gray-400 hover:text-white hover:bg-white/10'
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm">{label}</span>
+                </NavLink>
+              ))}
+            </nav>
+
+            <div className="flex flex-col gap-1 px-4 mt-auto">
+              <NavLink
+                to="/settings"
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200',
+                  location.pathname === '/settings'
+                    ? 'bg-lime text-black font-medium'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
+                )}
+              >
+                <Settings className="w-5 h-5" />
+                <span className="text-sm">Settings</span>
+              </NavLink>
+              <NavLink
+                to="/help"
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200',
+                  location.pathname === '/help'
+                    ? 'bg-lime text-black font-medium'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
+                )}
+              >
+                <HelpCircle className="w-5 h-5" />
+                <span className="text-sm">Help</span>
+              </NavLink>
+              <button
+                onClick={() => { handleLogout(); setMobileMenuOpen(false) }}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors duration-200 cursor-pointer"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="text-sm">Logout</span>
+              </button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </header>
   )
 }
