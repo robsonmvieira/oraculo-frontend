@@ -9,6 +9,7 @@ import { AUDIENCE_INTENTS_QUERY_KEY } from '@/modules/audience/application/hooks
 import { THEME_SUMMARY_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemeSummary'
 import { THEME_PANEL_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemePanel'
 import { ALERTS_QUERY_KEY, ALERTS_SUMMARY_QUERY_KEY } from '@/modules/topic-alerts'
+import { CONTENT_SUGGESTIONS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetContentSuggestions'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -28,6 +29,11 @@ function invalidateAnalysisQueries(
   if (type === 'topic_alert_new_topic' || type === 'topic_alert_growth_spike' || type === 'topic_alert_new_theme') {
     queryClient.invalidateQueries({ queryKey: ALERTS_QUERY_KEY(audienceId) })
     queryClient.invalidateQueries({ queryKey: ALERTS_SUMMARY_QUERY_KEY(audienceId) })
+    return
+  }
+
+  if (type === 'content_suggestions_ready') {
+    queryClient.invalidateQueries({ queryKey: CONTENT_SUGGESTIONS_QUERY_KEY(audienceId) })
     return
   }
 

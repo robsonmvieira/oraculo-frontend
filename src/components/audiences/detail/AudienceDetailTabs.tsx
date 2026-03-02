@@ -1,6 +1,6 @@
 import { useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Sparkles, Bell } from 'lucide-react'
+import { Sparkles, Bell, Lightbulb } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   TopicsTable,
@@ -11,6 +11,7 @@ import {
   SubredditsTabContent,
   AlertsTabContent,
 } from '@/components/audiences/detail'
+import { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
 import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
 import type { AudienceStats, RadarData } from './AboutAudiencePanel'
@@ -254,6 +255,10 @@ export function AudienceDetailTabs({
           <Bell className="w-4 h-4" />
           {t('tabs.alerts')}
         </TabsTrigger>
+        <TabsTrigger value="content">
+          <Lightbulb className="w-4 h-4" />
+          {t('tabs.content')}
+        </TabsTrigger>
         <TabsTrigger value="ask">
           <Sparkles className="w-4 h-4" />
           {t('tabs.ask')}
@@ -361,6 +366,10 @@ export function AudienceDetailTabs({
 
       <TabsContent value="alerts" className="mt-6">
         <AlertsTabContent audienceId={audienceId} />
+      </TabsContent>
+
+      <TabsContent value="content" className="mt-6">
+        <ContentSuggestionsTabContent audienceId={audienceId} />
       </TabsContent>
 
       <TabsContent value="ask" className="mt-6">

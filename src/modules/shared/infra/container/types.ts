@@ -54,4 +54,8 @@ export const TYPES = {
   ListAlertsUseCase: Symbol.for('ListAlertsUseCase'),
   GetAlertsSummaryUseCase: Symbol.for('GetAlertsSummaryUseCase'),
   DismissAlertUseCase: Symbol.for('DismissAlertUseCase'),
+  GetContentSuggestionsUseCase: Symbol.for('GetContentSuggestionsUseCase'),
+  RefreshContentSuggestionsUseCase: Symbol.for('RefreshContentSuggestionsUseCase'),
+  GetContentSuggestionDetailUseCase: Symbol.for('GetContentSuggestionDetailUseCase'),
+  SendContentSuggestionFeedbackUseCase: Symbol.for('SendContentSuggestionFeedbackUseCase'),
 } as const

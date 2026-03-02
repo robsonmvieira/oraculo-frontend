@@ -1,0 +1,64 @@
+---
+name: task-starter
+description: |
+  Automates the startup ritual for new development tasks: reads the context files from `current-task/` and `docs/pre-issue.md`, then presents an action plan for approval before any code is written. Use this skill whenever the user says things like "start the task", "begin the issue", "let's work on the next task", "read current-task", "load the task context", "new task", "start implementation", or any variation that signals they want to kick off a new piece of work from their task pipeline. Also trigger when the user mentions `current-task`, `pre-issue`, or references starting/beginning a development workflow. This skill should trigger even if the user gives additional instructions alongside the start command — the reading and planning steps come first, then the user's specific instructions are addressed within the plan.
+---
+
+# Task Starter
+
+This skill defines the standard workflow for beginning a new development task in this project. The goal is to gather all available context before writing a single line of code, then present a clear action plan for the developer to approve.
+
+## Why this matters
+
+Starting a task without reading all the context leads to wrong assumptions, rework, and wasted time. The backend team documents their work carefully — the `.md` file in `current-task/` explains motivations, architecture decisions, affected files, migrations, and routes. The `.rest` file documents the API contract (endpoints, parameters, response shapes). And `docs/pre-issue.md` defines the project's task lifecycle rules. Skipping any of these means flying blind.
+
+## Step-by-step workflow
+
+### 1. Read the task context
+
+Start by reading everything in the `current-task/` folder at the project root. There are typically two files:
+
+- **A `.md` file** — This is the backend implementation document. It contains the motivation for the feature, the problem being solved, architectural decisions, files that were changed on the backend, database migrations, new routes, and any other context the backend developer documented. Read this thoroughly — it's the primary source of truth for what the frontend needs to integrate with.
+
+- **A `.rest` file** — This is the API documentation. It shows the endpoints, HTTP methods, request parameters, request bodies, and response shapes for the CRUD operations related to this task. Pay close attention to field names, types, and any pagination or filtering patterns.
+
+If the folder is empty or missing files, stop and tell the developer — don't proceed without the necessary context.
+
+### 2. Read the project workflow rules
+
+Read `docs/pre-issue.md`. This file defines how tasks should flow through the project lifecycle: planning, board tracking, implementation, review, commit, PR, and documentation. These rules apply to every task and should inform the action plan.
+
+### 3. Analyze and cross-reference
+
+With all files read, take a moment to synthesize:
+
+- What is the feature about? What problem does it solve?
+- What API endpoints are available? What data shapes will the frontend consume?
+- Are there any edge cases or special behaviors documented?
+- What existing frontend patterns (components, hooks, services) are likely relevant?
+- Does the task require new routes, new components, new API service functions, or modifications to existing ones?
+
+If anything is unclear or seems incomplete, note it as a question to ask — don't assume.
+
+### 4. Present the action plan
+
+Present a structured plan in Portuguese (the project's working language) that covers:
+
+- **Resumo da tarefa** — What this task is about in 2-3 sentences
+- **Endpoints envolvidos** — List the API endpoints from the `.rest` file with a brief description of each
+- **O que será implementado** — Concrete list of what needs to be built or modified (components, hooks, services, routes, types, etc.)
+- **Abordagem técnica** — How you plan to implement it, referencing existing project patterns where applicable
+- **Dúvidas ou pontos de atenção** — Anything that's unclear, risky, or needs the developer's input before starting
+
+### 5. Wait for approval
+
+Do not start implementing until the developer explicitly approves the plan. They may have corrections, additional context, or want to adjust the scope. This is the checkpoint — nothing moves forward without a green light.
+
+Once approved, follow the lifecycle defined in `pre-issue.md` (create board card, move to in-progress, etc.) and begin implementation.
+
+## Important reminders
+
+- Always read `current-task/` files first, then `docs/pre-issue.md` — this order matters because the task context informs how you interpret the workflow rules.
+- Present everything in Portuguese, matching the project's documentation language.
+- If the user included specific instructions in their prompt alongside the trigger (e.g., "start the task, focus on the list view first"), incorporate those instructions into the plan rather than ignoring them.
+- Never assume missing information. If the `.md` or `.rest` file doesn't cover something you need, ask.

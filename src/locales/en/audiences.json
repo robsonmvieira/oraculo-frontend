@@ -287,6 +287,7 @@
     "topics": "Topics",
     "themes": "Themes",
     "alerts": "Alerts",
+    "content": "Content",
     "ask": "Ask",
     "products": "Products",
     "askAI": "Ask AI",
@@ -451,5 +452,71 @@
     "communityAddFailed": "Failed to add community",
     "markNotRelevantFailed": "Failed to mark as not relevant",
     "genericError": "Something went wrong. Please try again."
+  },
+  "contentSuggestions": {
+    "title": "Content Suggestions",
+    "subtitle": "Intelligence-driven content ideas based on your audience data",
+    "generate": "Generate Suggestions",
+    "regenerate": "Regenerate",
+    "processing": "Generating content suggestions...",
+    "processingDescription": "Analyzing data from all available modules to create strategic content recommendations. This may take 1-2 minutes.",
+    "empty": "No content suggestions yet.",
+    "emptyDescription": "Generate suggestions based on your audience's topics, sentiments, and behavioral patterns.",
+    "failed": "Failed to generate suggestions",
+    "failedDescription": "Something went wrong while generating suggestions. Please try again.",
+    "retry": "Try Again",
+    "alreadyExists": "Suggestions are up to date. Run new analyses first to get updated suggestions.",
+    "rank": "Rank #{{rank}}",
+    "whyNow": "Why now",
+    "approach": "Approach",
+    "evidence": "Evidence",
+    "outline": "Content Outline",
+    "keywords": "Keywords",
+    "researchNotes": "Research Notes",
+    "imagePrompt": "Image Prompt",
+    "differentiation": "Differentiation",
+    "accuracyNotes": "Accuracy Validation",
+    "sourceTopics": "Source Topics",
+    "sourceModules": "Data Sources",
+    "modulesUsed": "Modules used",
+    "priority": {
+      "label": "Priority",
+      "all": "All",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "format": {
+      "label": "Format",
+      "thread": "Thread",
+      "carrossel": "Carousel",
+      "artigo": "Article",
+      "video_script": "Video Script",
+      "newsletter": "Newsletter",
+      "infographic": "Infographic"
+    },
+    "tone": {
+      "label": "Tone",
+      "educativo": "Educational",
+      "urgente": "Urgent",
+      "empatico": "Empathetic",
+      "provocativo": "Provocative",
+      "inspirador": "Inspiring",
+      "analitico": "Analytical",
+      "educativo_com_urgencia": "Educational + Urgent"
+    },
+    "feedback": {
+      "title": "Was this helpful?",
+      "useful": "Useful",
+      "not_useful": "Not useful",
+      "used": "I used this",
+      "sent": "Feedback sent!",
+      "error": "Failed to send feedback"
+    },
+    "drawer": {
+      "title": "Suggestion Details",
+      "close": "Close"
+    },
+    "growth": "+{{value}}% growth"
   }
 }

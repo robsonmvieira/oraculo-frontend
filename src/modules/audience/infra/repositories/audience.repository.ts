@@ -33,6 +33,10 @@ import type { GetThemeSummaryParams, GetThemeSummaryResult, ThemeSummaryStatus }
 import type { RefreshThemeSummaryParams, RefreshThemeSummaryResult } from '../../domain/use-cases/refresh-theme-summary.use-case'
 import type { GetThemePanelParams, GetThemePanelResult, ThemePanelStatus } from '../../domain/use-cases/get-theme-panel.use-case'
 import type { RefreshThemePanelParams, RefreshThemePanelResult } from '../../domain/use-cases/refresh-theme-panel.use-case'
+import type { GetContentSuggestionsParams, GetContentSuggestionsResult } from '../../domain/use-cases/get-content-suggestions.use-case'
+import type { RefreshContentSuggestionsParams, RefreshContentSuggestionsResult } from '../../domain/use-cases/refresh-content-suggestions.use-case'
+import type { GetContentSuggestionDetailParams, GetContentSuggestionDetailResult } from '../../domain/use-cases/get-content-suggestion-detail.use-case'
+import type { SendContentSuggestionFeedbackParams, SendContentSuggestionFeedbackResult } from '../../domain/use-cases/send-content-suggestion-feedback.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -48,6 +52,8 @@ import { IntentPost } from '../../domain/entities/IntentPost.entity'
 import { ThemeSummary } from '../../domain/entities/ThemeSummary.entity'
 import type { EmotionalTone } from '../../domain/entities/ThemeSummary.entity'
 import { ThemePanel } from '../../domain/entities/ThemePanel.entity'
+import { ContentSuggestionAnalysis, ContentSuggestion } from '../../domain/entities/ContentSuggestion.entity'
+import type { ContentSuggestionAnalysisStatus, ContentSuggestionPriority, ContentSuggestionFormat, ContentSuggestionTone, ContentSuggestionFeedbackStatus } from '../../domain/entities/ContentSuggestion.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -484,6 +490,66 @@ interface RefreshThemePanelApiResponse {
   theme_id: string
   panel_id?: string
   message?: string
+}
+
+interface ContentSuggestionAnalysisApiResponse {
+  id: string
+  audience_id?: string
+  status: string
+  modules_used: string[]
+  model_used: string
+  error_message?: string | null
+  created_at: string
+}
+
+interface ContentSuggestionApiItem {
+  id: string
+  analysis_id: string
+  rank: number
+  priority: string
+  title: string
+  approach: string
+  why_now: string
+  evidence: Record<string, unknown>
+  format: string
+  format_rationale: string
+  emotional_tone: string
+  tone_rationale: string
+  outline: Array<{ slide?: number; item?: number; content: string }>
+  keywords: string[]
+  research_notes: string
+  image_prompt: string
+  differentiation_notes: string
+  accuracy_notes?: string
+  source_topics: Array<{ topic_id?: string; topic_name: string; growth?: number; growth_percentage?: number }>
+  source_modules: string[]
+  feedback_status?: string | null
+  feedback_at?: string | null
+  created_at: string
+}
+
+interface GetContentSuggestionsApiResponse {
+  status?: string
+  analysis?: ContentSuggestionAnalysisApiResponse | null
+  suggestions?: ContentSuggestionApiItem[]
+  total?: number
+  limit?: number
+  offset?: number
+}
+
+interface RefreshContentSuggestionsApiResponse {
+  status: string
+  analysis_id: string
+  message: string
+  modules_found?: string[]
+}
+
+interface ContentSuggestionDetailApiResponse extends ContentSuggestionApiItem {}
+
+interface SendContentSuggestionFeedbackApiResponse {
+  suggestion_id: string
+  feedback_status: string
+  feedback_at: string
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -1231,5 +1297,122 @@ export class AudienceRepository implements IAudienceRepository {
       themeId: response.theme_id,
       panelId: response.panel_id,
     }
+  }
+
+  async getContentSuggestions(params: GetContentSuggestionsParams): Promise<GetContentSuggestionsResult> {
+    const searchParams = new URLSearchParams()
+    if (params.priority) searchParams.set('priority', params.priority)
+    if (params.feedbackStatus) searchParams.set('feedback_status', params.feedbackStatus)
+    if (params.limit) searchParams.set('limit', String(params.limit))
+    if (params.offset) searchParams.set('offset', String(params.offset))
+
+    const query = searchParams.toString()
+    const suffix = query ? '?' + query : ''
+    const url = `audiences/${params.audienceId}/content-suggestions` + suffix
+
+    const response = await this.httpClient.get<GetContentSuggestionsApiResponse>(url)
+
+    const status = (response.status ?? response.analysis?.status ?? 'no_analysis') as ContentSuggestionAnalysisStatus
+
+    if (status !== 'ready' || !response.analysis) {
+      return {
+        status,
+        analysis: null,
+        suggestions: [],
+        total: 0,
+        limit: response.limit ?? params.limit ?? 10,
+        offset: response.offset ?? params.offset ?? 0,
+      }
+    }
+
+    return {
+      status,
+      analysis: new ContentSuggestionAnalysis({
+        id: response.analysis.id,
+        audienceId: response.analysis.audience_id ?? params.audienceId,
+        status: response.analysis.status as ContentSuggestionAnalysisStatus,
+        modulesUsed: response.analysis.modules_used ?? [],
+        modelUsed: response.analysis.model_used ?? '',
+        errorMessage: response.analysis.error_message ?? null,
+        createdAt: response.analysis.created_at ?? '',
+      }),
+      suggestions: (response.suggestions ?? []).map((s) => this.mapContentSuggestion(s)),
+      total: response.total ?? 0,
+      limit: response.limit ?? params.limit ?? 10,
+      offset: response.offset ?? params.offset ?? 0,
+    }
+  }
+
+  async refreshContentSuggestions(params: RefreshContentSuggestionsParams): Promise<RefreshContentSuggestionsResult> {
+    const response = await this.httpClient.post<RefreshContentSuggestionsApiResponse>(
+      `audiences/${params.audienceId}/content-suggestions/refresh`,
+      {}
+    )
+
+    return {
+      status: response.status as 'processing' | 'already_exists',
+      analysisId: response.analysis_id,
+      message: response.message,
+      modulesFound: response.modules_found,
+    }
+  }
+
+  async getContentSuggestionDetail(params: GetContentSuggestionDetailParams): Promise<GetContentSuggestionDetailResult> {
+    const response = await this.httpClient.get<ContentSuggestionDetailApiResponse>(
+      `audiences/${params.audienceId}/content-suggestions/${params.suggestionId}`
+    )
+
+    return {
+      suggestion: this.mapContentSuggestion(response),
+    }
+  }
+
+  async sendContentSuggestionFeedback(params: SendContentSuggestionFeedbackParams): Promise<SendContentSuggestionFeedbackResult> {
+    const response = await this.httpClient.post<SendContentSuggestionFeedbackApiResponse>(
+      `audiences/${params.audienceId}/content-suggestions/${params.suggestionId}/feedback`,
+      { status: params.status }
+    )
+
+    return {
+      suggestionId: response.suggestion_id,
+      feedbackStatus: response.feedback_status as ContentSuggestionFeedbackStatus,
+      feedbackAt: response.feedback_at,
+    }
+  }
+
+  private mapContentSuggestion(s: ContentSuggestionApiItem): ContentSuggestion {
+    return new ContentSuggestion({
+      id: s.id,
+      analysisId: s.analysis_id,
+      rank: s.rank,
+      priority: s.priority as ContentSuggestionPriority,
+      title: s.title,
+      approach: s.approach,
+      whyNow: s.why_now,
+      evidence: s.evidence ?? {},
+      format: s.format as ContentSuggestionFormat,
+      formatRationale: s.format_rationale ?? '',
+      emotionalTone: s.emotional_tone as ContentSuggestionTone,
+      toneRationale: s.tone_rationale ?? '',
+      outline: (s.outline ?? []).map((o) => ({
+        slide: o.slide,
+        item: o.item,
+        content: o.content,
+      })),
+      keywords: s.keywords ?? [],
+      researchNotes: s.research_notes ?? '',
+      imagePrompt: s.image_prompt ?? '',
+      differentiationNotes: s.differentiation_notes ?? '',
+      accuracyNotes: s.accuracy_notes ?? '',
+      sourceTopics: (s.source_topics ?? []).map((t) => ({
+        topicId: t.topic_id ?? null,
+        topicName: t.topic_name,
+        growthPercentage: t.growth_percentage ?? t.growth ?? null,
+      })),
+      sourceModules: s.source_modules ?? [],
+      feedbackStatus: (s.feedback_status as ContentSuggestionFeedbackStatus) ?? null,
+      feedbackAt: s.feedback_at ?? null,
+      createdAt: s.created_at ?? '',
+    })
   }
 }

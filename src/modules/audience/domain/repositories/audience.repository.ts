@@ -31,6 +31,10 @@ import type { GetThemeSummaryParams, GetThemeSummaryResult } from "../use-cases/
 import type { RefreshThemeSummaryParams, RefreshThemeSummaryResult } from "../use-cases/refresh-theme-summary.use-case";
 import type { GetThemePanelParams, GetThemePanelResult } from "../use-cases/get-theme-panel.use-case";
 import type { RefreshThemePanelParams, RefreshThemePanelResult } from "../use-cases/refresh-theme-panel.use-case";
+import type { GetContentSuggestionsParams, GetContentSuggestionsResult } from "../use-cases/get-content-suggestions.use-case";
+import type { RefreshContentSuggestionsParams, RefreshContentSuggestionsResult } from "../use-cases/refresh-content-suggestions.use-case";
+import type { GetContentSuggestionDetailParams, GetContentSuggestionDetailResult } from "../use-cases/get-content-suggestion-detail.use-case";
+import type { SendContentSuggestionFeedbackParams, SendContentSuggestionFeedbackResult } from "../use-cases/send-content-suggestion-feedback.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -68,4 +72,8 @@ export interface IAudienceRepository {
   refreshThemeSummary(params: RefreshThemeSummaryParams): Promise<RefreshThemeSummaryResult>
   getThemePanel(params: GetThemePanelParams): Promise<GetThemePanelResult>
   refreshThemePanel(params: RefreshThemePanelParams): Promise<RefreshThemePanelResult>
+  getContentSuggestions(params: GetContentSuggestionsParams): Promise<GetContentSuggestionsResult>
+  refreshContentSuggestions(params: RefreshContentSuggestionsParams): Promise<RefreshContentSuggestionsResult>
+  getContentSuggestionDetail(params: GetContentSuggestionDetailParams): Promise<GetContentSuggestionDetailResult>
+  sendContentSuggestionFeedback(params: SendContentSuggestionFeedbackParams): Promise<SendContentSuggestionFeedbackResult>
 }

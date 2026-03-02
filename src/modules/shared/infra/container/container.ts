@@ -3,8 +3,8 @@ import { TYPES } from './types'
 import { KyHttpClient, type HttpClient } from '../http'
 import { AudienceRepository } from '@/modules/audience/infra/repositories'
 import type { IAudienceRepository } from '@/modules/audience/domain/repositories'
-import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase, GetAudienceSuggestionsUseCase, DeleteAudienceUseCase, GetAudienceKeywordsUseCase, MarkCommunityNotRelevantUseCase, GetAudienceTopicsUseCase, GetTopicDeepDiveUseCase, TriggerTopicDeepDiveUseCase, GetTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsUseCase, GetTopicSentimentUseCase, TriggerTopicSentimentUseCase, AskTopicUseCase, StartTopicChatUseCase, SendTopicChatMessageUseCase, ListTopicChatConversationsUseCase, GetTopicChatMessagesUseCase, ArchiveTopicChatUseCase, GetTopicGrowthHistoryUseCase, GetAudienceThemesUseCase, RefreshAudienceThemesUseCase, GetAudienceIntentsUseCase, RefreshAudienceIntentsUseCase, GetIntentPostsUseCase, GetThemeSummaryUseCase, RefreshThemeSummaryUseCase, GetThemePanelUseCase, RefreshThemePanelUseCase } from '@/modules/audience/application/use-cases'
-import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase, IGetAudienceSuggestionsUseCase, IDeleteAudienceUseCase, IGetAudienceKeywordsUseCase, IMarkCommunityNotRelevantUseCase, IGetAudienceTopicsUseCase, IGetTopicDeepDiveUseCase, ITriggerTopicDeepDiveUseCase, IGetTopicBehavioralPatternsUseCase, ITriggerTopicBehavioralPatternsUseCase, IGetTopicSentimentUseCase, ITriggerTopicSentimentUseCase, IAskTopicUseCase, IStartTopicChatUseCase, ISendTopicChatMessageUseCase, IListTopicChatConversationsUseCase, IGetTopicChatMessagesUseCase, IArchiveTopicChatUseCase, IGetTopicGrowthHistoryUseCase, IGetAudienceThemesUseCase, IRefreshAudienceThemesUseCase, IGetAudienceIntentsUseCase, IRefreshAudienceIntentsUseCase, IGetIntentPostsUseCase, IGetThemeSummaryUseCase, IRefreshThemeSummaryUseCase, IGetThemePanelUseCase, IRefreshThemePanelUseCase } from '@/modules/audience/domain/use-cases'
+import { ListUserAudiencesUseCase, FetchDefaultAudiencesUseCase, GetAudienceTemplateByIdUseCase, CreateAudienceUseCase, GetAudienceByIdUseCase, UpdateAudienceUseCase, AddCommunityToAudienceUseCase, RemoveCommunityFromAudienceUseCase, GetAudienceSuggestionsUseCase, DeleteAudienceUseCase, GetAudienceKeywordsUseCase, MarkCommunityNotRelevantUseCase, GetAudienceTopicsUseCase, GetTopicDeepDiveUseCase, TriggerTopicDeepDiveUseCase, GetTopicBehavioralPatternsUseCase, TriggerTopicBehavioralPatternsUseCase, GetTopicSentimentUseCase, TriggerTopicSentimentUseCase, AskTopicUseCase, StartTopicChatUseCase, SendTopicChatMessageUseCase, ListTopicChatConversationsUseCase, GetTopicChatMessagesUseCase, ArchiveTopicChatUseCase, GetTopicGrowthHistoryUseCase, GetAudienceThemesUseCase, RefreshAudienceThemesUseCase, GetAudienceIntentsUseCase, RefreshAudienceIntentsUseCase, GetIntentPostsUseCase, GetThemeSummaryUseCase, RefreshThemeSummaryUseCase, GetThemePanelUseCase, RefreshThemePanelUseCase, GetContentSuggestionsUseCase, RefreshContentSuggestionsUseCase, GetContentSuggestionDetailUseCase, SendContentSuggestionFeedbackUseCase } from '@/modules/audience/application/use-cases'
+import type { IListUserAudiencesUseCase, IFetchDefaultAudiencesUseCase, IGetAudienceTemplateByIdUseCase, ICreateAudienceUseCase, IGetAudienceByIdUseCase, IUpdateAudienceUseCase, IAddCommunityToAudienceUseCase, IRemoveCommunityFromAudienceUseCase, IGetAudienceSuggestionsUseCase, IDeleteAudienceUseCase, IGetAudienceKeywordsUseCase, IMarkCommunityNotRelevantUseCase, IGetAudienceTopicsUseCase, IGetTopicDeepDiveUseCase, ITriggerTopicDeepDiveUseCase, IGetTopicBehavioralPatternsUseCase, ITriggerTopicBehavioralPatternsUseCase, IGetTopicSentimentUseCase, ITriggerTopicSentimentUseCase, IAskTopicUseCase, IStartTopicChatUseCase, ISendTopicChatMessageUseCase, IListTopicChatConversationsUseCase, IGetTopicChatMessagesUseCase, IArchiveTopicChatUseCase, IGetTopicGrowthHistoryUseCase, IGetAudienceThemesUseCase, IRefreshAudienceThemesUseCase, IGetAudienceIntentsUseCase, IRefreshAudienceIntentsUseCase, IGetIntentPostsUseCase, IGetThemeSummaryUseCase, IRefreshThemeSummaryUseCase, IGetThemePanelUseCase, IRefreshThemePanelUseCase, IGetContentSuggestionsUseCase, IRefreshContentSuggestionsUseCase, IGetContentSuggestionDetailUseCase, ISendContentSuggestionFeedbackUseCase } from '@/modules/audience/domain/use-cases'
 import { CommunityRepository } from '@/modules/community/infra/repositories'
 import type { ICommunityRepository } from '@/modules/community/domain/repositories'
 import { BrowseCommunitiesUseCase } from '@/modules/community/application/use-cases'
@@ -294,6 +294,26 @@ container.bind<IGetAlertsSummaryUseCase>(TYPES.GetAlertsSummaryUseCase).toDynami
 container.bind<IDismissAlertUseCase>(TYPES.DismissAlertUseCase).toDynamicValue(() => {
   const topicAlertRepository = container.get<ITopicAlertRepository>(TYPES.TopicAlertRepository)
   return new DismissAlertUseCase(topicAlertRepository)
+}).inSingletonScope()
+
+container.bind<IGetContentSuggestionsUseCase>(TYPES.GetContentSuggestionsUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new GetContentSuggestionsUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IRefreshContentSuggestionsUseCase>(TYPES.RefreshContentSuggestionsUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new RefreshContentSuggestionsUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<IGetContentSuggestionDetailUseCase>(TYPES.GetContentSuggestionDetailUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new GetContentSuggestionDetailUseCase(audienceRepository)
+}).inSingletonScope()
+
+container.bind<ISendContentSuggestionFeedbackUseCase>(TYPES.SendContentSuggestionFeedbackUseCase).toDynamicValue(() => {
+  const audienceRepository = container.get<IAudienceRepository>(TYPES.AudienceRepository)
+  return new SendContentSuggestionFeedbackUseCase(audienceRepository)
 }).inSingletonScope()
 
 export { container }

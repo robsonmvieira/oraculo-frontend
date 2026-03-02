@@ -1,0 +1,915 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Design System | Neural Interface</title>
+<!-- Tailwind CSS -->
+<script src="assets/resource_3fa48481346f.js"></script>
+<!-- Iconify -->
+<script src="assets/iconify-icon_b44501fe9299.js"></script>
+<!-- GSAP -->
+<script src="assets/gsap_4a57399e4113.js"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="assets/css2_b576227558ef.css" rel="stylesheet"/>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #030014;
+        margin: 0;
+    }
+
+    .font-display {
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #030014;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 3px;
+    }
+
+    .loader-bar {
+        box-shadow: 0 0 15px #a855f7, 0 0 30px #a855f7;
+    }
+
+    /* ── Design System additions (layout only, no new visual styles) ── */
+    .ds-section {
+        border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .ds-swatch {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+    .ds-gradient-swatch {
+        width: 200px;
+        height: 80px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+    .ds-type-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 24px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .ds-type-row:last-child {
+        border-bottom: none;
+    }
+    .ds-type-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        color: rgba(255,255,255,0.35);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        min-width: 120px;
+        flex-shrink: 0;
+    }
+    .ds-type-spec {
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-size: 11px;
+        color: rgba(255,255,255,0.25);
+        text-align: right;
+        min-width: 140px;
+        flex-shrink: 0;
+    }
+    .ds-type-preview {
+        flex: 1;
+        padding: 0 32px;
+    }
+    .ds-state-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 10px;
+        color: rgba(255,255,255,0.3);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+        margin-top: 12px;
+    }
+    .ds-motion-card {
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 16px;
+        padding: 32px;
+        background: rgba(255,255,255,0.02);
+    }
+    .ds-layout-frame {
+        border: 1px dashed rgba(168,85,247,0.2);
+        border-radius: 12px;
+        padding: 24px;
+        position: relative;
+    }
+    .ds-layout-label {
+        position: absolute;
+        top: -10px;
+        left: 16px;
+        background: #030014;
+        padding: 0 8px;
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-size: 10px;
+        color: rgba(168,85,247,0.5);
+        letter-spacing: 0.05em;
+    }
+</style>
+</head>
+
+<body class="relative w-full text-white antialiased selection:bg-purple-500 selection:text-white">
+
+<!-- ════════════════════════════════════════════════════════════════════
+     NAVIGATION — Anchor links to each section
+     ════════════════════════════════════════════════════════════════════ -->
+<nav class="sticky top-0 z-50 flex w-full items-center justify-between px-6 md:px-12 py-4 backdrop-blur-xl bg-[#030014]/80 border-b border-white/5">
+    <div class="flex items-center gap-2 cursor-pointer group">
+        <div class="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 transition-colors group-hover:border-purple-500/50">
+            <iconify-icon class="text-xl text-white transition-transform duration-500 group-hover:rotate-180 group-hover:text-purple-400" icon="solar:atom-linear"></iconify-icon>
+        </div>
+        <span class="font-display text-sm font-medium tracking-tight text-white/90">Design<span class="text-purple-400">SYSTEM</span></span>
+    </div>
+    <div class="hidden md:flex items-center gap-6">
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#hero">HERO</a>
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#typography">TYPOGRAPHY</a>
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#colors">COLORS</a>
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#components">COMPONENTS</a>
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#layout">LAYOUT</a>
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#motion">MOTION</a>
+        <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#icons">ICONS</a>
+    </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 0 — HERO (Exact Clone, Text Adapted)
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="hero" class="relative h-screen w-full bg-[#030014] overflow-hidden">
+
+    <!-- Simulated particle bg with CSS (no WebGL needed for DS) -->
+    <div class="absolute inset-0 z-0" style="background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(168,85,247,0.08) 0%, rgba(56,189,248,0.03) 40%, transparent 70%);"></div>
+
+    <!-- UI Overlay — identical structure to original -->
+    <div class="relative z-10 flex h-full flex-col justify-between p-6 md:p-12 pointer-events-none">
+
+        <!-- Navbar -->
+        <nav class="flex w-full items-center justify-between">
+            <div class="flex items-center gap-2 pointer-events-auto cursor-pointer group">
+                <div class="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 transition-colors group-hover:border-purple-500/50">
+                    <iconify-icon class="text-xl text-white transition-transform duration-500 group-hover:rotate-180 group-hover:text-purple-400" icon="solar:atom-linear"></iconify-icon>
+                </div>
+                <span class="font-display text-sm font-medium tracking-tight text-white/90">Morpheus<span class="text-purple-400">LABS</span></span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 pointer-events-auto">
+                <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#">PROJECTSXX</a>
+                <a class="text-xs font-medium text-white/60 hover:text-white transition-colors" href="#">STUDIO</a>
+                <button class="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-md hover:bg-white/20 transition-colors border border-white/5">
+                    CONNECT
+                </button>
+            </div>
+            <button class="md:hidden pointer-events-auto text-2xl text-white/80">
+                <iconify-icon icon="solar:hamburger-menu-linear"></iconify-icon>
+            </button>
+        </nav>
+
+        <!-- Main Hero Content -->
+        <main class="flex flex-col max-w-4xl">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="h-px w-8 bg-purple-500/50"></div>
+                <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">Design System</span>
+            </div>
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.9] text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/40 mb-8">
+                Visual tokens <br/>
+                & <span class="text-purple-400 italic font-light">patterns.</span>
+            </h1>
+            <p class="max-w-md text-sm md:text-base text-white/60 leading-relaxed mb-10 font-light">
+                The complete design system for Neural Interface — documenting every typographic scale, color, component, and motion pattern extracted from the source.
+            </p>
+            <div class="flex items-center gap-4 pointer-events-auto">
+                <button class="group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black transition-transform hover:scale-105 active:scale-95">
+                    <span class="relative z-10 text-sm font-semibold tracking-tight">Explore System</span>
+                    <iconify-icon class="relative z-10 text-lg transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" icon="solar:arrow-right-up-linear"></iconify-icon>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-200 to-purple-400 opacity-0 transition-opacity group-hover:opacity-100"></div>
+                </button>
+                <button class="group flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-purple-500/30">
+                    <iconify-icon class="text-xl text-white ml-0.5 group-hover:text-purple-400 transition-colors" icon="solar:play-linear"></iconify-icon>
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer Stats -->
+        <footer class="flex items-end justify-between pointer-events-auto">
+            <div class="flex flex-col gap-1">
+                <span class="font-mono text-[10px] text-white/40">RENDER_TIME</span>
+                <span class="font-mono text-xs text-purple-400">1.2ms</span>
+            </div>
+            <div class="hidden md:flex gap-12">
+                <div class="flex flex-col gap-1">
+                    <span class="font-mono text-[10px] text-white/40">PARTICLES</span>
+                    <span class="font-mono text-xs text-white/80">12,400</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="font-mono text-[10px] text-white/40">STATUS</span>
+                    <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="font-mono text-xs text-white/80">ONLINE</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 1 — TYPOGRAPHY
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="typography" class="ds-section px-6 md:px-12 py-20 md:py-32">
+    <div class="flex items-center gap-3 mb-12">
+        <div class="h-px w-8 bg-purple-500/50"></div>
+        <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">01 — Typography</span>
+    </div>
+
+    <div class="max-w-5xl">
+
+        <!-- Heading 1 -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Heading 1</span>
+            <div class="ds-type-preview">
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.9] text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/40">Digital matter</h1>
+            </div>
+            <span class="ds-type-spec">Space Grotesk · 96px / 0.9 · Medium</span>
+        </div>
+
+        <!-- Heading 1 — Italic accent -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">H1 Accent</span>
+            <div class="ds-type-preview">
+                <span class="font-display text-5xl md:text-7xl lg:text-8xl text-purple-400 italic font-light tracking-tight leading-[0.9]">Reddit.</span>
+            </div>
+            <span class="ds-type-spec">Space Grotesk · 96px / 0.9 · Light Italic</span>
+        </div>
+
+        <!-- Nav Brand -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Brand Mark</span>
+            <div class="ds-type-preview">
+                <span class="font-display text-sm font-medium tracking-tight text-white/90">Morpheus<span class="text-purple-400">LABS</span></span>
+            </div>
+            <span class="ds-type-spec">Space Grotesk · 14px · Medium</span>
+        </div>
+
+        <!-- Body -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Body</span>
+            <div class="ds-type-preview">
+                <p class="text-sm md:text-base text-white/60 leading-relaxed font-light">We craft high-performance WebGL experiences that bridge the gap between abstract data and human perception.</p>
+            </div>
+            <span class="ds-type-spec">Inter · 16px / relaxed · Light</span>
+        </div>
+
+        <!-- Button Label -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Button Label</span>
+            <div class="ds-type-preview">
+                <span class="text-sm font-semibold tracking-tight text-black bg-white/10 rounded-full px-4 py-1 inline-block text-white">Launch Experiment</span>
+            </div>
+            <span class="ds-type-spec">Inter · 14px · Semibold</span>
+        </div>
+
+        <!-- Nav Link -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Nav Link</span>
+            <div class="ds-type-preview">
+                <span class="text-xs font-medium text-white/60">PROJECTS!!</span>
+            </div>
+            <span class="ds-type-spec">Inter · 12px · Medium</span>
+        </div>
+
+        <!-- Connect Button Label -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Button S</span>
+            <div class="ds-type-preview">
+                <span class="text-xs font-medium text-white">Login</span>
+            </div>
+            <span class="ds-type-spec">Inter · 12px · Medium</span>
+        </div>
+
+        <!-- Mono Tag -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Tag / Label</span>
+            <div class="ds-type-preview">
+                <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">Infinit ideas</span>
+            </div>
+            <span class="ds-type-spec">Mono · 12px · Tracking Widest</span>
+        </div>
+
+        <!-- Mono Data -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Data Value</span>
+            <div class="ds-type-preview">
+                <span class="font-mono text-xs text-white/80">12,400</span>
+            </div>
+            <span class="ds-type-spec">Mono · 12px · Regular</span>
+        </div>
+
+        <!-- Mono Micro -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">Micro Label</span>
+            <div class="ds-type-preview">
+                <span class="font-mono text-[10px] text-white/40">RENDER_TIME</span>
+            </div>
+            <span class="ds-type-spec">Mono · 10px · Regular</span>
+        </div>
+
+        <!-- Loader text -->
+        <div class="ds-type-row">
+            <span class="ds-type-label">System Init</span>
+            <div class="ds-type-preview">
+                <span class="font-mono text-xs text-purple-400">SYSTEM_INIT</span>
+                <span class="font-mono text-xs text-purple-400 ml-6">0%</span>
+            </div>
+            <span class="ds-type-spec">Mono · 12px · Purple-400</span>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 2 — COLORS & SURFACES
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="colors" class="ds-section px-6 md:px-12 py-20 md:py-32">
+    <div class="flex items-center gap-3 mb-12">
+        <div class="h-px w-8 bg-purple-500/50"></div>
+        <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">02 — Colors & Surfaces</span>
+    </div>
+
+    <!-- Core Palette -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Core Palette</p>
+        <div class="flex flex-wrap gap-6">
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch" style="background: #030014;"></div>
+                <span class="font-mono text-[10px] text-white/40">BG</span>
+                <span class="font-mono text-xs text-white/60">#030014</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch" style="background: #a855f7;"></div>
+                <span class="font-mono text-[10px] text-white/40">PRIMARY</span>
+                <span class="font-mono text-xs text-white/60">#a855f7</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch" style="background: #38bdf8;"></div>
+                <span class="font-mono text-[10px] text-white/40">SECONDARY</span>
+                <span class="font-mono text-xs text-white/60">#38bdf8</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch" style="background: #22c55e;"></div>
+                <span class="font-mono text-[10px] text-white/40">STATUS</span>
+                <span class="font-mono text-xs text-white/60">green-500</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch" style="background: #ffffff;"></div>
+                <span class="font-mono text-[10px] text-white/40">WHITE</span>
+                <span class="font-mono text-xs text-white/60">#ffffff</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Text Opacity Scale -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Text Opacity Scale</p>
+        <div class="flex flex-wrap gap-8">
+            <div class="flex flex-col gap-2">
+                <span class="text-base text-white/90">The quick brown fox</span>
+                <span class="font-mono text-[10px] text-white/30">white/90</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <span class="text-base text-white/80">The quick brown fox</span>
+                <span class="font-mono text-[10px] text-white/30">white/80</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <span class="text-base text-white/60">The quick brown fox</span>
+                <span class="font-mono text-[10px] text-white/30">white/60</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <span class="text-base text-white/40">The quick brown fox</span>
+                <span class="font-mono text-[10px] text-white/30">white/40</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Surface Colors -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Surface & Glass</p>
+        <div class="flex flex-wrap gap-6">
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch bg-white/5 backdrop-blur-sm"></div>
+                <span class="font-mono text-[10px] text-white/40">GLASS 5%</span>
+                <span class="font-mono text-xs text-white/60">bg-white/5</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch bg-white/10 backdrop-blur-md"></div>
+                <span class="font-mono text-[10px] text-white/40">GLASS 10%</span>
+                <span class="font-mono text-xs text-white/60">bg-white/10</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-swatch bg-white/20 backdrop-blur-md"></div>
+                <span class="font-mono text-[10px] text-white/40">GLASS 20%</span>
+                <span class="font-mono text-xs text-white/60">bg-white/20</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Borders -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Borders & Dividers</p>
+        <div class="flex flex-col gap-6 max-w-md">
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-full rounded-lg border border-white/10"></div>
+                <span class="font-mono text-[10px] text-white/40 whitespace-nowrap">border-white/10</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-full rounded-lg border border-white/5"></div>
+                <span class="font-mono text-[10px] text-white/40 whitespace-nowrap">border-white/5</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-full rounded-lg border border-purple-500/50"></div>
+                <span class="font-mono text-[10px] text-white/40 whitespace-nowrap">border-purple-500/50</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-px w-full bg-purple-500/50"></div>
+                <span class="font-mono text-[10px] text-white/40 whitespace-nowrap">divider — h-px bg-purple-500/50</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gradients -->
+    <div>
+        <p class="text-sm text-white/40 mb-8 font-light">Gradients</p>
+        <div class="flex flex-wrap gap-6">
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-gradient-swatch bg-gradient-to-br from-white via-white to-white/40"></div>
+                <span class="font-mono text-[10px] text-white/40">HEADING TEXT</span>
+                <span class="font-mono text-[10px] text-white/30">from-white via-white to-white/40</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-gradient-swatch bg-gradient-to-r from-purple-200 to-purple-400"></div>
+                <span class="font-mono text-[10px] text-white/40">BUTTON HOVER</span>
+                <span class="font-mono text-[10px] text-white/30">from-purple-200 to-purple-400</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="ds-gradient-swatch" style="background: linear-gradient(to bottom right, rgba(168,85,247,0.08), rgba(56,189,248,0.03), transparent);"></div>
+                <span class="font-mono text-[10px] text-white/40">AMBIENT GLOW</span>
+                <span class="font-mono text-[10px] text-white/30">radial purple → sky → transparent</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 3 — UI COMPONENTS
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="components" class="ds-section px-6 md:px-12 py-20 md:py-32">
+    <div class="flex items-center gap-3 mb-12">
+        <div class="h-px w-8 bg-purple-500/50"></div>
+        <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">03 — UI Components</span>
+    </div>
+
+    <!-- Primary Button -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Primary Button — States</p>
+        <div class="flex flex-wrap items-start gap-10">
+            <!-- Default -->
+            <div class="flex flex-col items-center">
+                <button class="group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black transition-transform">
+                    <span class="relative z-10 text-sm font-semibold tracking-tight">Launch Experiment</span>
+                    <iconify-icon class="relative z-10 text-lg" icon="solar:arrow-right-up-linear"></iconify-icon>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-200 to-purple-400 opacity-0 transition-opacity"></div>
+                </button>
+                <span class="ds-state-label">Default</span>
+            </div>
+            <!-- Hover (forced) -->
+            <div class="flex flex-col items-center">
+                <button class="group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black scale-105">
+                    <span class="relative z-10 text-sm font-semibold tracking-tight">Launch Experiment</span>
+                    <iconify-icon class="relative z-10 text-lg translate-x-1 -translate-y-1" icon="solar:arrow-right-up-linear"></iconify-icon>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-200 to-purple-400 opacity-100"></div>
+                </button>
+                <span class="ds-state-label">Hover</span>
+            </div>
+            <!-- Active (forced) -->
+            <div class="flex flex-col items-center">
+                <button class="group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black scale-95">
+                    <span class="relative z-10 text-sm font-semibold tracking-tight">Launch Experiment</span>
+                    <iconify-icon class="relative z-10 text-lg" icon="solar:arrow-right-up-linear"></iconify-icon>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-200 to-purple-400 opacity-100"></div>
+                </button>
+                <span class="ds-state-label">Active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icon Button (Play) -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Icon Button — States</p>
+        <div class="flex flex-wrap items-start gap-10">
+            <div class="flex flex-col items-center">
+                <button class="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                    <iconify-icon class="text-xl text-white ml-0.5" icon="solar:play-linear"></iconify-icon>
+                </button>
+                <span class="ds-state-label">Default</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <button class="flex h-12 w-12 items-center justify-center rounded-full border border-purple-500/30 bg-white/10 backdrop-blur-sm">
+                    <iconify-icon class="text-xl text-purple-400 ml-0.5" icon="solar:play-linear"></iconify-icon>
+                </button>
+                <span class="ds-state-label">Hover</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connect Button -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Ghost Button (Connect) — States</p>
+        <div class="flex flex-wrap items-start gap-10">
+            <div class="flex flex-col items-center">
+                <button class="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-md border border-white/5">
+                    CONNECT
+                </button>
+                <span class="ds-state-label">Default</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <button class="rounded-full bg-white/20 px-4 py-1.5 text-xs font-medium backdrop-blur-md border border-white/5">
+                    CONNECT
+                </button>
+                <span class="ds-state-label">Hover</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logo / Brand Mark -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Brand Mark — States</p>
+        <div class="flex flex-wrap items-start gap-10">
+            <div class="flex flex-col items-center">
+                <div class="flex items-center gap-2">
+                    <div class="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5">
+                        <iconify-icon class="text-xl text-white" icon="solar:atom-linear"></iconify-icon>
+                    </div>
+                    <span class="font-display text-sm font-medium tracking-tight text-white/90">Morpheus<span class="text-purple-400">LABS</span></span>
+                </div>
+                <span class="ds-state-label">Default</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="flex items-center gap-2">
+                    <div class="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-purple-500/50 bg-white/5">
+                        <iconify-icon class="text-xl text-purple-400 rotate-180" icon="solar:atom-linear"></iconify-icon>
+                    </div>
+                    <span class="font-display text-sm font-medium tracking-tight text-white/90">Morpheus<span class="text-purple-400">LABS</span></span>
+                </div>
+                <span class="ds-state-label">Hover</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat / Metric -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Stat / Metric Block</p>
+        <div class="flex flex-wrap gap-12">
+            <div class="flex flex-col gap-1">
+                <span class="font-mono text-[10px] text-white/40">RENDER_TIME</span>
+                <span class="font-mono text-xs text-purple-400">1.2ms</span>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="font-mono text-[10px] text-white/40">PARTICLES</span>
+                <span class="font-mono text-xs text-white/80">12,400</span>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="font-mono text-[10px] text-white/40">STATUS</span>
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="font-mono text-xs text-white/80">ONLINE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag / Label Component -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Tag / Label with Divider</p>
+        <div class="flex items-center gap-3">
+            <div class="h-px w-8 bg-purple-500/50"></div>
+            <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">Infinit ideas</span>
+        </div>
+    </div>
+
+    <!-- Loader Bar -->
+    <div>
+        <p class="text-sm text-white/40 mb-8 font-light">Loader Bar</p>
+        <div class="w-48">
+            <div class="flex justify-between mb-2 text-xs font-mono text-purple-400">
+                <span>SYSTEM_INIT</span>
+                <span>67%</span>
+            </div>
+            <div class="h-0.5 w-full bg-white/10 overflow-hidden rounded-full">
+                <div class="loader-bar h-full bg-purple-500 rounded-full" style="width: 67%;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 4 — LAYOUT & SPACING
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="layout" class="ds-section px-6 md:px-12 py-20 md:py-32">
+    <div class="flex items-center gap-3 mb-12">
+        <div class="h-px w-8 bg-purple-500/50"></div>
+        <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">04 — Layout & Spacing</span>
+    </div>
+
+    <!-- Full-page Hero Layout -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Hero Layout — full viewport, flex column, justify-between</p>
+        <div class="ds-layout-frame" style="height: 400px;">
+            <span class="ds-layout-label">h-screen · flex flex-col justify-between · p-6 md:p-12</span>
+            <div class="flex flex-col justify-between h-full">
+                <!-- Top -->
+                <div class="ds-layout-frame">
+                    <span class="ds-layout-label">NAV — flex justify-between items-center</span>
+                    <div class="flex items-center justify-between py-2">
+                        <div class="bg-white/5 rounded-full h-8 w-32 border border-white/10"></div>
+                        <div class="flex gap-4">
+                            <div class="bg-white/5 rounded h-4 w-16 border border-white/10"></div>
+                            <div class="bg-white/5 rounded h-4 w-16 border border-white/10"></div>
+                            <div class="bg-white/5 rounded-full h-6 w-20 border border-white/10"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Middle -->
+                <div class="ds-layout-frame my-4">
+                    <span class="ds-layout-label">MAIN — flex flex-col max-w-4xl</span>
+                    <div class="flex flex-col gap-3 py-2">
+                        <div class="bg-white/5 rounded h-2 w-24 border border-white/10"></div>
+                        <div class="bg-white/5 rounded h-8 w-80 border border-white/10"></div>
+                        <div class="bg-white/5 rounded h-3 w-64 border border-white/10"></div>
+                        <div class="flex gap-3 mt-2">
+                            <div class="bg-white/5 rounded-full h-8 w-36 border border-white/10"></div>
+                            <div class="bg-white/5 rounded-full h-8 w-8 border border-white/10"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bottom -->
+                <div class="ds-layout-frame">
+                    <span class="ds-layout-label">FOOTER — flex justify-between items-end</span>
+                    <div class="flex items-end justify-between py-2">
+                        <div class="bg-white/5 rounded h-6 w-16 border border-white/10"></div>
+                        <div class="flex gap-8">
+                            <div class="bg-white/5 rounded h-6 w-16 border border-white/10"></div>
+                            <div class="bg-white/5 rounded h-6 w-20 border border-white/10"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spacing Tokens -->
+    <div class="mb-16">
+        <p class="text-sm text-white/40 mb-8 font-light">Spacing tokens used</p>
+        <div class="flex flex-col gap-4 max-w-lg">
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/20 rounded" style="width: 8px;"></div>
+                <span class="font-mono text-[10px] text-white/40">gap-2 · 8px</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/20 rounded" style="width: 12px;"></div>
+                <span class="font-mono text-[10px] text-white/40">gap-3 · 12px</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/20 rounded" style="width: 16px;"></div>
+                <span class="font-mono text-[10px] text-white/40">gap-4 · 16px</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/30 rounded" style="width: 32px;"></div>
+                <span class="font-mono text-[10px] text-white/40">gap-8 · 32px</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/30 rounded" style="width: 48px;"></div>
+                <span class="font-mono text-[10px] text-white/40">gap-12 · 48px</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/40 rounded" style="width: 24px;"></div>
+                <span class="font-mono text-[10px] text-white/40">p-6 · 24px (mobile padding)</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-4 bg-purple-500/40 rounded" style="width: 48px;"></div>
+                <span class="font-mono text-[10px] text-white/40">p-12 · 48px (desktop padding)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container -->
+    <div>
+        <p class="text-sm text-white/40 mb-8 font-light">Max-width constraint</p>
+        <div class="ds-layout-frame">
+            <span class="ds-layout-label">max-w-4xl (896px)</span>
+            <div class="max-w-4xl py-4">
+                <div class="bg-white/5 rounded h-4 w-full border border-white/10"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 5 — MOTION & INTERACTION
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="motion" class="ds-section px-6 md:px-12 py-20 md:py-32">
+    <div class="flex items-center gap-3 mb-12">
+        <div class="h-px w-8 bg-purple-500/50"></div>
+        <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">05 — Motion & Interaction</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+
+        <!-- GSAP Fade In -->
+        <div class="ds-motion-card">
+            <p class="font-mono text-[10px] text-white/40 mb-4">GSAP UI REVEAL</p>
+            <p class="text-xs text-white/50 mb-6 font-light">Elements enter with opacity: 0 → 1, translateY → 0, staggered 0.15s, power3.out easing.</p>
+            <div class="flex flex-col gap-3" id="gsap-demo">
+                <div class="gsap-demo-el bg-white/5 rounded h-6 w-3/4 border border-white/10 opacity-0 translate-y-4"></div>
+                <div class="gsap-demo-el bg-white/5 rounded h-6 w-1/2 border border-white/10 opacity-0 translate-y-4"></div>
+                <div class="gsap-demo-el bg-white/5 rounded h-6 w-2/3 border border-white/10 opacity-0 translate-y-4"></div>
+            </div>
+            <button onclick="replayGsap()" class="mt-6 rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-md hover:bg-white/20 transition-colors border border-white/5">
+                Replay
+            </button>
+        </div>
+
+        <!-- Hover Scale -->
+        <div class="ds-motion-card">
+            <p class="font-mono text-[10px] text-white/40 mb-4">BUTTON HOVER SCALE</p>
+            <p class="text-xs text-white/50 mb-6 font-light">transition-transform, hover:scale-105, active:scale-95</p>
+            <button class="group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-3.5 text-black transition-transform hover:scale-105 active:scale-95">
+                <span class="relative z-10 text-sm font-semibold tracking-tight">Hover me</span>
+                <iconify-icon class="relative z-10 text-lg transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" icon="solar:arrow-right-up-linear"></iconify-icon>
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-200 to-purple-400 opacity-0 transition-opacity group-hover:opacity-100"></div>
+            </button>
+        </div>
+
+        <!-- Icon Rotation -->
+        <div class="ds-motion-card">
+            <p class="font-mono text-[10px] text-white/40 mb-4">LOGO ICON ROTATION</p>
+            <p class="text-xs text-white/50 mb-6 font-light">transition-transform duration-500 group-hover:rotate-180, color shifts to purple-400.</p>
+            <div class="flex items-center gap-2 cursor-pointer group">
+                <div class="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 transition-colors group-hover:border-purple-500/50">
+                    <iconify-icon class="text-2xl text-white transition-transform duration-500 group-hover:rotate-180 group-hover:text-purple-400" icon="solar:atom-linear"></iconify-icon>
+                </div>
+                <span class="font-display text-sm font-medium tracking-tight text-white/90">Hover <span class="text-purple-400">icon</span></span>
+            </div>
+        </div>
+
+        <!-- Pulse Status -->
+        <div class="ds-motion-card">
+            <p class="font-mono text-[10px] text-white/40 mb-4">STATUS PULSE</p>
+            <p class="text-xs text-white/50 mb-6 font-light">animate-pulse on green-500 status dot.</p>
+            <div class="flex items-center gap-3">
+                <span class="h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="font-mono text-xs text-white/80">ONLINE</span>
+            </div>
+        </div>
+
+        <!-- Loader Glow -->
+        <div class="ds-motion-card">
+            <p class="font-mono text-[10px] text-white/40 mb-4">LOADER BAR GLOW</p>
+            <p class="text-xs text-white/50 mb-6 font-light">box-shadow: 0 0 15px #a855f7, 0 0 30px #a855f7 on progress bar.</p>
+            <div class="w-full">
+                <div class="h-1 w-full bg-white/10 overflow-hidden rounded-full">
+                    <div class="loader-bar h-full bg-purple-500 rounded-full animate-loader-demo" style="width: 60%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transition Colors -->
+        <div class="ds-motion-card">
+            <p class="font-mono text-[10px] text-white/40 mb-4">NAV LINK TRANSITION</p>
+            <p class="text-xs text-white/50 mb-6 font-light">transition-colors on text: white/60 → white on hover.</p>
+            <div class="flex gap-6">
+                <a class="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer" href="#">PROJECTS!!</a>
+                <a class="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer" href="#">STUDIO</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SECTION 6 — ICONS
+     ════════════════════════════════════════════════════════════════════ -->
+<section id="icons" class="ds-section px-6 md:px-12 py-20 md:py-32">
+    <div class="flex items-center gap-3 mb-12">
+        <div class="h-px w-8 bg-purple-500/50"></div>
+        <span class="font-mono text-xs text-purple-400 tracking-widest uppercase">06 — Icons</span>
+    </div>
+
+    <p class="text-sm text-white/40 mb-8 font-light">Iconify — Solar (Linear) icon set</p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl">
+
+        <!-- atom -->
+        <div class="flex flex-col items-center gap-4 p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+            <iconify-icon class="text-3xl text-white" icon="solar:atom-linear"></iconify-icon>
+            <span class="font-mono text-[10px] text-white/40">atom-linear</span>
+            <div class="flex gap-3 items-end mt-1">
+                <iconify-icon class="text-sm text-white/60" icon="solar:atom-linear"></iconify-icon>
+                <iconify-icon class="text-xl text-white/80" icon="solar:atom-linear"></iconify-icon>
+                <iconify-icon class="text-3xl text-purple-400" icon="solar:atom-linear"></iconify-icon>
+            </div>
+        </div>
+
+        <!-- arrow-right-up -->
+        <div class="flex flex-col items-center gap-4 p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+            <iconify-icon class="text-3xl text-white" icon="solar:arrow-right-up-linear"></iconify-icon>
+            <span class="font-mono text-[10px] text-white/40">arrow-right-up</span>
+            <div class="flex gap-3 items-end mt-1">
+                <iconify-icon class="text-sm text-white/60" icon="solar:arrow-right-up-linear"></iconify-icon>
+                <iconify-icon class="text-xl text-white/80" icon="solar:arrow-right-up-linear"></iconify-icon>
+                <iconify-icon class="text-3xl text-purple-400" icon="solar:arrow-right-up-linear"></iconify-icon>
+            </div>
+        </div>
+
+        <!-- play -->
+        <div class="flex flex-col items-center gap-4 p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+            <iconify-icon class="text-3xl text-white" icon="solar:play-linear"></iconify-icon>
+            <span class="font-mono text-[10px] text-white/40">play-linear</span>
+            <div class="flex gap-3 items-end mt-1">
+                <iconify-icon class="text-sm text-white/60" icon="solar:play-linear"></iconify-icon>
+                <iconify-icon class="text-xl text-white/80" icon="solar:play-linear"></iconify-icon>
+                <iconify-icon class="text-3xl text-purple-400" icon="solar:play-linear"></iconify-icon>
+            </div>
+        </div>
+
+        <!-- hamburger -->
+        <div class="flex flex-col items-center gap-4 p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+            <iconify-icon class="text-3xl text-white" icon="solar:hamburger-menu-linear"></iconify-icon>
+            <span class="font-mono text-[10px] text-white/40">hamburger-menu</span>
+            <div class="flex gap-3 items-end mt-1">
+                <iconify-icon class="text-sm text-white/60" icon="solar:hamburger-menu-linear"></iconify-icon>
+                <iconify-icon class="text-xl text-white/80" icon="solar:hamburger-menu-linear"></iconify-icon>
+                <iconify-icon class="text-3xl text-purple-400" icon="solar:hamburger-menu-linear"></iconify-icon>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="text-xs text-white/30 mt-8 font-light">Color inheritance: icons inherit text color via currentColor. Size controlled by font-size (text-sm / text-xl / text-2xl / text-3xl).</p>
+</section>
+
+
+<!-- Footer -->
+<footer class="ds-section px-6 md:px-12 py-12 flex items-center justify-between">
+    <span class="font-mono text-[10px] text-white/30">DESIGN_SYSTEM v1.0</span>
+    <span class="font-mono text-[10px] text-white/30">NEURAL INTERFACE · PARTICLE CLOUD</span>
+</footer>
+
+
+<!-- Motion demo script -->
+<script>
+    function replayGsap() {
+        const els = document.querySelectorAll('.gsap-demo-el');
+        gsap.set(els, { opacity: 0, y: 16 });
+        gsap.to(els, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "power3.out"
+        });
+    }
+
+    // Auto-play on load
+    window.addEventListener('load', () => {
+        setTimeout(replayGsap, 600);
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
+</body></html>
