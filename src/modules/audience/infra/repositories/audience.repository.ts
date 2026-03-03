@@ -1590,6 +1590,17 @@ export class AudienceRepository implements IAudienceRepository {
     })
 
     if (!response.ok) {
+      if (response.status === 400) {
+        try {
+          const body = await response.json()
+          if (body?.error === 'message_limit_reached') {
+            callbacks.onError('message_limit_reached')
+            return
+          }
+        } catch {
+          // fall through to generic error
+        }
+      }
       callbacks.onError(`HTTP ${response.status}`)
       return
     }
@@ -1631,6 +1642,9 @@ export class AudienceRepository implements IAudienceRepository {
                   messageId: parsed.message_id,
                   conversationId: parsed.conversation_id,
                   suggestion: parsed.suggestion,
+                  followUpSuggestions: Array.isArray(parsed.follow_up_suggestions)
+                    ? parsed.follow_up_suggestions
+                    : [],
                 })
               } else if (currentEvent === 'error') {
                 callbacks.onError(parsed.error)

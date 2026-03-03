@@ -63,5 +63,7 @@ export function useStreamTopicChatMessage() {
     setIsStreaming(false)
   }, [])
 
-  return { send, abort, streamingText, isStreaming, error }
+  const isMessageLimitError = error === 'message_limit_reached'
+
+  return { send, abort, streamingText, isStreaming, error, isMessageLimitError }
 }
