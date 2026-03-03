@@ -61,4 +61,6 @@ export const TYPES = {
   TriggerContentProductionUseCase: Symbol.for('TriggerContentProductionUseCase'),
   GetContentDraftsUseCase: Symbol.for('GetContentDraftsUseCase'),
   GetContentDraftDetailUseCase: Symbol.for('GetContentDraftDetailUseCase'),
+  AskIntentUseCase: Symbol.for('AskIntentUseCase'),
+  StreamTopicChatMessageUseCase: Symbol.for('StreamTopicChatMessageUseCase'),
 } as const

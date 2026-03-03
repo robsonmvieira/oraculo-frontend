@@ -1,16 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Send, Loader2, AlertCircle, Plus, ArrowLeft, Archive, Info, MessageSquareText, User, Bot } from 'lucide-react'
-import { gsap } from '@/lib/gsap'
-import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
 import {
   useStartTopicChat,
-  useSendTopicChatMessage,
   useListTopicChatConversations,
   useGetTopicChatMessages,
   useArchiveTopicChat,
+  useStreamTopicChatMessage,
   TOPIC_CHAT_CONVERSATIONS_QUERY_KEY,
 } from '@/modules/audience/application/hooks'
 import { useQueryClient } from '@tanstack/react-query'
@@ -32,22 +30,19 @@ interface LocalMessage {
 
 export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSectionProps>) {
   const { t } = useTranslation('audiences')
-  const prefersReducedMotion = useReducedMotion()
   const queryClient = useQueryClient()
 
   const [view, setView] = useState<ChatView>('list')
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
   const [question, setQuestion] = useState('')
   const [localMessages, setLocalMessages] = useState<LocalMessage[]>([])
-  const [streamingText, setStreamingText] = useState('')
+  const [suggestion, setSuggestion] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const streamingRef = useRef<HTMLSpanElement>(null)
-  const gsapTweenRef = useRef<gsap.core.Tween | null>(null)
 
   const startChat = useStartTopicChat()
-  const sendMessage = useSendTopicChatMessage()
   const archiveChat = useArchiveTopicChat()
+  const stream = useStreamTopicChatMessage()
 
   const { data: conversationsData, isLoading: isLoadingConversations } = useListTopicChatConversations(
     audienceId,
@@ -74,7 +69,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
 
   const trimmedQuestion = question.trim()
   const isValid = trimmedQuestion.length >= 3
-  const isSending = sendMessage.isPending
+  const isBusy = stream.isStreaming
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -82,29 +77,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
 
   useEffect(() => {
     scrollToBottom()
-  }, [displayMessages.length, streamingText, scrollToBottom])
-
-  const animateStreamingText = useCallback((fullText: string) => {
-    if (prefersReducedMotion) {
-      setStreamingText(fullText)
-      return
-    }
-
-    const proxy = { chars: 0 }
-    gsapTweenRef.current?.kill()
-
-    gsapTweenRef.current = gsap.to(proxy, {
-      chars: fullText.length,
-      duration: Math.min(fullText.length * 0.02, 3),
-      ease: 'none',
-      onUpdate: () => {
-        setStreamingText(fullText.slice(0, Math.round(proxy.chars)))
-      },
-      onComplete: () => {
-        setStreamingText(fullText)
-      },
-    })
-  }, [prefersReducedMotion])
+  }, [displayMessages.length, stream.streamingText, scrollToBottom])
 
   const handleStartConversation = () => {
     startChat.mutate(
@@ -113,6 +86,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
         onSuccess: (data) => {
           setActiveConversationId(data.conversationId)
           setLocalMessages([])
+          setSuggestion(null)
           setView('conversation')
         },
       },
@@ -122,16 +96,16 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
   const handleOpenConversation = (conversationId: string) => {
     setActiveConversationId(conversationId)
     setLocalMessages([])
-    setStreamingText('')
+    setSuggestion(null)
     setView('conversation')
   }
 
   const handleBackToList = () => {
-    gsapTweenRef.current?.kill()
+    stream.abort()
     setView('list')
     setActiveConversationId(null)
     setLocalMessages([])
-    setStreamingText('')
+    setSuggestion(null)
     setQuestion('')
     queryClient.invalidateQueries({
       queryKey: [TOPIC_CHAT_CONVERSATIONS_QUERY_KEY, audienceId, topicId],
@@ -148,7 +122,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isValid || isSending || !activeConversationId) return
+    if (!isValid || isBusy || !activeConversationId) return
 
     const userMessage: LocalMessage = {
       id: `local-user-${Date.now()}`,
@@ -156,29 +130,34 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
       content: trimmedQuestion,
     }
 
-    const currentMessages = localMessages.length > 0 ? localMessages : serverMessages
-    setLocalMessages([...currentMessages, userMessage])
-    setQuestion('')
-    setStreamingText('')
+    const streamingPlaceholder: LocalMessage = {
+      id: `local-assistant-${Date.now()}`,
+      role: 'assistant',
+      content: '',
+      isStreaming: true,
+    }
 
-    sendMessage.mutate(
+    const currentMessages = localMessages.length > 0 ? localMessages : serverMessages
+    setLocalMessages([...currentMessages, userMessage, streamingPlaceholder])
+    setQuestion('')
+    setSuggestion(null)
+
+    stream.send(
       {
         audienceId,
         topicId,
         conversationId: activeConversationId,
         question: trimmedQuestion,
       },
-      {
-        onSuccess: (data) => {
-          const assistantMessage: LocalMessage = {
-            id: data.messageId,
-            role: 'assistant',
-            content: data.answer,
-            isStreaming: true,
-          }
-          setLocalMessages((prev) => [...prev, assistantMessage])
-          animateStreamingText(data.answer)
-        },
+      (payload) => {
+        setLocalMessages((prev) =>
+          prev.map((msg) =>
+            msg.isStreaming
+              ? { ...msg, id: payload.messageId, content: payload.answer, isStreaming: false }
+              : msg,
+          ),
+        )
+        setSuggestion(payload.suggestion)
       },
     )
   }
@@ -316,10 +295,9 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           </p>
         )}
 
-        {displayMessages.map((msg, index) => {
-          const isLastAssistant =
-            msg.role === 'assistant' && index === displayMessages.length - 1 && msg.isStreaming
-          const displayContent = isLastAssistant && streamingText ? streamingText : msg.content
+        {displayMessages.map((msg) => {
+          const isStreamingMsg = msg.isStreaming && stream.isStreaming
+          const displayContent = isStreamingMsg ? stream.streamingText : msg.content
 
           return (
             <div
@@ -338,10 +316,10 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
                     : 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 rounded-bl-sm'
                 }`}
               >
-                <span ref={isLastAssistant ? streamingRef : undefined} className="whitespace-pre-line">
-                  {displayContent}
+                <span className="whitespace-pre-line">
+                  {displayContent || (isStreamingMsg ? '' : msg.content)}
                 </span>
-                {isLastAssistant && streamingText.length < msg.content.length && (
+                {isStreamingMsg && (
                   <span className="inline-block w-0.5 h-4 bg-gray-500 dark:bg-zinc-400 animate-pulse ml-0.5 align-text-bottom" />
                 )}
               </div>
@@ -354,27 +332,11 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           )
         })}
 
-        {/* Loading indicator while waiting for response */}
-        {isSending && (
-          <div className="flex gap-2 justify-start">
-            <div className="w-6 h-6 rounded-full bg-lime/20 flex items-center justify-center shrink-0 mt-1">
-              <Bot className="w-3.5 h-3.5 text-lime" />
-            </div>
-            <div className="bg-gray-100 dark:bg-zinc-800 rounded-xl rounded-bl-sm px-3 py-2">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-zinc-500 animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          </div>
-        )}
-
         <div ref={messagesEndRef} />
       </div>
 
       {/* Suggestion */}
-      {sendMessage.data?.suggestion && (
+      {suggestion && (
         <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/30 mb-3">
           <Info className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
           <div>
@@ -382,18 +344,18 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
               {t('topicDetail.chatSuggestion')}
             </p>
             <p className="text-xs text-amber-600 dark:text-amber-300">
-              {sendMessage.data.suggestion}
+              {suggestion}
             </p>
           </div>
         </div>
       )}
 
       {/* Error */}
-      {sendMessage.isError && (
+      {stream.error && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
           <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
           <p className="text-sm text-red-600 dark:text-red-400">
-            {t('topicDetail.chatError')}
+            {t('topicDetail.chatStreamError')}
           </p>
         </div>
       )}
@@ -406,22 +368,22 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           onChange={(e) => setQuestion(e.target.value)}
           placeholder={t('topicDetail.chatPlaceholder')}
           maxLength={500}
-          disabled={isSending}
+          disabled={isBusy}
           className="flex-1 h-9 px-3 text-sm rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-lime focus:border-transparent disabled:opacity-50"
         />
         <Button
           type="submit"
           variant="primary"
           size="sm"
-          disabled={!isValid || isSending}
+          disabled={!isValid || isBusy}
           className="gap-1.5"
         >
-          {isSending ? (
+          {isBusy ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
           ) : (
             <Send className="w-3.5 h-3.5" />
           )}
-          {isSending ? t('topicDetail.chatSending') : t('topicDetail.chatSend')}
+          {isBusy ? t('topicDetail.chatSending') : t('topicDetail.chatSend')}
         </Button>
       </form>
 
