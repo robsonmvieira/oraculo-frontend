@@ -186,6 +186,18 @@
         "growth": "Crescimento",
         "conversion": "Conversão"
       }
+    },
+    "intentAsk": {
+      "title": "Perguntar sobre esta categoria",
+      "placeholder": "Faça uma pergunta sobre os pontos de dor desta audiência...",
+      "send": "Enviar",
+      "sending": "Pensando...",
+      "error": "Não foi possível obter uma resposta. Tente novamente.",
+      "contextRich": "Contexto rico",
+      "contextLimited": "Contexto limitado",
+      "cached": "Em cache",
+      "suggestion": "Sugestão",
+      "minLength": "A pergunta deve ter pelo menos 3 caracteres"
     }
   },
   "topics": {
@@ -272,6 +284,8 @@
     "chatStarting": "Iniciando conversa...",
     "chatSuggestion": "Sugestão",
     "chatNoMessages": "Inicie a conversa enviando uma mensagem.",
+    "chatStreamError": "Conexão perdida durante a resposta. Tente novamente.",
+    "chatContextPartial": "Contexto parcial",
     "growth": "Crescimento",
     "growthHistory": "Histórico de Crescimento",
     "growthTrend": "Tendência",

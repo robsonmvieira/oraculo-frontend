@@ -1,4 +1,5 @@
 import type { HttpClient } from '@/modules/shared'
+import { API_BASE_URL } from '@/modules/shared'
 import { Audience } from '../../domain/entities/Audience.entity'
 import { AudienceTemplate } from '../../domain/entities/AudienceTemplate.entity'
 import type { IAudienceRepository } from '../../domain/repositories/audience.repository'
@@ -40,6 +41,9 @@ import type { SendContentSuggestionFeedbackParams, SendContentSuggestionFeedback
 import type { TriggerContentProductionParams, TriggerContentProductionResult } from '../../domain/use-cases/trigger-content-production.use-case'
 import type { GetContentDraftsParams, GetContentDraftsResult } from '../../domain/use-cases/get-content-drafts.use-case'
 import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from '../../domain/use-cases/get-content-draft-detail.use-case'
+import type { AskIntentParams, AskIntentResult } from '../../domain/use-cases/ask-intent.use-case'
+import type { StreamTopicChatMessageParams, StreamTopicChatMessageCallbacks } from '../../domain/use-cases/stream-topic-chat-message.use-case'
+import type { TopicChatContextQuality } from '../../domain/entities/TopicConversation.entity'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -58,6 +62,7 @@ import { ThemePanel } from '../../domain/entities/ThemePanel.entity'
 import { ContentSuggestionAnalysis, ContentSuggestion } from '../../domain/entities/ContentSuggestion.entity'
 import type { ContentSuggestionAnalysisStatus, ContentSuggestionPriority, ContentSuggestionFormat, ContentSuggestionTone, ContentSuggestionFeedbackStatus } from '../../domain/entities/ContentSuggestion.entity'
 import { ContentDraft } from '../../domain/entities/ContentDraft.entity'
+import { IntentAskResponse } from '../../domain/entities/IntentAskResponse.entity'
 import type { ContentDraftPlatform, ContentDraftStatus } from '../../domain/entities/ContentDraft.entity'
 
 interface AudienceTemplateResponse {
@@ -328,6 +333,15 @@ interface TopicAskApiResponse {
   sources_used: string[]
   cached: boolean
   topic_name: string
+  suggestion: string | null
+}
+
+interface IntentAskApiResponse {
+  answer: string
+  context_quality: string
+  sources_used: string[]
+  cached: boolean
+  category: string
   suggestion: string | null
 }
 
@@ -1537,6 +1551,99 @@ export class AudienceRepository implements IAudienceRepository {
 
     return {
       draft: this.mapContentDraft(response),
+    }
+  }
+
+  async askIntent(params: AskIntentParams): Promise<AskIntentResult> {
+    const response = await this.httpClient.post<IntentAskApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/ask`,
+      { question: params.question }
+    )
+
+    return new IntentAskResponse({
+      answer: response.answer,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      sourcesUsed: response.sources_used,
+      cached: response.cached,
+      category: response.category,
+      suggestion: response.suggestion,
+    })
+  }
+
+  async streamTopicChatMessage(
+    params: StreamTopicChatMessageParams,
+    callbacks: StreamTopicChatMessageCallbacks,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const token = localStorage.getItem('access_token')
+    const url = `${API_BASE_URL}/audiences/${params.audienceId}/topics/${params.topicId}/chat/${params.conversationId}/messages`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ question: params.question }),
+      signal,
+    })
+
+    if (!response.ok) {
+      callbacks.onError(`HTTP ${response.status}`)
+      return
+    }
+
+    const reader = response.body?.getReader()
+    if (!reader) {
+      callbacks.onError('No response body')
+      return
+    }
+
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() ?? ''
+
+        let currentEvent = ''
+
+        for (const line of lines) {
+          if (line.startsWith('event: ')) {
+            currentEvent = line.slice(7).trim()
+          } else if (line.startsWith('data: ')) {
+            const data = line.slice(6)
+            try {
+              const parsed = JSON.parse(data)
+
+              if (currentEvent === 'token') {
+                callbacks.onToken(parsed.content)
+              } else if (currentEvent === 'done') {
+                callbacks.onDone({
+                  answer: parsed.answer,
+                  contextQuality: parsed.context_quality as TopicChatContextQuality,
+                  messageId: parsed.message_id,
+                  conversationId: parsed.conversation_id,
+                  suggestion: parsed.suggestion,
+                })
+              } else if (currentEvent === 'error') {
+                callbacks.onError(parsed.error)
+              }
+            } catch {
+              // skip malformed JSON lines
+            }
+            currentEvent = ''
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock()
     }
   }
 }

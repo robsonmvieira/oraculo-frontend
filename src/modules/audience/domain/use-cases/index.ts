@@ -40,3 +40,5 @@ export type { ISendContentSuggestionFeedbackUseCase, SendContentSuggestionFeedba
 export type { ITriggerContentProductionUseCase, TriggerContentProductionParams, TriggerContentProductionResult } from './trigger-content-production.use-case'
 export type { IGetContentDraftsUseCase, GetContentDraftsParams, GetContentDraftsResult } from './get-content-drafts.use-case'
 export type { IGetContentDraftDetailUseCase, GetContentDraftDetailParams, GetContentDraftDetailResult } from './get-content-draft-detail.use-case'
+export type { IAskIntentUseCase, AskIntentParams, AskIntentResult } from './ask-intent.use-case'
+export type { IStreamTopicChatMessageUseCase, StreamTopicChatMessageParams, StreamTopicChatMessageDonePayload, StreamTopicChatMessageCallbacks } from './stream-topic-chat-message.use-case'

@@ -38,6 +38,8 @@ import type { SendContentSuggestionFeedbackParams, SendContentSuggestionFeedback
 import type { TriggerContentProductionParams, TriggerContentProductionResult } from "../use-cases/trigger-content-production.use-case";
 import type { GetContentDraftsParams, GetContentDraftsResult } from "../use-cases/get-content-drafts.use-case";
 import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from "../use-cases/get-content-draft-detail.use-case";
+import type { AskIntentParams, AskIntentResult } from "../use-cases/ask-intent.use-case";
+import type { StreamTopicChatMessageParams, StreamTopicChatMessageCallbacks } from "../use-cases/stream-topic-chat-message.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -82,4 +84,6 @@ export interface IAudienceRepository {
   triggerContentProduction(params: TriggerContentProductionParams): Promise<TriggerContentProductionResult>
   getContentDrafts(params: GetContentDraftsParams): Promise<GetContentDraftsResult>
   getContentDraftDetail(params: GetContentDraftDetailParams): Promise<GetContentDraftDetailResult>
+  askIntent(params: AskIntentParams): Promise<AskIntentResult>
+  streamTopicChatMessage(params: StreamTopicChatMessageParams, callbacks: StreamTopicChatMessageCallbacks, signal?: AbortSignal): Promise<void>
 }

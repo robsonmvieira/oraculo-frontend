@@ -38,3 +38,5 @@ export { useSendContentSuggestionFeedback } from './useSendContentSuggestionFeed
 export { useTriggerContentProduction } from './useTriggerContentProduction'
 export { useGetContentDrafts, CONTENT_DRAFTS_QUERY_KEY } from './useGetContentDrafts'
 export { useGetContentDraftDetail, CONTENT_DRAFT_DETAIL_QUERY_KEY } from './useGetContentDraftDetail'
+export { useAskIntent } from './useAskIntent'
+export { useStreamTopicChatMessage } from './useStreamTopicChatMessage'

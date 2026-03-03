@@ -186,6 +186,18 @@
         "growth": "Growth",
         "conversion": "Conversion"
       }
+    },
+    "intentAsk": {
+      "title": "Ask about this category",
+      "placeholder": "Ask a question about this audience's pain points...",
+      "send": "Send",
+      "sending": "Thinking...",
+      "error": "Failed to get an answer. Please try again.",
+      "contextRich": "Rich context",
+      "contextLimited": "Limited context",
+      "cached": "Cached",
+      "suggestion": "Suggestion",
+      "minLength": "Question must be at least 3 characters"
     }
   },
   "topics": {
@@ -272,6 +284,8 @@
     "chatStarting": "Starting conversation...",
     "chatSuggestion": "Suggestion",
     "chatNoMessages": "Start the conversation by sending a message.",
+    "chatStreamError": "Connection lost during response. Please try again.",
+    "chatContextPartial": "Partial context",
     "growth": "Growth",
     "growthHistory": "Growth History",
     "growthTrend": "Trend",

@@ -1,4 +1,4 @@
-export type TopicChatContextQuality = 'rich' | 'limited'
+export type TopicChatContextQuality = 'rich' | 'partial' | 'limited'
 
 interface TopicConversationProps {
   conversationId: string

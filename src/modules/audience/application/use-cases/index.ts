@@ -40,3 +40,5 @@ export { SendContentSuggestionFeedbackUseCase } from './send-content-suggestion-
 export { TriggerContentProductionUseCase } from './trigger-content-production-use-case'
 export { GetContentDraftsUseCase } from './get-content-drafts-use-case'
 export { GetContentDraftDetailUseCase } from './get-content-draft-detail-use-case'
+export { AskIntentUseCase } from './ask-intent-use-case'
+export { StreamTopicChatMessageUseCase } from './stream-topic-chat-message-use-case'

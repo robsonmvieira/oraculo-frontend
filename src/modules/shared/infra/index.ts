@@ -1,5 +1,5 @@
 export { container, TYPES } from './container'
-export { KyHttpClient } from './http'
+export { KyHttpClient, API_BASE_URL } from './http'
 export type { HttpClient } from './http'
 export { queryClient, QueryProvider } from './query'
 export { useThemeStore, useUIStore } from './store'
