@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Send, Loader2, AlertCircle, Plus, ArrowLeft, Archive, Info, MessageSquareText, User, Bot } from 'lucide-react'
+import { Send, Loader2, AlertCircle, Plus, ArrowLeft, Archive, Download, Info, MessageSquareText, User, Bot } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -9,6 +9,7 @@ import {
   useGetTopicChatMessages,
   useArchiveTopicChat,
   useStreamTopicChatMessage,
+  useExportTopicChat,
   TOPIC_CHAT_CONVERSATIONS_QUERY_KEY,
 } from '@/modules/audience/application/hooks'
 import { useQueryClient } from '@tanstack/react-query'
@@ -43,6 +44,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
 
   const startChat = useStartTopicChat()
   const archiveChat = useArchiveTopicChat()
+  const exportChat = useExportTopicChat()
   const stream = useStreamTopicChatMessage()
 
   const { data: conversationsData, isLoading: isLoadingConversations } = useListTopicChatConversations(
@@ -124,10 +126,16 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
     )
   }
 
+  const handleExport = () => {
+    if (!activeConversationId) return
+    exportChat.mutate({ audienceId, topicId, conversationId: activeConversationId })
+  }
+
   const isLimitReached = stream.isMessageLimitError
+  const isRateLimited = stream.isRateLimitError
 
   const sendMessage = (text: string) => {
-    if (!activeConversationId || isBusy || isLimitReached) return
+    if (!activeConversationId || isBusy || isLimitReached || isRateLimited) return
 
     const userMessage: LocalMessage = {
       id: `local-user-${crypto.randomUUID()}`,
@@ -179,7 +187,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isValid || isBusy || isLimitReached) return
+    if (!isValid || isBusy || isLimitReached || isRateLimited) return
     sendMessage(trimmedQuestion)
   }
 
@@ -286,16 +294,32 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           <ArrowLeft className="w-3.5 h-3.5" />
           {t('topicDetail.chatBack')}
         </button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-1 text-xs text-red-500 hover:text-red-600"
-          onClick={handleArchive}
-          disabled={archiveChat.isPending}
-        >
-          <Archive className="w-3 h-3" />
-          {t('topicDetail.chatArchive')}
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 text-xs text-gray-500 hover:text-gray-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+            onClick={handleExport}
+            disabled={exportChat.isPending}
+          >
+            {exportChat.isPending ? (
+              <Loader2 className="w-3 h-3 animate-spin" />
+            ) : (
+              <Download className="w-3 h-3" />
+            )}
+            {t('topicDetail.chatExport')}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 text-xs text-red-500 hover:text-red-600"
+            onClick={handleArchive}
+            disabled={archiveChat.isPending}
+          >
+            <Archive className="w-3 h-3" />
+            {t('topicDetail.chatArchive')}
+          </Button>
+        </div>
       </div>
 
       {/* Context quality badge */}
@@ -368,7 +392,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
               key={s}
               type="button"
               onClick={() => handleFollowUpClick(s)}
-              disabled={isLimitReached}
+              disabled={isLimitReached || isRateLimited}
               className="text-xs px-2.5 py-1 rounded-full border border-gray-200 dark:border-zinc-700 text-gray-600 dark:text-zinc-400 hover:border-lime hover:text-lime transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {s}
@@ -392,35 +416,56 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
         </div>
       )}
 
-      {/* Error */}
-      {stream.error && (
-        isLimitReached ? (
-          <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
-            <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm text-red-600 dark:text-red-400 mb-2">
-                {t('topicDetail.chatLimitReached')}
-              </p>
-              <Button
-                variant="primary"
-                size="sm"
-                className="gap-1.5"
-                onClick={handleStartConversation}
-                disabled={startChat.isPending}
-              >
-                <Plus className="w-3.5 h-3.5" />
-                {t('topicDetail.chatNewConversation')}
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
-            <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-            <p className="text-sm text-red-600 dark:text-red-400">
-              {t('topicDetail.chatStreamError')}
+      {/* Error: message limit reached */}
+      {isLimitReached && (
+        <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
+          <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm text-red-600 dark:text-red-400 mb-2">
+              {t('topicDetail.chatLimitReached')}
             </p>
+            <Button
+              variant="primary"
+              size="sm"
+              className="gap-1.5"
+              onClick={handleStartConversation}
+              disabled={startChat.isPending}
+            >
+              <Plus className="w-3.5 h-3.5" />
+              {t('topicDetail.chatNewConversation')}
+            </Button>
           </div>
-        )
+        </div>
+      )}
+
+      {/* Error: rate limit exceeded */}
+      {isRateLimited && (
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/30 mb-3">
+          <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
+          <p className="text-sm text-amber-600 dark:text-amber-400">
+            {t('topicDetail.chatRateLimitReached', { seconds: stream.rateLimitCountdown })}
+          </p>
+        </div>
+      )}
+
+      {/* Error: generic stream error */}
+      {stream.error && !isLimitReached && !isRateLimited && (
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
+          <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+          <p className="text-sm text-red-600 dark:text-red-400">
+            {t('topicDetail.chatStreamError')}
+          </p>
+        </div>
+      )}
+
+      {/* Error: export failed */}
+      {exportChat.isError && (
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
+          <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+          <p className="text-sm text-red-600 dark:text-red-400">
+            {t('topicDetail.chatExportError')}
+          </p>
+        </div>
       )}
 
       {/* Input */}
@@ -431,14 +476,14 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           onChange={(e) => setQuestion(e.target.value)}
           placeholder={t('topicDetail.chatPlaceholder')}
           maxLength={500}
-          disabled={isBusy || isLimitReached}
+          disabled={isBusy || isLimitReached || isRateLimited}
           className="flex-1 h-9 px-3 text-sm rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-lime focus:border-transparent disabled:opacity-50"
         />
         <Button
           type="submit"
           variant="primary"
           size="sm"
-          disabled={!isValid || isBusy || isLimitReached}
+          disabled={!isValid || isBusy || isLimitReached || isRateLimited}
           className="gap-1.5"
         >
           {isBusy ? (

@@ -63,4 +63,5 @@ export const TYPES = {
   GetContentDraftDetailUseCase: Symbol.for('GetContentDraftDetailUseCase'),
   AskIntentUseCase: Symbol.for('AskIntentUseCase'),
   StreamTopicChatMessageUseCase: Symbol.for('StreamTopicChatMessageUseCase'),
+  ExportTopicChatUseCase: Symbol.for('ExportTopicChatUseCase'),
 } as const
