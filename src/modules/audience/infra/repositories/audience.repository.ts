@@ -43,6 +43,7 @@ import type { GetContentDraftsParams, GetContentDraftsResult } from '../../domai
 import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from '../../domain/use-cases/get-content-draft-detail.use-case'
 import type { AskIntentParams, AskIntentResult } from '../../domain/use-cases/ask-intent.use-case'
 import type { StreamTopicChatMessageParams, StreamTopicChatMessageCallbacks } from '../../domain/use-cases/stream-topic-chat-message.use-case'
+import type { ExportTopicChatParams, ExportTopicChatResult } from '../../domain/use-cases/export-topic-chat.use-case'
 import type { TopicChatContextQuality } from '../../domain/entities/TopicConversation.entity'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
@@ -1590,6 +1591,17 @@ export class AudienceRepository implements IAudienceRepository {
     })
 
     if (!response.ok) {
+      if (response.status === 429) {
+        try {
+          const body = await response.json()
+          if (body?.error === 'rate_limit_exceeded') {
+            callbacks.onError('rate_limit_exceeded')
+            return
+          }
+        } catch {
+          // fall through to generic error
+        }
+      }
       if (response.status === 400) {
         try {
           const body = await response.json()
@@ -1659,5 +1671,29 @@ export class AudienceRepository implements IAudienceRepository {
     } finally {
       reader.releaseLock()
     }
+  }
+
+  async exportTopicChat(params: ExportTopicChatParams): Promise<ExportTopicChatResult> {
+    const token = localStorage.getItem('access_token')
+    const url = `${API_BASE_URL}/audiences/${params.audienceId}/topics/${params.topicId}/chat/${params.conversationId}/export`
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
+    const blob = await response.blob()
+
+    const disposition = response.headers.get('Content-Disposition') ?? ''
+    const filenameMatch = /filename="?(.+?)"?$/.exec(disposition)
+    const filename = filenameMatch?.[1] ?? `chat-export-${new Date().toISOString().slice(0, 10)}.md`
+
+    return { blob, filename }
   }
 }

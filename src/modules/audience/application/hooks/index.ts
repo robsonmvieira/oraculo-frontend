@@ -40,3 +40,4 @@ export { useGetContentDrafts, CONTENT_DRAFTS_QUERY_KEY } from './useGetContentDr
 export { useGetContentDraftDetail, CONTENT_DRAFT_DETAIL_QUERY_KEY } from './useGetContentDraftDetail'
 export { useAskIntent } from './useAskIntent'
 export { useStreamTopicChatMessage } from './useStreamTopicChatMessage'
+export { useExportTopicChat } from './useExportTopicChat'

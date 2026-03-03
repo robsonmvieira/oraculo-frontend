@@ -40,6 +40,7 @@ import type { GetContentDraftsParams, GetContentDraftsResult } from "../use-case
 import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from "../use-cases/get-content-draft-detail.use-case";
 import type { AskIntentParams, AskIntentResult } from "../use-cases/ask-intent.use-case";
 import type { StreamTopicChatMessageParams, StreamTopicChatMessageCallbacks } from "../use-cases/stream-topic-chat-message.use-case";
+import type { ExportTopicChatParams, ExportTopicChatResult } from "../use-cases/export-topic-chat.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -86,4 +87,5 @@ export interface IAudienceRepository {
   getContentDraftDetail(params: GetContentDraftDetailParams): Promise<GetContentDraftDetailResult>
   askIntent(params: AskIntentParams): Promise<AskIntentResult>
   streamTopicChatMessage(params: StreamTopicChatMessageParams, callbacks: StreamTopicChatMessageCallbacks, signal?: AbortSignal): Promise<void>
+  exportTopicChat(params: ExportTopicChatParams): Promise<ExportTopicChatResult>
 }

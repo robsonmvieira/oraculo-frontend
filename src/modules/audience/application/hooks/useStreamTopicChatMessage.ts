@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { container, TYPES } from '@/modules/shared'
 import type {
   IStreamTopicChatMessageUseCase,
@@ -6,13 +6,32 @@ import type {
   StreamTopicChatMessageDonePayload,
 } from '@/modules/audience/domain/use-cases'
 
+const RATE_LIMIT_COOLDOWN_SECONDS = 60
+
 const streamUseCase = container.get<IStreamTopicChatMessageUseCase>(TYPES.StreamTopicChatMessageUseCase)
 
 export function useStreamTopicChatMessage() {
   const [streamingText, setStreamingText] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [rateLimitCountdown, setRateLimitCountdown] = useState(0)
   const abortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    if (rateLimitCountdown <= 0) return
+
+    const interval = setInterval(() => {
+      setRateLimitCountdown((prev) => {
+        if (prev <= 1) {
+          setError(null)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [rateLimitCountdown])
 
   const send = useCallback(
     async (
@@ -45,6 +64,9 @@ export function useStreamTopicChatMessage() {
             onError: (err) => {
               setError(err)
               setIsStreaming(false)
+              if (err === 'rate_limit_exceeded') {
+                setRateLimitCountdown(RATE_LIMIT_COOLDOWN_SECONDS)
+              }
             },
           },
           controller.signal,
@@ -64,6 +86,7 @@ export function useStreamTopicChatMessage() {
   }, [])
 
   const isMessageLimitError = error === 'message_limit_reached'
+  const isRateLimitError = error === 'rate_limit_exceeded'
 
-  return { send, abort, streamingText, isStreaming, error, isMessageLimitError }
+  return { send, abort, streamingText, isStreaming, error, isMessageLimitError, isRateLimitError, rateLimitCountdown }
 }

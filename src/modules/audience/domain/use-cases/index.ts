@@ -42,3 +42,4 @@ export type { IGetContentDraftsUseCase, GetContentDraftsParams, GetContentDrafts
 export type { IGetContentDraftDetailUseCase, GetContentDraftDetailParams, GetContentDraftDetailResult } from './get-content-draft-detail.use-case'
 export type { IAskIntentUseCase, AskIntentParams, AskIntentResult } from './ask-intent.use-case'
 export type { IStreamTopicChatMessageUseCase, StreamTopicChatMessageParams, StreamTopicChatMessageDonePayload, StreamTopicChatMessageCallbacks } from './stream-topic-chat-message.use-case'
+export type { IExportTopicChatUseCase, ExportTopicChatParams, ExportTopicChatResult } from './export-topic-chat.use-case'
