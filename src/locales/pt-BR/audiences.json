@@ -285,6 +285,7 @@
     "chatSuggestion": "Sugestão",
     "chatNoMessages": "Inicie a conversa enviando uma mensagem.",
     "chatStreamError": "Conexão perdida durante a resposta. Tente novamente.",
+    "chatLimitReached": "Esta conversa atingiu o limite de 100 mensagens. Inicie uma nova conversa para continuar.",
     "chatContextPartial": "Contexto parcial",
     "growth": "Crescimento",
     "growthHistory": "Histórico de Crescimento",

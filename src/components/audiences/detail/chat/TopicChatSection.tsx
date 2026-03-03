@@ -37,6 +37,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
   const [question, setQuestion] = useState('')
   const [localMessages, setLocalMessages] = useState<LocalMessage[]>([])
   const [suggestion, setSuggestion] = useState<string | null>(null)
+  const [followUpSuggestions, setFollowUpSuggestions] = useState<string[]>([])
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -87,6 +88,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           setActiveConversationId(data.conversationId)
           setLocalMessages([])
           setSuggestion(null)
+          setFollowUpSuggestions([])
           setView('conversation')
         },
       },
@@ -97,6 +99,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
     setActiveConversationId(conversationId)
     setLocalMessages([])
     setSuggestion(null)
+    setFollowUpSuggestions([])
     setView('conversation')
   }
 
@@ -106,6 +109,7 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
     setActiveConversationId(null)
     setLocalMessages([])
     setSuggestion(null)
+    setFollowUpSuggestions([])
     setQuestion('')
     queryClient.invalidateQueries({
       queryKey: [TOPIC_CHAT_CONVERSATIONS_QUERY_KEY, audienceId, topicId],
@@ -120,34 +124,38 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
     )
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!isValid || isBusy || !activeConversationId) return
+  const isLimitReached = stream.isMessageLimitError
+
+  const sendMessage = (text: string) => {
+    if (!activeConversationId || isBusy || isLimitReached) return
 
     const userMessage: LocalMessage = {
-      id: `local-user-${Date.now()}`,
+      id: `local-user-${crypto.randomUUID()}`,
       role: 'user',
-      content: trimmedQuestion,
+      content: text,
     }
 
     const streamingPlaceholder: LocalMessage = {
-      id: `local-assistant-${Date.now()}`,
+      id: `local-assistant-${crypto.randomUUID()}`,
       role: 'assistant',
       content: '',
       isStreaming: true,
     }
 
     const currentMessages = localMessages.length > 0 ? localMessages : serverMessages
+    const isFirstMessage = currentMessages.filter((m) => m.role === 'user').length === 0
+
     setLocalMessages([...currentMessages, userMessage, streamingPlaceholder])
     setQuestion('')
     setSuggestion(null)
+    setFollowUpSuggestions([])
 
     stream.send(
       {
         audienceId,
         topicId,
         conversationId: activeConversationId,
-        question: trimmedQuestion,
+        question: text,
       },
       (payload) => {
         setLocalMessages((prev) =>
@@ -158,8 +166,25 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           ),
         )
         setSuggestion(payload.suggestion)
+        setFollowUpSuggestions(payload.followUpSuggestions)
+
+        if (isFirstMessage) {
+          queryClient.invalidateQueries({
+            queryKey: [TOPIC_CHAT_CONVERSATIONS_QUERY_KEY, audienceId, topicId],
+          })
+        }
       },
     )
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!isValid || isBusy || isLimitReached) return
+    sendMessage(trimmedQuestion)
+  }
+
+  const handleFollowUpClick = (text: string) => {
+    sendMessage(text)
   }
 
   // --- Conversation list view ---
@@ -335,6 +360,23 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Follow-up suggestions */}
+      {followUpSuggestions.length > 0 && !isBusy && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {followUpSuggestions.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => handleFollowUpClick(s)}
+              disabled={isLimitReached}
+              className="text-xs px-2.5 py-1 rounded-full border border-gray-200 dark:border-zinc-700 text-gray-600 dark:text-zinc-400 hover:border-lime hover:text-lime transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Suggestion */}
       {suggestion && (
         <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/30 mb-3">
@@ -352,12 +394,33 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
 
       {/* Error */}
       {stream.error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
-          <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-          <p className="text-sm text-red-600 dark:text-red-400">
-            {t('topicDetail.chatStreamError')}
-          </p>
-        </div>
+        isLimitReached ? (
+          <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
+            <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm text-red-600 dark:text-red-400 mb-2">
+                {t('topicDetail.chatLimitReached')}
+              </p>
+              <Button
+                variant="primary"
+                size="sm"
+                className="gap-1.5"
+                onClick={handleStartConversation}
+                disabled={startChat.isPending}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {t('topicDetail.chatNewConversation')}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 mb-3">
+            <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {t('topicDetail.chatStreamError')}
+            </p>
+          </div>
+        )
       )}
 
       {/* Input */}
@@ -368,14 +431,14 @@ export function TopicChatSection({ audienceId, topicId }: Readonly<TopicChatSect
           onChange={(e) => setQuestion(e.target.value)}
           placeholder={t('topicDetail.chatPlaceholder')}
           maxLength={500}
-          disabled={isBusy}
+          disabled={isBusy || isLimitReached}
           className="flex-1 h-9 px-3 text-sm rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-lime focus:border-transparent disabled:opacity-50"
         />
         <Button
           type="submit"
           variant="primary"
           size="sm"
-          disabled={!isValid || isBusy}
+          disabled={!isValid || isBusy || isLimitReached}
           className="gap-1.5"
         >
           {isBusy ? (

@@ -13,6 +13,7 @@ export interface StreamTopicChatMessageDonePayload {
   messageId: string
   conversationId: string
   suggestion: string | null
+  followUpSuggestions: string[]
 }
 
 export interface StreamTopicChatMessageCallbacks {
