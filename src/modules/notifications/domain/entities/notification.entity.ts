@@ -21,6 +21,8 @@ export type NotificationType =
   | 'topic_alert_growth_spike'
   | 'topic_alert_new_theme'
   | 'content_suggestions_ready'
+  | 'content_production_ready'
+  | 'content_production_failed'
 
 export interface NotificationMetadata {
   audience_id?: string

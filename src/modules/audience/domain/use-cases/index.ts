@@ -37,3 +37,6 @@ export type { IGetContentSuggestionsUseCase, GetContentSuggestionsParams, GetCon
 export type { IRefreshContentSuggestionsUseCase, RefreshContentSuggestionsParams, RefreshContentSuggestionsResult } from './refresh-content-suggestions.use-case'
 export type { IGetContentSuggestionDetailUseCase, GetContentSuggestionDetailParams, GetContentSuggestionDetailResult } from './get-content-suggestion-detail.use-case'
 export type { ISendContentSuggestionFeedbackUseCase, SendContentSuggestionFeedbackParams, SendContentSuggestionFeedbackResult } from './send-content-suggestion-feedback.use-case'
+export type { ITriggerContentProductionUseCase, TriggerContentProductionParams, TriggerContentProductionResult } from './trigger-content-production.use-case'
+export type { IGetContentDraftsUseCase, GetContentDraftsParams, GetContentDraftsResult } from './get-content-drafts.use-case'
+export type { IGetContentDraftDetailUseCase, GetContentDraftDetailParams, GetContentDraftDetailResult } from './get-content-draft-detail.use-case'

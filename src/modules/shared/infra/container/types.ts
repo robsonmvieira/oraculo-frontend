@@ -58,4 +58,7 @@ export const TYPES = {
   RefreshContentSuggestionsUseCase: Symbol.for('RefreshContentSuggestionsUseCase'),
   GetContentSuggestionDetailUseCase: Symbol.for('GetContentSuggestionDetailUseCase'),
   SendContentSuggestionFeedbackUseCase: Symbol.for('SendContentSuggestionFeedbackUseCase'),
+  TriggerContentProductionUseCase: Symbol.for('TriggerContentProductionUseCase'),
+  GetContentDraftsUseCase: Symbol.for('GetContentDraftsUseCase'),
+  GetContentDraftDetailUseCase: Symbol.for('GetContentDraftDetailUseCase'),
 } as const

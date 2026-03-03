@@ -414,7 +414,8 @@
       "negative": "negativo",
       "mixed": "misto",
       "neutral": "neutro",
-      "dissatisfied": "insatisfeito"
+      "dissatisfied": "insatisfeito",
+      "satisfied": "satisfeito"
     },
     "frequency": {
       "high": "alto",
@@ -525,6 +526,56 @@
       "title": "Detalhes da Sugestão",
       "close": "Fechar"
     },
-    "growth": "+{{value}}% crescimento"
+    "growth": "+{{value}}% crescimento",
+    "production": {
+      "title": "Produzir Conteúdo",
+      "selectPlatforms": "Selecione as plataformas",
+      "produce": "Produzir Conteúdo",
+      "producing": "Produzindo...",
+      "processing": "Gerando conteúdo...",
+      "processingDescription": "A IA está escrevendo conteúdo completo para cada plataforma selecionada. Isso pode levar 1-2 minutos.",
+      "alreadyExists": "Conteúdo já produzido para todas as plataformas selecionadas.",
+      "failed": "Falha na produção de conteúdo",
+      "failedDescription": "Algo deu errado durante a produção do conteúdo. Por favor, tente novamente.",
+      "platform": {
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter / X",
+        "instagram": "Instagram",
+        "reddit": "Reddit"
+      },
+      "platformDescription": {
+        "linkedin": "Post profissional (máx 3.000 chars)",
+        "twitter": "Thread (até 10 tweets)",
+        "instagram": "Carrossel + legenda",
+        "reddit": "Post com markdown"
+      }
+    },
+    "drafts": {
+      "title": "Conteúdo Gerado",
+      "viewDraft": "Ver Draft",
+      "status": {
+        "processing": "Processando",
+        "ready": "Pronto",
+        "failed": "Falhou"
+      },
+      "hooks": {
+        "title": "Opções de Hook",
+        "description": "Escolha a melhor abertura para seu conteúdo",
+        "option": "Opção {{number}}"
+      },
+      "fullDraft": "Conteúdo Completo",
+      "narrativeArc": "Arco Narrativo",
+      "cta": "Call to Action",
+      "platformNotes": "Notas da Plataforma",
+      "hashtags": "Hashtags",
+      "image": "Imagem Gerada",
+      "imageAspectRatio": "Proporção: {{ratio}}",
+      "modelUsed": "Modelo: {{model}}",
+      "copy": "Copiar",
+      "copied": "Copiado!",
+      "noDrafts": "Nenhum draft ainda",
+      "noDraftsDescription": "Selecione as plataformas acima e clique em \"Produzir Conteúdo\" para gerar os drafts.",
+      "errorMessage": "Erro: {{message}}"
+    }
   }
 }

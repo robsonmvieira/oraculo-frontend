@@ -206,6 +206,7 @@ export function ContentSuggestionsTabContent({ audienceId }: Readonly<ContentSug
 
       <ContentSuggestionDrawer
         suggestion={selectedSuggestion}
+        audienceId={audienceId}
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         onFeedback={handleFeedback}
