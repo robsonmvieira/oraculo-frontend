@@ -9,6 +9,7 @@ import { useGetThemePanel } from '@/modules/audience/application/hooks/useGetThe
 import { useRefreshThemePanel } from '@/modules/audience/application/hooks/useRefreshThemePanel'
 import { ThemeSummaryCard } from './ThemeSummaryCard'
 import { PainPatternsSection } from './PainPatternsSection'
+import { IntentAskSection } from './ask/IntentAskSection'
 import type { ThemeAnalysisWindow } from '@/modules/audience/domain/use-cases'
 import type { PainPattern } from '@/modules/audience/domain/entities/IntentCategory.entity'
 
@@ -59,6 +60,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
   const prefersReducedMotion = useReducedMotion()
   const [showPosts, setShowPosts] = useState(false)
   const [showPatterns, setShowPatterns] = useState(false)
+  const [showAsk, setShowAsk] = useState(false)
 
   const refreshIntentsMutation = useRefreshAudienceIntents()
 
@@ -166,6 +168,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
   useEffect(() => {
     setShowPosts(false)
     setShowPatterns(false)
+    setShowAsk(false)
   }, [theme?.id, intentCategory])
 
   const isIntentTheme = !!intentCategory
@@ -201,7 +204,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                 variant={showPosts ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowPosts(!showPosts); setShowPatterns(false) } : undefined}
+                onClick={isIntentTheme ? () => { setShowPosts(!showPosts); setShowPatterns(false); setShowAsk(false) } : undefined}
               >
                 <Search className="w-3.5 h-3.5" />
                 {t('themes.browseAll')}
@@ -210,12 +213,17 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                 variant={showPatterns ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowPatterns(!showPatterns); setShowPosts(false) } : undefined}
+                onClick={isIntentTheme ? () => { setShowPatterns(!showPatterns); setShowPosts(false); setShowAsk(false) } : undefined}
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('themes.patterns')}
               </Button>
-              <Button variant="outline" size="sm" className="gap-1.5">
+              <Button
+                variant={showAsk ? 'primary' : 'outline'}
+                size="sm"
+                className="gap-1.5"
+                onClick={isIntentTheme ? () => { setShowAsk(!showAsk); setShowPosts(false); setShowPatterns(false) } : undefined}
+              >
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('themes.ask')}
               </Button>
@@ -255,7 +263,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
               </div>
             )}
 
-            {!showPatterns && <div className="grid grid-cols-3 gap-4">
+            {!showPatterns && !showAsk && <div className="grid grid-cols-3 gap-4">
               {/* Subcategories */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -394,6 +402,13 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                 patterns={theme.painPatterns ?? []}
                 onRefresh={handleRefreshPatterns}
                 isRefreshing={refreshIntentsMutation.isPending}
+              />
+            )}
+
+            {showAsk && isIntentTheme && audienceId && intentCategory && (
+              <IntentAskSection
+                audienceId={audienceId}
+                category={intentCategory}
               />
             )}
           </>
