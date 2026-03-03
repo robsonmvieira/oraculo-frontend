@@ -98,14 +98,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'orders',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
-          </Suspense>
-        ),
-      },
-      {
         path: 'audiences',
         element: (
           <Suspense fallback={<PageLoader />}>
@@ -118,54 +110,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <AudienceDetail />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'campaigns',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'cart',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'analytics',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'customers',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'integrations',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'mobile',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Placeholder />
           </Suspense>
         ),
       },

@@ -2,14 +2,7 @@ import { useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   Home,
-  FileText,
   Package,
-  Briefcase,
-  ShoppingBag,
-  Clock,
-  User,
-  Link2,
-  Smartphone,
   Bell,
   Settings,
   HelpCircle,
@@ -22,14 +15,7 @@ import { useLogout } from '@/modules/auth'
 
 const navItems = [
   { icon: Home, path: '/dashboard', label: 'Dashboard' },
-  { icon: FileText, path: '/orders', label: 'Orders' },
   { icon: Package, path: '/audiences', label: 'Audiences' },
-  { icon: Briefcase, path: '/campaigns', label: 'Campaigns' },
-  { icon: ShoppingBag, path: '/cart', label: 'Cart' },
-  { icon: Clock, path: '/analytics', label: 'Analytics' },
-  { icon: User, path: '/customers', label: 'Customers' },
-  { icon: Link2, path: '/integrations', label: 'Integrations' },
-  { icon: Smartphone, path: '/mobile', label: 'Mobile' },
   { icon: Bell, path: '/notifications', label: 'Notifications' },
 ]
 

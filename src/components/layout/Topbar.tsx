@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, NavLink } from 'react-router-dom'
 import {
   Bell, Sun, Moon, Plus, ChevronDown, User, LogOut, Settings, HelpCircle, Menu,
-  Home, FileText, Package, Briefcase, ShoppingBag, Clock, Link2, Smartphone,
+  Home, Package,
 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { Button, Input, Avatar } from '@/components/ui'
@@ -25,27 +25,13 @@ import { useReducedMotion } from '@/hooks'
 
 const mobileNavItems = [
   { icon: Home, path: '/dashboard', label: 'Dashboard' },
-  { icon: FileText, path: '/orders', label: 'Orders' },
   { icon: Package, path: '/audiences', label: 'Audiences' },
-  { icon: Briefcase, path: '/campaigns', label: 'Campaigns' },
-  { icon: ShoppingBag, path: '/cart', label: 'Cart' },
-  { icon: Clock, path: '/analytics', label: 'Analytics' },
-  { icon: User, path: '/customers', label: 'Customers' },
-  { icon: Link2, path: '/integrations', label: 'Integrations' },
-  { icon: Smartphone, path: '/mobile', label: 'Mobile' },
   { icon: Bell, path: '/notifications', label: 'Notifications' },
 ]
 
 const pageNames: Record<string, string> = {
   '/dashboard': 'Dashboard',
-  '/orders': 'Orders',
   '/audiences': 'Audiences',
-  '/campaigns': 'Campaigns',
-  '/cart': 'Cart',
-  '/analytics': 'Analytics',
-  '/customers': 'Customers',
-  '/integrations': 'Integrations',
-  '/mobile': 'Mobile',
   '/settings': 'Settings',
   '/help': 'Help',
   '/profile': 'Profile',
