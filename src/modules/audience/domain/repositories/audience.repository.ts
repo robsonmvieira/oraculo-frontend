@@ -35,6 +35,9 @@ import type { GetContentSuggestionsParams, GetContentSuggestionsResult } from ".
 import type { RefreshContentSuggestionsParams, RefreshContentSuggestionsResult } from "../use-cases/refresh-content-suggestions.use-case";
 import type { GetContentSuggestionDetailParams, GetContentSuggestionDetailResult } from "../use-cases/get-content-suggestion-detail.use-case";
 import type { SendContentSuggestionFeedbackParams, SendContentSuggestionFeedbackResult } from "../use-cases/send-content-suggestion-feedback.use-case";
+import type { TriggerContentProductionParams, TriggerContentProductionResult } from "../use-cases/trigger-content-production.use-case";
+import type { GetContentDraftsParams, GetContentDraftsResult } from "../use-cases/get-content-drafts.use-case";
+import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from "../use-cases/get-content-draft-detail.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -76,4 +79,7 @@ export interface IAudienceRepository {
   refreshContentSuggestions(params: RefreshContentSuggestionsParams): Promise<RefreshContentSuggestionsResult>
   getContentSuggestionDetail(params: GetContentSuggestionDetailParams): Promise<GetContentSuggestionDetailResult>
   sendContentSuggestionFeedback(params: SendContentSuggestionFeedbackParams): Promise<SendContentSuggestionFeedbackResult>
+  triggerContentProduction(params: TriggerContentProductionParams): Promise<TriggerContentProductionResult>
+  getContentDrafts(params: GetContentDraftsParams): Promise<GetContentDraftsResult>
+  getContentDraftDetail(params: GetContentDraftDetailParams): Promise<GetContentDraftDetailResult>
 }

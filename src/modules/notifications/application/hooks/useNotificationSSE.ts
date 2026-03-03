@@ -10,6 +10,7 @@ import { THEME_SUMMARY_QUERY_KEY } from '@/modules/audience/application/hooks/us
 import { THEME_PANEL_QUERY_KEY } from '@/modules/audience/application/hooks/useGetThemePanel'
 import { ALERTS_QUERY_KEY, ALERTS_SUMMARY_QUERY_KEY } from '@/modules/topic-alerts'
 import { CONTENT_SUGGESTIONS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetContentSuggestions'
+import { CONTENT_DRAFTS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetContentDrafts'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -33,6 +34,15 @@ function invalidateAnalysisQueries(
   }
 
   if (type === 'content_suggestions_ready') {
+    queryClient.invalidateQueries({ queryKey: CONTENT_SUGGESTIONS_QUERY_KEY(audienceId) })
+    return
+  }
+
+  if (type === 'content_production_ready' || type === 'content_production_failed') {
+    const suggestionId = metadata.suggestion_id as string | undefined
+    if (suggestionId) {
+      queryClient.invalidateQueries({ queryKey: CONTENT_DRAFTS_QUERY_KEY(audienceId, suggestionId) })
+    }
     queryClient.invalidateQueries({ queryKey: CONTENT_SUGGESTIONS_QUERY_KEY(audienceId) })
     return
   }

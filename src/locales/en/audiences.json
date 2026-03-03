@@ -414,7 +414,8 @@
       "negative": "negative",
       "mixed": "mixed",
       "neutral": "neutral",
-      "dissatisfied": "dissatisfied"
+      "dissatisfied": "dissatisfied",
+      "satisfied": "satisfied"
     },
     "frequency": {
       "high": "high",
@@ -525,6 +526,56 @@
       "title": "Suggestion Details",
       "close": "Close"
     },
-    "growth": "+{{value}}% growth"
+    "growth": "+{{value}}% growth",
+    "production": {
+      "title": "Produce Content",
+      "selectPlatforms": "Select platforms",
+      "produce": "Produce Content",
+      "producing": "Producing...",
+      "processing": "Generating content...",
+      "processingDescription": "The AI is writing complete content for each selected platform. This may take 1-2 minutes.",
+      "alreadyExists": "Content already produced for all selected platforms.",
+      "failed": "Content production failed",
+      "failedDescription": "Something went wrong during content production. Please try again.",
+      "platform": {
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter / X",
+        "instagram": "Instagram",
+        "reddit": "Reddit"
+      },
+      "platformDescription": {
+        "linkedin": "Professional post (max 3,000 chars)",
+        "twitter": "Thread (up to 10 tweets)",
+        "instagram": "Carousel + caption",
+        "reddit": "Post with markdown"
+      }
+    },
+    "drafts": {
+      "title": "Generated Content",
+      "viewDraft": "View Draft",
+      "status": {
+        "processing": "Processing",
+        "ready": "Ready",
+        "failed": "Failed"
+      },
+      "hooks": {
+        "title": "Hook Options",
+        "description": "Choose the best opening for your content",
+        "option": "Option {{number}}"
+      },
+      "fullDraft": "Full Content",
+      "narrativeArc": "Narrative Arc",
+      "cta": "Call to Action",
+      "platformNotes": "Platform Notes",
+      "hashtags": "Hashtags",
+      "image": "Generated Image",
+      "imageAspectRatio": "Aspect ratio: {{ratio}}",
+      "modelUsed": "Model: {{model}}",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "noDrafts": "No drafts yet",
+      "noDraftsDescription": "Select platforms above and click \"Produce Content\" to generate drafts.",
+      "errorMessage": "Error: {{message}}"
+    }
   }
 }

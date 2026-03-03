@@ -94,6 +94,7 @@ interface ContentSuggestionProps {
   sourceModules: string[]
   feedbackStatus: ContentSuggestionFeedbackStatus | null
   feedbackAt: string | null
+  imageUrl: string | null
   createdAt: string
 }
 
@@ -120,6 +121,7 @@ export class ContentSuggestion {
   private readonly sourceModules: string[]
   private readonly feedbackStatus: ContentSuggestionFeedbackStatus | null
   private readonly feedbackAt: string | null
+  private readonly imageUrl: string | null
   private readonly createdAt: string
 
   constructor(props: ContentSuggestionProps) {
@@ -145,6 +147,7 @@ export class ContentSuggestion {
     this.sourceModules = props.sourceModules
     this.feedbackStatus = props.feedbackStatus
     this.feedbackAt = props.feedbackAt
+    this.imageUrl = props.imageUrl
     this.createdAt = props.createdAt
   }
 
@@ -170,5 +173,6 @@ export class ContentSuggestion {
   getSourceModules(): string[] { return this.sourceModules }
   getFeedbackStatus(): ContentSuggestionFeedbackStatus | null { return this.feedbackStatus }
   getFeedbackAt(): string | null { return this.feedbackAt }
+  getImageUrl(): string | null { return this.imageUrl }
   getCreatedAt(): string { return this.createdAt }
 }

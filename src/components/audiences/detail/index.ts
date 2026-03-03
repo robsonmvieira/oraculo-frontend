@@ -67,5 +67,11 @@ export type { ContentSuggestionDrawerProps } from './ContentSuggestionDrawer'
 export { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
 export type { ContentSuggestionsTabContentProps } from './ContentSuggestionsTabContent'
 
+export { ContentDraftCard } from './ContentDraftCard'
+export type { ContentDraftCardProps } from './ContentDraftCard'
+
+export { ContentDraftDrawer } from './ContentDraftDrawer'
+export type { ContentDraftDrawerProps } from './ContentDraftDrawer'
+
 export { PainPatternsSection } from './PainPatternsSection'
 export type { PainPatternsSectionProps } from './PainPatternsSection'

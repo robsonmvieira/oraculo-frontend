@@ -37,6 +37,9 @@ import type { GetContentSuggestionsParams, GetContentSuggestionsResult } from '.
 import type { RefreshContentSuggestionsParams, RefreshContentSuggestionsResult } from '../../domain/use-cases/refresh-content-suggestions.use-case'
 import type { GetContentSuggestionDetailParams, GetContentSuggestionDetailResult } from '../../domain/use-cases/get-content-suggestion-detail.use-case'
 import type { SendContentSuggestionFeedbackParams, SendContentSuggestionFeedbackResult } from '../../domain/use-cases/send-content-suggestion-feedback.use-case'
+import type { TriggerContentProductionParams, TriggerContentProductionResult } from '../../domain/use-cases/trigger-content-production.use-case'
+import type { GetContentDraftsParams, GetContentDraftsResult } from '../../domain/use-cases/get-content-drafts.use-case'
+import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from '../../domain/use-cases/get-content-draft-detail.use-case'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
 import { TopicDeepDive } from '../../domain/entities/TopicDeepDive.entity'
@@ -54,6 +57,8 @@ import type { EmotionalTone } from '../../domain/entities/ThemeSummary.entity'
 import { ThemePanel } from '../../domain/entities/ThemePanel.entity'
 import { ContentSuggestionAnalysis, ContentSuggestion } from '../../domain/entities/ContentSuggestion.entity'
 import type { ContentSuggestionAnalysisStatus, ContentSuggestionPriority, ContentSuggestionFormat, ContentSuggestionTone, ContentSuggestionFeedbackStatus } from '../../domain/entities/ContentSuggestion.entity'
+import { ContentDraft } from '../../domain/entities/ContentDraft.entity'
+import type { ContentDraftPlatform, ContentDraftStatus } from '../../domain/entities/ContentDraft.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -540,6 +545,7 @@ interface ContentSuggestionApiItem {
   source_modules: string[]
   feedback_status?: string | null
   feedback_at?: string | null
+  image_url?: string | null
   created_at: string
 }
 
@@ -565,6 +571,37 @@ interface SendContentSuggestionFeedbackApiResponse {
   suggestion_id: string
   feedback_status: string
   feedback_at: string
+}
+
+interface ContentDraftApiItem {
+  id: string
+  suggestion_id: string
+  platform: string
+  status: string
+  hooks: Array<{ option: number; text: string }>
+  full_draft: string
+  narrative_arc: string
+  cta: string
+  platform_notes: string
+  hashtags: string[]
+  image_url: string | null
+  image_aspect_ratio: string | null
+  model_used: string
+  error_message: string | null
+  created_at: string
+}
+
+interface TriggerContentProductionApiResponse {
+  status: string
+  suggestion_id: string
+  platforms: string[]
+  message: string
+}
+
+interface GetContentDraftsApiResponse {
+  suggestion_id: string
+  drafts: ContentDraftApiItem[]
+  total: number
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -1442,7 +1479,64 @@ export class AudienceRepository implements IAudienceRepository {
       sourceModules: s.source_modules ?? [],
       feedbackStatus: (s.feedback_status as ContentSuggestionFeedbackStatus) ?? null,
       feedbackAt: s.feedback_at ?? null,
+      imageUrl: s.image_url ?? null,
       createdAt: s.created_at ?? '',
     })
+  }
+
+  private mapContentDraft(d: ContentDraftApiItem): ContentDraft {
+    return new ContentDraft({
+      id: d.id,
+      suggestionId: d.suggestion_id,
+      platform: d.platform as ContentDraftPlatform,
+      status: d.status as ContentDraftStatus,
+      hooks: (d.hooks ?? []).map((h) => ({ option: h.option, text: h.text })),
+      fullDraft: d.full_draft ?? '',
+      narrativeArc: d.narrative_arc ?? '',
+      cta: d.cta ?? '',
+      platformNotes: d.platform_notes ?? '',
+      hashtags: d.hashtags ?? [],
+      imageUrl: d.image_url ?? null,
+      imageAspectRatio: d.image_aspect_ratio ?? null,
+      modelUsed: d.model_used ?? '',
+      errorMessage: d.error_message ?? null,
+      createdAt: d.created_at ?? '',
+    })
+  }
+
+  async triggerContentProduction(params: TriggerContentProductionParams): Promise<TriggerContentProductionResult> {
+    const response = await this.httpClient.post<TriggerContentProductionApiResponse>(
+      `audiences/${params.audienceId}/content-suggestions/${params.suggestionId}/produce`,
+      { target_platforms: params.targetPlatforms }
+    )
+
+    return {
+      status: response.status as 'processing' | 'already_exists',
+      suggestionId: response.suggestion_id,
+      platforms: response.platforms,
+      message: response.message,
+    }
+  }
+
+  async getContentDrafts(params: GetContentDraftsParams): Promise<GetContentDraftsResult> {
+    const response = await this.httpClient.get<GetContentDraftsApiResponse>(
+      `audiences/${params.audienceId}/content-suggestions/${params.suggestionId}/drafts`
+    )
+
+    return {
+      suggestionId: response.suggestion_id,
+      drafts: (response.drafts ?? []).map((d) => this.mapContentDraft(d)),
+      total: response.total ?? 0,
+    }
+  }
+
+  async getContentDraftDetail(params: GetContentDraftDetailParams): Promise<GetContentDraftDetailResult> {
+    const response = await this.httpClient.get<ContentDraftApiItem>(
+      `audiences/${params.audienceId}/content-suggestions/${params.suggestionId}/drafts/${params.draftId}`
+    )
+
+    return {
+      draft: this.mapContentDraft(response),
+    }
   }
 }
