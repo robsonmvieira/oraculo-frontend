@@ -113,7 +113,7 @@ function translateWithFallback(t: (key: string) => string, prefix: string, value
 
 function mapIntentToDetail(intent: IntentCategory, t: (key: string) => string): ThemeDetail {
   const subcategories = Object.entries(intent.getSubcategories()).map(([name, count]) => ({
-    name: translateWithFallback(t, 'themes.intents.sentiments', name),
+    name: translateWithFallback(t, 'themes.intents.subcategories', name),
     count,
   }))
   const topics = Object.entries(intent.getTopicKeywords()).map(([name, count]) => ({

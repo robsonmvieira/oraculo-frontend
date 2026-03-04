@@ -163,7 +163,7 @@
       "ideas_desc": "People suggesting ideas",
       "news": "News",
       "news_desc": "Conversations about current news & events",
-      "sentiments": {
+      "subcategories": {
         "frustration": "Frustration",
         "concern": "Concern",
         "anxiety": "Anxiety",
@@ -173,7 +173,23 @@
         "sadness": "Sadness",
         "confusion": "Confusion",
         "fear": "Fear",
-        "irritation": "Irritation"
+        "irritation": "Irritation",
+        "tools": "Tools",
+        "automation": "Automation",
+        "templates": "Templates",
+        "frameworks": "Frameworks",
+        "integrations": "Integrations",
+        "platforms": "Platforms",
+        "workflows": "Workflows",
+        "optimization": "Optimization",
+        "career": "Career",
+        "strategy": "Strategy",
+        "beginner": "Beginner",
+        "comparison": "Comparison",
+        "best_practices": "Best Practices",
+        "recommendation": "Recommendation",
+        "troubleshooting": "Troubleshooting",
+        "scaling": "Scaling"
       },
       "keywords": {
         "agency": "Agency",
