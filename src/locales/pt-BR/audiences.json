@@ -341,6 +341,25 @@
     "askComingSoon": "Em breve - Faça perguntas sobre esta audiência",
     "productsComingSoon": "Em breve - Descubra produtos relevantes para esta audiência"
   },
+  "semanticSearch": {
+    "title": "Pesquise sua audiência",
+    "subtitle": "Encontre padrões e insights em todos os posts da sua audiência",
+    "placeholder": "O que sua audiência está falando?",
+    "send": "Pesquisar",
+    "searching": "Pesquisando nos posts da sua audiência...",
+    "error": "Busca falhou. Tente novamente.",
+    "noResults": "Nenhum resultado encontrado para esta busca. Tente um termo diferente.",
+    "postsSearched": "{{count}} posts pesquisados",
+    "postsMatched": "{{count}} resultados",
+    "contextRich": "Contexto rico",
+    "contextLimited": "Contexto limitado",
+    "cached": "Em cache",
+    "minLength": "A busca deve ter pelo menos 3 caracteres",
+    "patterns": "Padrões encontrados",
+    "answer": "Análise da IA",
+    "posts": "posts",
+    "similarity": "{{value}}% relevância"
+  },
   "alerts": {
     "title": "Alertas",
     "empty": "Nenhum alerta para esta audiência ainda.",

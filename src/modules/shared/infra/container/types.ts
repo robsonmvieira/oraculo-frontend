@@ -70,4 +70,5 @@ export const TYPES = {
   GetIntentChatMessagesUseCase: Symbol.for('GetIntentChatMessagesUseCase'),
   ArchiveIntentChatUseCase: Symbol.for('ArchiveIntentChatUseCase'),
   ExportIntentChatUseCase: Symbol.for('ExportIntentChatUseCase'),
+  SemanticSearchUseCase: Symbol.for('SemanticSearchUseCase'),
 } as const

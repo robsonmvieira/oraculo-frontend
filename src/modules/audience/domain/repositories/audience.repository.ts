@@ -47,6 +47,7 @@ import type { ListIntentChatConversationsParams, ListIntentChatConversationsResu
 import type { GetIntentChatMessagesParams, GetIntentChatMessagesResult } from "../use-cases/get-intent-chat-messages.use-case";
 import type { ArchiveIntentChatParams, ArchiveIntentChatResult } from "../use-cases/archive-intent-chat.use-case";
 import type { ExportIntentChatParams, ExportIntentChatResult } from "../use-cases/export-intent-chat.use-case";
+import type { SemanticSearchParams, SemanticSearchUseCaseResult } from "../use-cases/semantic-search.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -100,4 +101,5 @@ export interface IAudienceRepository {
   getIntentChatMessages(params: GetIntentChatMessagesParams): Promise<GetIntentChatMessagesResult>
   archiveIntentChat(params: ArchiveIntentChatParams): Promise<ArchiveIntentChatResult>
   exportIntentChat(params: ExportIntentChatParams): Promise<ExportIntentChatResult>
+  semanticSearch(params: SemanticSearchParams): Promise<SemanticSearchUseCaseResult>
 }

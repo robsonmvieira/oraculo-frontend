@@ -49,3 +49,4 @@ export type { IListIntentChatConversationsUseCase, ListIntentChatConversationsPa
 export type { IGetIntentChatMessagesUseCase, GetIntentChatMessagesParams, GetIntentChatMessagesResult } from './get-intent-chat-messages.use-case'
 export type { IArchiveIntentChatUseCase, ArchiveIntentChatParams, ArchiveIntentChatResult } from './archive-intent-chat.use-case'
 export type { IExportIntentChatUseCase, ExportIntentChatParams, ExportIntentChatResult } from './export-intent-chat.use-case'
+export type { ISemanticSearchUseCase, SemanticSearchParams, SemanticSearchUseCaseResult } from './semantic-search.use-case'

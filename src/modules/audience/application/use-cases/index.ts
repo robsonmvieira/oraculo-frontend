@@ -49,3 +49,4 @@ export { ListIntentChatConversationsUseCase } from './list-intent-chat-conversat
 export { GetIntentChatMessagesUseCase } from './get-intent-chat-messages-use-case'
 export { ArchiveIntentChatUseCase } from './archive-intent-chat-use-case'
 export { ExportIntentChatUseCase } from './export-intent-chat-use-case'
+export { SemanticSearchUseCase } from './semantic-search-use-case'

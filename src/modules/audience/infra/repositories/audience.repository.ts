@@ -73,6 +73,8 @@ import { IntentAskResponse } from '../../domain/entities/IntentAskResponse.entit
 import { IntentConversation } from '../../domain/entities/IntentConversation.entity'
 import { IntentConversationMessage } from '../../domain/entities/IntentConversationMessage.entity'
 import type { ContentDraftPlatform, ContentDraftStatus } from '../../domain/entities/ContentDraft.entity'
+import type { SemanticSearchParams, SemanticSearchUseCaseResult } from '../../domain/use-cases/semantic-search.use-case'
+import { SemanticSearchResult } from '../../domain/entities/SemanticSearchResult.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -676,6 +678,37 @@ interface GetContentDraftsApiResponse {
   suggestion_id: string
   drafts: ContentDraftApiItem[]
   total: number
+}
+
+interface SemanticSearchSubmissionApiItem {
+  title: string
+  body: string
+  subreddit: string
+  score: number
+  num_comments: number
+  permalink: string
+  similarity: number
+}
+
+interface SemanticSearchPatternApiItem {
+  name: string
+  emoji: string
+  description: string
+  post_count: number
+  total_upvotes: number
+  total_comments: number
+  submissions: SemanticSearchSubmissionApiItem[]
+}
+
+interface SemanticSearchApiResponse {
+  answer: string
+  patterns: SemanticSearchPatternApiItem[]
+  total_posts_searched: number
+  total_posts_matched: number
+  pattern_count: number
+  context_quality: string
+  cached: boolean
+  query: string
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -1851,5 +1884,39 @@ export class AudienceRepository implements IAudienceRepository {
     const filename = filenameMatch?.[1] ?? `intent-chat-export-${new Date().toISOString().slice(0, 10)}.md`
 
     return { blob, filename }
+  }
+
+  async semanticSearch(params: SemanticSearchParams): Promise<SemanticSearchUseCaseResult> {
+    const response = await this.httpClient.post<SemanticSearchApiResponse>(
+      `audiences/${params.audienceId}/semantic-search`,
+      { query: params.query }
+    )
+
+    return new SemanticSearchResult({
+      answer: response.answer,
+      patterns: response.patterns.map((p) => ({
+        name: p.name,
+        emoji: p.emoji,
+        description: p.description,
+        postCount: p.post_count,
+        totalUpvotes: p.total_upvotes,
+        totalComments: p.total_comments,
+        submissions: p.submissions.map((s) => ({
+          title: s.title,
+          body: s.body,
+          subreddit: s.subreddit,
+          score: s.score,
+          numComments: s.num_comments,
+          permalink: s.permalink,
+          similarity: s.similarity,
+        })),
+      })),
+      totalPostsSearched: response.total_posts_searched,
+      totalPostsMatched: response.total_posts_matched,
+      patternCount: response.pattern_count,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      cached: response.cached,
+      query: response.query,
+    })
   }
 }

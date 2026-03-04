@@ -341,6 +341,25 @@
     "askComingSoon": "Coming soon - Ask questions about this audience",
     "productsComingSoon": "Coming soon - Discover products relevant to this audience"
   },
+  "semanticSearch": {
+    "title": "Search your audience",
+    "subtitle": "Find patterns and insights across all posts in your audience",
+    "placeholder": "What is your audience talking about?",
+    "send": "Search",
+    "searching": "Searching across your audience posts...",
+    "error": "Search failed. Please try again.",
+    "noResults": "No results found for this query. Try a different search term.",
+    "postsSearched": "{{count}} posts searched",
+    "postsMatched": "{{count}} matches",
+    "contextRich": "Rich context",
+    "contextLimited": "Limited context",
+    "cached": "Cached",
+    "minLength": "Query must be at least 3 characters",
+    "patterns": "Patterns found",
+    "answer": "AI Analysis",
+    "posts": "posts",
+    "similarity": "{{value}}% match"
+  },
   "alerts": {
     "title": "Alerts",
     "empty": "No alerts for this audience yet.",

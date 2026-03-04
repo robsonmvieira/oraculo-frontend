@@ -47,3 +47,4 @@ export { useListIntentChatConversations, INTENT_CHAT_CONVERSATIONS_QUERY_KEY } f
 export { useGetIntentChatMessages, INTENT_CHAT_MESSAGES_QUERY_KEY } from './useGetIntentChatMessages'
 export { useArchiveIntentChat } from './useArchiveIntentChat'
 export { useExportIntentChat } from './useExportIntentChat'
+export { useSemanticSearch } from './useSemanticSearch'
