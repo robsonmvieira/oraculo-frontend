@@ -41,6 +41,12 @@ import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from ".
 import type { AskIntentParams, AskIntentResult } from "../use-cases/ask-intent.use-case";
 import type { StreamTopicChatMessageParams, StreamTopicChatMessageCallbacks } from "../use-cases/stream-topic-chat-message.use-case";
 import type { ExportTopicChatParams, ExportTopicChatResult } from "../use-cases/export-topic-chat.use-case";
+import type { StartIntentChatParams, StartIntentChatResult } from "../use-cases/start-intent-chat.use-case";
+import type { SendIntentChatMessageParams, SendIntentChatMessageResult } from "../use-cases/send-intent-chat-message.use-case";
+import type { ListIntentChatConversationsParams, ListIntentChatConversationsResult } from "../use-cases/list-intent-chat-conversations.use-case";
+import type { GetIntentChatMessagesParams, GetIntentChatMessagesResult } from "../use-cases/get-intent-chat-messages.use-case";
+import type { ArchiveIntentChatParams, ArchiveIntentChatResult } from "../use-cases/archive-intent-chat.use-case";
+import type { ExportIntentChatParams, ExportIntentChatResult } from "../use-cases/export-intent-chat.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -88,4 +94,10 @@ export interface IAudienceRepository {
   askIntent(params: AskIntentParams): Promise<AskIntentResult>
   streamTopicChatMessage(params: StreamTopicChatMessageParams, callbacks: StreamTopicChatMessageCallbacks, signal?: AbortSignal): Promise<void>
   exportTopicChat(params: ExportTopicChatParams): Promise<ExportTopicChatResult>
+  startIntentChat(params: StartIntentChatParams): Promise<StartIntentChatResult>
+  sendIntentChatMessage(params: SendIntentChatMessageParams): Promise<SendIntentChatMessageResult>
+  listIntentChatConversations(params: ListIntentChatConversationsParams): Promise<ListIntentChatConversationsResult>
+  getIntentChatMessages(params: GetIntentChatMessagesParams): Promise<GetIntentChatMessagesResult>
+  archiveIntentChat(params: ArchiveIntentChatParams): Promise<ArchiveIntentChatResult>
+  exportIntentChat(params: ExportIntentChatParams): Promise<ExportIntentChatResult>
 }

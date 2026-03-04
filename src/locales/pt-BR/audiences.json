@@ -198,6 +198,27 @@
       "cached": "Em cache",
       "suggestion": "Sugestão",
       "minLength": "A pergunta deve ter pelo menos 3 caracteres"
+    },
+    "intentChat": {
+      "title": "Conversar sobre esta categoria",
+      "placeholder": "Digite sua mensagem...",
+      "send": "Enviar",
+      "sending": "Pensando...",
+      "error": "Não foi possível enviar a mensagem. Tente novamente.",
+      "contextRich": "Contexto rico",
+      "contextLimited": "Contexto limitado",
+      "minLength": "A mensagem deve ter pelo menos 3 caracteres",
+      "newConversation": "Nova conversa",
+      "conversations": "Conversas",
+      "noConversations": "Nenhuma conversa ainda. Inicie uma!",
+      "archive": "Arquivar",
+      "archived": "Conversa arquivada",
+      "back": "Voltar às conversas",
+      "starting": "Iniciando conversa...",
+      "suggestion": "Sugestão",
+      "noMessages": "Inicie a conversa enviando uma mensagem.",
+      "export": "Exportar",
+      "exportError": "Não foi possível exportar a conversa. Tente novamente."
     }
   },
   "topics": {
@@ -588,6 +609,8 @@
       "hashtags": "Hashtags",
       "image": "Imagem Gerada",
       "imageAspectRatio": "Proporção: {{ratio}}",
+      "imageLoadError": "Não foi possível carregar a imagem",
+      "openImageLink": "Abrir link da imagem",
       "modelUsed": "Modelo: {{model}}",
       "copy": "Copiar",
       "copied": "Copiado!",

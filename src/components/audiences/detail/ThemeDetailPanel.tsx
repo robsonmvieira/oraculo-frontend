@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, Sparkles, Copy, MessageSquare, Loader2 } from 'lucide-react'
+import { Search, Sparkles, Copy, MessageSquare, MessageSquareText, Loader2 } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { useRefreshThemePanel } from '@/modules/audience/application/hooks/useRe
 import { ThemeSummaryCard } from './ThemeSummaryCard'
 import { PainPatternsSection } from './PainPatternsSection'
 import { IntentAskSection } from './ask/IntentAskSection'
+import { IntentChatSection } from './chat/IntentChatSection'
 import type { ThemeAnalysisWindow } from '@/modules/audience/domain/use-cases'
 import type { PainPattern } from '@/modules/audience/domain/entities/IntentCategory.entity'
 
@@ -61,6 +62,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
   const [showPosts, setShowPosts] = useState(false)
   const [showPatterns, setShowPatterns] = useState(false)
   const [showAsk, setShowAsk] = useState(false)
+  const [showChat, setShowChat] = useState(false)
 
   const refreshIntentsMutation = useRefreshAudienceIntents()
 
@@ -169,6 +171,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
     setShowPosts(false)
     setShowPatterns(false)
     setShowAsk(false)
+    setShowChat(false)
   }, [theme?.id, intentCategory])
 
   const isIntentTheme = !!intentCategory
@@ -204,7 +207,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                 variant={showPosts ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowPosts(!showPosts); setShowPatterns(false); setShowAsk(false) } : undefined}
+                onClick={isIntentTheme ? () => { setShowPosts(!showPosts); setShowPatterns(false); setShowAsk(false); setShowChat(false) } : undefined}
               >
                 <Search className="w-3.5 h-3.5" />
                 {t('themes.browseAll')}
@@ -213,7 +216,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                 variant={showPatterns ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowPatterns(!showPatterns); setShowPosts(false); setShowAsk(false) } : undefined}
+                onClick={isIntentTheme ? () => { setShowPatterns(!showPatterns); setShowPosts(false); setShowAsk(false); setShowChat(false) } : undefined}
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('themes.patterns')}
@@ -222,10 +225,19 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
                 variant={showAsk ? 'primary' : 'outline'}
                 size="sm"
                 className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowAsk(!showAsk); setShowPosts(false); setShowPatterns(false) } : undefined}
+                onClick={isIntentTheme ? () => { setShowAsk(!showAsk); setShowPosts(false); setShowPatterns(false); setShowChat(false) } : undefined}
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('themes.ask')}
+              </Button>
+              <Button
+                variant={showChat ? 'primary' : 'outline'}
+                size="sm"
+                className="gap-1.5"
+                onClick={isIntentTheme ? () => { setShowChat(!showChat); setShowPosts(false); setShowPatterns(false); setShowAsk(false) } : undefined}
+              >
+                <MessageSquareText className="w-3.5 h-3.5" />
+                {t('themes.intentChat.title')}
               </Button>
               <Button variant="outline" size="sm" className="gap-1.5">
                 <Copy className="w-3.5 h-3.5" />
@@ -263,7 +275,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
               </div>
             )}
 
-            {!showPatterns && !showAsk && <div className="grid grid-cols-3 gap-4">
+            {!showPatterns && !showAsk && !showChat && <div className="grid grid-cols-3 gap-4">
               {/* Subcategories */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -407,6 +419,13 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
 
             {showAsk && isIntentTheme && audienceId && intentCategory && (
               <IntentAskSection
+                audienceId={audienceId}
+                category={intentCategory}
+              />
+            )}
+
+            {showChat && isIntentTheme && audienceId && intentCategory && (
+              <IntentChatSection
                 audienceId={audienceId}
                 category={intentCategory}
               />

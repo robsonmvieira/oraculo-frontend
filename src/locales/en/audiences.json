@@ -198,6 +198,27 @@
       "cached": "Cached",
       "suggestion": "Suggestion",
       "minLength": "Question must be at least 3 characters"
+    },
+    "intentChat": {
+      "title": "Chat about this category",
+      "placeholder": "Type your message...",
+      "send": "Send",
+      "sending": "Thinking...",
+      "error": "Failed to send message. Please try again.",
+      "contextRich": "Rich context",
+      "contextLimited": "Limited context",
+      "minLength": "Message must be at least 3 characters",
+      "newConversation": "New conversation",
+      "conversations": "Conversations",
+      "noConversations": "No conversations yet. Start one!",
+      "archive": "Archive",
+      "archived": "Conversation archived",
+      "back": "Back to conversations",
+      "starting": "Starting conversation...",
+      "suggestion": "Suggestion",
+      "noMessages": "Start the conversation by sending a message.",
+      "export": "Export",
+      "exportError": "Failed to export conversation. Please try again."
     }
   },
   "topics": {
@@ -588,6 +609,8 @@
       "hashtags": "Hashtags",
       "image": "Generated Image",
       "imageAspectRatio": "Aspect ratio: {{ratio}}",
+      "imageLoadError": "Could not load the image",
+      "openImageLink": "Open image link",
       "modelUsed": "Model: {{model}}",
       "copy": "Copy",
       "copied": "Copied!",
