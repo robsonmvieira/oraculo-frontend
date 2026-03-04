@@ -758,5 +758,74 @@
       "tags": "Tags",
       "noVideos": "Nenhum vídeo coletado para este tópico"
     }
+  },
+  "productIntelligence": {
+    "title": "Inteligência de Produtos",
+    "subtitle": "Descubra produtos, marcas e ferramentas mencionados pela sua audiência e detecte oportunidades de mercado",
+    "analyzeProducts": "Analisar Produtos",
+    "reanalyze": "Re-analisar",
+    "weekly": "Semanal",
+    "monthly": "Mensal",
+    "processing": "Analisando produtos mencionados pela sua audiência...",
+    "processingHelp": "Isso pode levar 2-3 minutos. Estamos extraindo produtos dos posts e detectando oportunidades de mercado.",
+    "failed": "A análise de produtos falhou. Tente novamente.",
+    "noAnalysis": "Nenhuma análise de produtos ainda",
+    "noAnalysisDescription": "Clique no botão acima para descobrir produtos, marcas e ferramentas mencionados pela sua audiência.",
+    "totalProducts": "Produtos encontrados",
+    "totalMentions": "Total de menções",
+    "totalOpportunities": "Oportunidades",
+    "searchProducts": "Buscar produtos...",
+    "sortBy": "Ordenar por",
+    "sortMentions": "Menções",
+    "sortSentiment": "Sentimento",
+    "sortName": "Nome",
+    "allCategories": "Todos",
+    "category": {
+      "tool": "Ferramenta",
+      "service": "Serviço",
+      "brand": "Marca",
+      "platform": "Plataforma",
+      "saas": "SaaS",
+      "physical_product": "Produto Físico"
+    },
+    "mentions": "{{count}} menções",
+    "sentiment": "Sentimento",
+    "trend": {
+      "rising": "Em alta",
+      "stable": "Estável",
+      "declining": "Em queda"
+    },
+    "sentimentLabel": {
+      "positive": "Positivo",
+      "negative": "Negativo",
+      "neutral": "Neutro",
+      "mixed": "Misto"
+    },
+    "detail": {
+      "selectProduct": "Selecione um produto",
+      "selectProductDescription": "Clique em um produto da lista para ver informações detalhadas.",
+      "positiveAspects": "Aspectos Positivos",
+      "negativeAspects": "Aspectos Negativos",
+      "gaps": "Funcionalidades Desejadas",
+      "alternatives": "Alternativas",
+      "evidenceQuotes": "Citações de Evidência",
+      "useCases": "Casos de Uso",
+      "communities": "Comunidades",
+      "noData": "Sem dados disponíveis"
+    },
+    "opportunities": {
+      "title": "Oportunidades de Mercado",
+      "score": "Score",
+      "demandSignals": "Sinais de demanda",
+      "existingSolutions": "Soluções existentes",
+      "evidence": "Evidências",
+      "relatedProducts": "Produtos relacionados",
+      "type": {
+        "unmet_demand": "Demanda Não Atendida",
+        "declining_product": "Produto em Declínio",
+        "underserved_niche": "Nicho Mal Atendido",
+        "emerging_trend": "Tendência Emergente"
+      }
+    }
   }
 }

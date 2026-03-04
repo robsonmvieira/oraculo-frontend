@@ -78,3 +78,6 @@ export type { PainPatternsSectionProps } from './PainPatternsSection'
 
 export { YouTubeValidationTabContent } from './youtube-validation'
 export type { YouTubeValidationTabContentProps } from './youtube-validation'
+
+export { ProductsTabContent } from './products'
+export type { ProductsTabContentProps } from './products'

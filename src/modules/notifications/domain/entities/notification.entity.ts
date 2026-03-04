@@ -23,6 +23,10 @@ export type NotificationType =
   | 'content_suggestions_ready'
   | 'content_production_ready'
   | 'content_production_failed'
+  | 'youtube_validation_complete'
+  | 'youtube_validation_failed'
+  | 'product_intelligence_ready'
+  | 'product_intelligence_failed'
 
 export interface NotificationMetadata {
   audience_id?: string

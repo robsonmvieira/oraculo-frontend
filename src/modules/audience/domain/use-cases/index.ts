@@ -53,3 +53,7 @@ export type { ISemanticSearchUseCase, SemanticSearchParams, SemanticSearchUseCas
 export type { IGetYouTubeValidationUseCase, GetYouTubeValidationParams, GetYouTubeValidationResult, YouTubeValidationStatus } from './get-youtube-validation.use-case'
 export type { ITriggerYouTubeValidationUseCase, TriggerYouTubeValidationParams, TriggerYouTubeValidationResult } from './trigger-youtube-validation.use-case'
 export type { IGetYouTubeValidationVideosUseCase, GetYouTubeValidationVideosParams, GetYouTubeValidationVideosResult } from './get-youtube-validation-videos.use-case'
+export type { IGetProductIntelligenceUseCase, GetProductIntelligenceParams, GetProductIntelligenceResult, ProductIntelligenceStatus } from './get-product-intelligence.use-case'
+export type { ITriggerProductIntelligenceUseCase, TriggerProductIntelligenceParams, TriggerProductIntelligenceResult } from './trigger-product-intelligence.use-case'
+export type { IGetProductDetailUseCase, GetProductDetailParams, GetProductDetailResult } from './get-product-detail.use-case'
+export type { IGetProductOpportunitiesUseCase, GetProductOpportunitiesParams, GetProductOpportunitiesResult } from './get-product-opportunities.use-case'
