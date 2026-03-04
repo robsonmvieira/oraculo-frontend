@@ -137,7 +137,18 @@
       "generate": "Gerar Padrões",
       "generating": "Analisando...",
       "bookmark": "Salvar {{count}} submissions",
-      "browse": "Explorar {{count}} submissions"
+      "browse": "Explorar {{count}} submissions",
+      "validationHigh": "Alta validação",
+      "validationMedium": "Validação média",
+      "validationLow": "Baixa validação",
+      "consensusStrong": "Consenso forte",
+      "consensusModerate": "Consenso moderado",
+      "consensusWeak": "Consenso fraco",
+      "consensusDivided": "Opiniões divididas",
+      "communitySuggests": "Comunidade sugere",
+      "recommendedByCommunity": "Recomendado pela comunidade",
+      "showComments": "Ver comentários ({{count}})",
+      "hideComments": "Ocultar comentários"
     },
     "intents": {
       "advice_request": "Pedidos de Conselho",

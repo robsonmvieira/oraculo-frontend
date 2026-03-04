@@ -9,6 +9,12 @@ export interface IntentSubreddit {
   count: number
 }
 
+export interface SubmissionTopComment {
+  body: string
+  score: number
+  author: string
+}
+
 export interface PainPatternSubmission {
   title: string
   body: string
@@ -16,6 +22,7 @@ export interface PainPatternSubmission {
   score: number
   numComments: number
   permalink: string
+  topComments?: SubmissionTopComment[]
 }
 
 export interface PainPattern {
@@ -25,6 +32,10 @@ export interface PainPattern {
   totalUpvotes: number
   totalComments: number
   submissions: PainPatternSubmission[]
+  validationScore?: 'high' | 'medium' | 'low'
+  suggestedCoping?: string[]
+  recommendedSolutions?: string[]
+  communityConsensus?: 'strong' | 'moderate' | 'weak' | 'divided'
 }
 
 interface IntentCategoryProps {
