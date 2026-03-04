@@ -1,6 +1,6 @@
 import { useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Sparkles, Bell, Lightbulb } from 'lucide-react'
+import { Sparkles, Bell, Lightbulb, Youtube } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import {
@@ -13,6 +13,7 @@ import {
   AlertsTabContent,
 } from '@/components/audiences/detail'
 import { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
+import { YouTubeValidationTabContent } from './youtube-validation'
 import { SemanticSearchSection } from './ask/SemanticSearchSection'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
@@ -268,6 +269,10 @@ export function AudienceDetailTabs({
           <Sparkles className="w-4 h-4" />
           {t('tabs.ask')}
         </TabsTrigger>
+        <TabsTrigger value="youtube">
+          <Youtube className="w-4 h-4" />
+          {t('tabs.youtube')}
+        </TabsTrigger>
         <TabsTrigger value="products">
           <Sparkles className="w-4 h-4" />
           {t('tabs.products')}
@@ -412,6 +417,10 @@ export function AudienceDetailTabs({
 
       <TabsContent value="ask" className="mt-6">
         <SemanticSearchSection audienceId={audienceId} />
+      </TabsContent>
+
+      <TabsContent value="youtube" className="mt-6">
+        <YouTubeValidationTabContent audienceId={audienceId} />
       </TabsContent>
 
       <TabsContent value="products" className="mt-6">

@@ -11,6 +11,7 @@ import { THEME_PANEL_QUERY_KEY } from '@/modules/audience/application/hooks/useG
 import { ALERTS_QUERY_KEY, ALERTS_SUMMARY_QUERY_KEY } from '@/modules/topic-alerts'
 import { CONTENT_SUGGESTIONS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetContentSuggestions'
 import { CONTENT_DRAFTS_QUERY_KEY } from '@/modules/audience/application/hooks/useGetContentDrafts'
+import { YOUTUBE_VALIDATION_QUERY_KEY } from '@/modules/audience/application/hooks/useGetYouTubeValidation'
 import { NotificationSSEService } from '../../infra/services/sse.service'
 import type { Notification } from '../../domain/entities'
 import { useNotificationStore } from '../store/notification.store'
@@ -35,6 +36,13 @@ function invalidateAnalysisQueries(
 
   if (type === 'content_suggestions_ready') {
     queryClient.invalidateQueries({ queryKey: CONTENT_SUGGESTIONS_QUERY_KEY(audienceId) })
+    return
+  }
+
+  if (type === 'youtube_validation_complete' || type === 'youtube_validation_failed') {
+    queryClient.invalidateQueries({ queryKey: YOUTUBE_VALIDATION_QUERY_KEY(audienceId) })
+    queryClient.invalidateQueries({ queryKey: ALERTS_QUERY_KEY(audienceId) })
+    queryClient.invalidateQueries({ queryKey: ALERTS_SUMMARY_QUERY_KEY(audienceId) })
     return
   }
 

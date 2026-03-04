@@ -412,7 +412,8 @@
     "products": "Products",
     "askAI": "Ask AI",
     "askComingSoon": "Coming soon - Ask questions about this audience",
-    "productsComingSoon": "Coming soon - Discover products relevant to this audience"
+    "productsComingSoon": "Coming soon - Discover products relevant to this audience",
+    "youtube": "YouTube"
   },
   "semanticSearch": {
     "title": "Search your audience",
@@ -709,6 +710,53 @@
       "noDrafts": "No drafts yet",
       "noDraftsDescription": "Select platforms above and click \"Produce Content\" to generate drafts.",
       "errorMessage": "Error: {{message}}"
+    }
+  },
+  "youtubeValidation": {
+    "title": "YouTube Cross-Platform Validation",
+    "subtitle": "Validate your audience topics against YouTube to find cross-platform opportunities",
+    "startValidation": "Validate on YouTube",
+    "processing": "Validating topics on YouTube...",
+    "processingHelp": "This may take 3-5 minutes. We're collecting videos, comments and transcripts for each topic.",
+    "failed": "YouTube validation failed. Please try again.",
+    "noAnalysis": "No YouTube validation yet",
+    "noAnalysisDescription": "Click the button above to validate your audience topics against YouTube content.",
+    "summary": {
+      "title": "Cross-Platform Summary",
+      "topicsAnalyzed": "Topics analyzed",
+      "topicsWithTraction": "With YouTube traction",
+      "contentGaps": "Content gaps found",
+      "avgTraction": "Avg. traction score",
+      "videosAnalyzed": "Videos analyzed",
+      "commentsAnalyzed": "Comments analyzed",
+      "keyFindings": "Key Findings",
+      "bestOpportunity": "Best Opportunity",
+      "biggestDivergence": "Biggest Divergence"
+    },
+    "topic": {
+      "tractionScore": "Traction Score",
+      "sentiment": "Sentiment",
+      "reddit": "Reddit",
+      "youtube": "YouTube",
+      "alignment": "Alignment",
+      "contentGap": "Content Gap",
+      "contentSaturated": "Saturated",
+      "productMentions": "Product Mentions",
+      "audienceOverlap": "Audience Overlap",
+      "opportunityInsights": "Opportunity Insights",
+      "viewVideos": "View collected videos"
+    },
+    "videos": {
+      "title": "Collected Videos",
+      "views": "views",
+      "likes": "likes",
+      "comments": "comments",
+      "duration": "duration",
+      "transcript": "Transcript",
+      "noTranscript": "No transcript",
+      "publishedAt": "Published",
+      "tags": "Tags",
+      "noVideos": "No videos collected for this topic"
     }
   }
 }

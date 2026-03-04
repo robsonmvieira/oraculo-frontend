@@ -50,3 +50,6 @@ export type { IGetIntentChatMessagesUseCase, GetIntentChatMessagesParams, GetInt
 export type { IArchiveIntentChatUseCase, ArchiveIntentChatParams, ArchiveIntentChatResult } from './archive-intent-chat.use-case'
 export type { IExportIntentChatUseCase, ExportIntentChatParams, ExportIntentChatResult } from './export-intent-chat.use-case'
 export type { ISemanticSearchUseCase, SemanticSearchParams, SemanticSearchUseCaseResult } from './semantic-search.use-case'
+export type { IGetYouTubeValidationUseCase, GetYouTubeValidationParams, GetYouTubeValidationResult, YouTubeValidationStatus } from './get-youtube-validation.use-case'
+export type { ITriggerYouTubeValidationUseCase, TriggerYouTubeValidationParams, TriggerYouTubeValidationResult } from './trigger-youtube-validation.use-case'
+export type { IGetYouTubeValidationVideosUseCase, GetYouTubeValidationVideosParams, GetYouTubeValidationVideosResult } from './get-youtube-validation-videos.use-case'

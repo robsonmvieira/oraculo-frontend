@@ -48,3 +48,6 @@ export { useGetIntentChatMessages, INTENT_CHAT_MESSAGES_QUERY_KEY } from './useG
 export { useArchiveIntentChat } from './useArchiveIntentChat'
 export { useExportIntentChat } from './useExportIntentChat'
 export { useSemanticSearch } from './useSemanticSearch'
+export { useGetYouTubeValidation, YOUTUBE_VALIDATION_QUERY_KEY } from './useGetYouTubeValidation'
+export { useTriggerYouTubeValidation } from './useTriggerYouTubeValidation'
+export { useGetYouTubeValidationVideos, YOUTUBE_VALIDATION_VIDEOS_QUERY_KEY } from './useGetYouTubeValidationVideos'
