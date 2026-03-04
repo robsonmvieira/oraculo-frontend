@@ -51,6 +51,10 @@ import type { SemanticSearchParams, SemanticSearchUseCaseResult } from "../use-c
 import type { GetYouTubeValidationParams, GetYouTubeValidationResult } from "../use-cases/get-youtube-validation.use-case";
 import type { TriggerYouTubeValidationParams, TriggerYouTubeValidationResult } from "../use-cases/trigger-youtube-validation.use-case";
 import type { GetYouTubeValidationVideosParams, GetYouTubeValidationVideosResult } from "../use-cases/get-youtube-validation-videos.use-case";
+import type { GetProductIntelligenceParams, GetProductIntelligenceResult } from "../use-cases/get-product-intelligence.use-case";
+import type { TriggerProductIntelligenceParams, TriggerProductIntelligenceResult } from "../use-cases/trigger-product-intelligence.use-case";
+import type { GetProductDetailParams, GetProductDetailResult } from "../use-cases/get-product-detail.use-case";
+import type { GetProductOpportunitiesParams, GetProductOpportunitiesResult } from "../use-cases/get-product-opportunities.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -108,4 +112,8 @@ export interface IAudienceRepository {
   getYouTubeValidation(params: GetYouTubeValidationParams): Promise<GetYouTubeValidationResult>
   triggerYouTubeValidation(params: TriggerYouTubeValidationParams): Promise<TriggerYouTubeValidationResult>
   getYouTubeValidationVideos(params: GetYouTubeValidationVideosParams): Promise<GetYouTubeValidationVideosResult>
+  getProductIntelligence(params: GetProductIntelligenceParams): Promise<GetProductIntelligenceResult>
+  triggerProductIntelligence(params: TriggerProductIntelligenceParams): Promise<TriggerProductIntelligenceResult>
+  getProductDetail(params: GetProductDetailParams): Promise<GetProductDetailResult>
+  getProductOpportunities(params: GetProductOpportunitiesParams): Promise<GetProductOpportunitiesResult>
 }

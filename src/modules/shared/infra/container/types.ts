@@ -74,4 +74,8 @@ export const TYPES = {
   GetYouTubeValidationUseCase: Symbol.for('GetYouTubeValidationUseCase'),
   TriggerYouTubeValidationUseCase: Symbol.for('TriggerYouTubeValidationUseCase'),
   GetYouTubeValidationVideosUseCase: Symbol.for('GetYouTubeValidationVideosUseCase'),
+  GetProductIntelligenceUseCase: Symbol.for('GetProductIntelligenceUseCase'),
+  TriggerProductIntelligenceUseCase: Symbol.for('TriggerProductIntelligenceUseCase'),
+  GetProductDetailUseCase: Symbol.for('GetProductDetailUseCase'),
+  GetProductOpportunitiesUseCase: Symbol.for('GetProductOpportunitiesUseCase'),
 } as const

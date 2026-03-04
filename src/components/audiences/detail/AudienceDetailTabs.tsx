@@ -1,6 +1,6 @@
 import { useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Sparkles, Bell, Lightbulb, Youtube } from 'lucide-react'
+import { Sparkles, Package, Bell, Lightbulb, Youtube } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import {
@@ -14,6 +14,7 @@ import {
 } from '@/components/audiences/detail'
 import { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
 import { YouTubeValidationTabContent } from './youtube-validation'
+import { ProductsTabContent } from './products'
 import { SemanticSearchSection } from './ask/SemanticSearchSection'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
@@ -274,7 +275,7 @@ export function AudienceDetailTabs({
           {t('tabs.youtube')}
         </TabsTrigger>
         <TabsTrigger value="products">
-          <Sparkles className="w-4 h-4" />
+          <Package className="w-4 h-4" />
           {t('tabs.products')}
         </TabsTrigger>
       </TabsList>
@@ -424,15 +425,7 @@ export function AudienceDetailTabs({
       </TabsContent>
 
       <TabsContent value="products" className="mt-6">
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
-          <Sparkles className="w-8 h-8 text-lime mx-auto mb-3" />
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-            {t('tabs.products')}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-zinc-400">
-            {t('tabs.productsComingSoon')}
-          </p>
-        </div>
+        <ProductsTabContent audienceId={audienceId} />
       </TabsContent>
     </Tabs>
   )

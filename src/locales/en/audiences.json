@@ -758,5 +758,74 @@
       "tags": "Tags",
       "noVideos": "No videos collected for this topic"
     }
+  },
+  "productIntelligence": {
+    "title": "Product Intelligence",
+    "subtitle": "Discover products, brands and tools mentioned by your audience and detect market opportunities",
+    "analyzeProducts": "Analyze Products",
+    "reanalyze": "Re-analyze",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "processing": "Analyzing products mentioned by your audience...",
+    "processingHelp": "This may take 2-3 minutes. We're extracting products from posts and detecting market opportunities.",
+    "failed": "Product analysis failed. Please try again.",
+    "noAnalysis": "No product analysis yet",
+    "noAnalysisDescription": "Click the button above to discover products, brands and tools mentioned by your audience.",
+    "totalProducts": "Products found",
+    "totalMentions": "Total mentions",
+    "totalOpportunities": "Opportunities",
+    "searchProducts": "Search products...",
+    "sortBy": "Sort by",
+    "sortMentions": "Mentions",
+    "sortSentiment": "Sentiment",
+    "sortName": "Name",
+    "allCategories": "All",
+    "category": {
+      "tool": "Tool",
+      "service": "Service",
+      "brand": "Brand",
+      "platform": "Platform",
+      "saas": "SaaS",
+      "physical_product": "Physical Product"
+    },
+    "mentions": "{{count}} mentions",
+    "sentiment": "Sentiment",
+    "trend": {
+      "rising": "Rising",
+      "stable": "Stable",
+      "declining": "Declining"
+    },
+    "sentimentLabel": {
+      "positive": "Positive",
+      "negative": "Negative",
+      "neutral": "Neutral",
+      "mixed": "Mixed"
+    },
+    "detail": {
+      "selectProduct": "Select a product",
+      "selectProductDescription": "Click on a product from the list to see detailed information.",
+      "positiveAspects": "Positive Aspects",
+      "negativeAspects": "Negative Aspects",
+      "gaps": "Feature Gaps",
+      "alternatives": "Alternatives",
+      "evidenceQuotes": "Evidence Quotes",
+      "useCases": "Use Cases",
+      "communities": "Communities",
+      "noData": "No data available"
+    },
+    "opportunities": {
+      "title": "Market Opportunities",
+      "score": "Score",
+      "demandSignals": "Demand signals",
+      "existingSolutions": "Existing solutions",
+      "evidence": "Evidence",
+      "relatedProducts": "Related products",
+      "type": {
+        "unmet_demand": "Unmet Demand",
+        "declining_product": "Declining Product",
+        "underserved_niche": "Underserved Niche",
+        "emerging_trend": "Emerging Trend"
+      }
+    }
   }
 }

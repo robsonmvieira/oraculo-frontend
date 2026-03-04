@@ -80,6 +80,12 @@ import type { GetYouTubeValidationVideosParams, GetYouTubeValidationVideosResult
 import { SemanticSearchResult } from '../../domain/entities/SemanticSearchResult.entity'
 import { YouTubeValidation } from '../../domain/entities/YouTubeValidation.entity'
 import { YouTubeCollectedVideo } from '../../domain/entities/YouTubeCollectedVideo.entity'
+import type { GetProductIntelligenceParams, GetProductIntelligenceResult, ProductIntelligenceStatus } from '../../domain/use-cases/get-product-intelligence.use-case'
+import type { TriggerProductIntelligenceParams, TriggerProductIntelligenceResult } from '../../domain/use-cases/trigger-product-intelligence.use-case'
+import type { GetProductDetailParams, GetProductDetailResult } from '../../domain/use-cases/get-product-detail.use-case'
+import type { GetProductOpportunitiesParams, GetProductOpportunitiesResult } from '../../domain/use-cases/get-product-opportunities.use-case'
+import { ProductProfile } from '../../domain/entities/ProductProfile.entity'
+import { ProductOpportunity } from '../../domain/entities/ProductOpportunity.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -790,6 +796,72 @@ interface YouTubeValidationVideosApiResponse {
     has_transcript: boolean
     transcript_lang: string | null
     published_at: string
+  }>
+}
+
+interface ProductIntelligenceApiResponse {
+  status: string
+  total_products?: number
+  total_mentions?: number
+  total_opportunities?: number
+  error_message?: string
+  products?: Array<{
+    id: string
+    product_name: string
+    normalized_name?: string
+    category: string
+    total_mentions: number
+    sentiment_score: number
+    sentiment_label: string
+    trend_direction: string
+    communities?: string[]
+    positive_aspects?: string[]
+    negative_aspects?: string[]
+    gaps?: string[]
+    alternatives?: Array<{ name: string; sentiment_label: string }>
+    evidence_quotes?: Array<{ quote: string; source_subreddit: string; score: number }>
+    use_cases?: string[]
+    created_at?: string
+  }>
+}
+
+interface TriggerProductIntelligenceApiResponse {
+  status: string
+  analysis_id?: string
+  message?: string
+}
+
+interface ProductDetailApiResponse {
+  id: string
+  product_name: string
+  normalized_name?: string
+  category: string
+  total_mentions: number
+  sentiment_score: number
+  sentiment_label: string
+  trend_direction: string
+  communities?: string[]
+  positive_aspects?: string[]
+  negative_aspects?: string[]
+  gaps?: string[]
+  alternatives?: Array<{ name: string; sentiment_label: string }>
+  evidence_quotes?: Array<{ quote: string; source_subreddit: string; score: number }>
+  use_cases?: string[]
+  created_at?: string
+}
+
+interface ProductOpportunitiesApiResponse {
+  status: string
+  opportunities?: Array<{
+    id: string
+    opportunity_type: string
+    title: string
+    description: string
+    opportunity_score: number
+    demand_signals: number
+    existing_solutions_count: number
+    evidence?: Array<{ quote: string; subreddit: string; post_url: string }>
+    related_products?: string[]
   }>
 }
 
@@ -2103,6 +2175,141 @@ export class AudienceRepository implements IAudienceRepository {
         hasTranscript: v.has_transcript,
         transcriptLang: v.transcript_lang,
         publishedAt: v.published_at,
+      })),
+    }
+  }
+
+  async getProductIntelligence(params: GetProductIntelligenceParams): Promise<GetProductIntelligenceResult> {
+    const searchParams = new URLSearchParams()
+    if (params.sortBy) searchParams.set('sort_by', params.sortBy)
+    if (params.category) searchParams.set('category', params.category)
+    if (params.limit) searchParams.set('limit', String(params.limit))
+    if (params.offset) searchParams.set('offset', String(params.offset))
+
+    const queryString = searchParams.toString()
+    const url = `audiences/${params.audienceId}/products${queryString ? `?${queryString}` : ''}`
+
+    const response = await this.httpClient.get<ProductIntelligenceApiResponse>(url)
+    const status = response.status as ProductIntelligenceStatus
+
+    if (status !== 'ready' || !response.products) {
+      return {
+        status,
+        totalProducts: 0,
+        totalMentions: 0,
+        totalOpportunities: 0,
+        products: [],
+        errorMessage: response.error_message,
+      }
+    }
+
+    return {
+      status,
+      totalProducts: response.total_products ?? 0,
+      totalMentions: response.total_mentions ?? 0,
+      totalOpportunities: response.total_opportunities ?? 0,
+      products: response.products.map((p) => new ProductProfile({
+        id: p.id,
+        productName: p.product_name,
+        normalizedName: p.normalized_name ?? '',
+        category: p.category,
+        totalMentions: p.total_mentions,
+        sentimentScore: p.sentiment_score,
+        sentimentLabel: p.sentiment_label,
+        trendDirection: p.trend_direction,
+        communities: p.communities ?? [],
+        positiveAspects: p.positive_aspects ?? [],
+        negativeAspects: p.negative_aspects ?? [],
+        gaps: p.gaps ?? [],
+        alternatives: (p.alternatives ?? []).map((a) => ({
+          name: a.name,
+          sentimentLabel: a.sentiment_label,
+        })),
+        evidenceQuotes: (p.evidence_quotes ?? []).map((e) => ({
+          quote: e.quote,
+          sourceSubreddit: e.source_subreddit,
+          score: e.score,
+        })),
+        useCases: p.use_cases ?? [],
+        createdAt: p.created_at ?? null,
+      })),
+    }
+  }
+
+  async triggerProductIntelligence(params: TriggerProductIntelligenceParams): Promise<TriggerProductIntelligenceResult> {
+    const response = await this.httpClient.post<TriggerProductIntelligenceApiResponse>(
+      `audiences/${params.audienceId}/products/refresh?window=${params.window}`
+    )
+    return {
+      status: response.status,
+      analysisId: response.analysis_id ?? '',
+      message: response.message,
+    }
+  }
+
+  async getProductDetail(params: GetProductDetailParams): Promise<GetProductDetailResult> {
+    const response = await this.httpClient.get<ProductDetailApiResponse>(
+      `audiences/${params.audienceId}/products/${params.productId}`
+    )
+
+    if (!response.id) {
+      return { product: null }
+    }
+
+    return {
+      product: new ProductProfile({
+        id: response.id,
+        productName: response.product_name,
+        normalizedName: response.normalized_name ?? '',
+        category: response.category,
+        totalMentions: response.total_mentions,
+        sentimentScore: response.sentiment_score,
+        sentimentLabel: response.sentiment_label,
+        trendDirection: response.trend_direction,
+        communities: response.communities ?? [],
+        positiveAspects: response.positive_aspects ?? [],
+        negativeAspects: response.negative_aspects ?? [],
+        gaps: response.gaps ?? [],
+        alternatives: (response.alternatives ?? []).map((a) => ({
+          name: a.name,
+          sentimentLabel: a.sentiment_label,
+        })),
+        evidenceQuotes: (response.evidence_quotes ?? []).map((e) => ({
+          quote: e.quote,
+          sourceSubreddit: e.source_subreddit,
+          score: e.score,
+        })),
+        useCases: response.use_cases ?? [],
+        createdAt: response.created_at ?? null,
+      }),
+    }
+  }
+
+  async getProductOpportunities(params: GetProductOpportunitiesParams): Promise<GetProductOpportunitiesResult> {
+    const response = await this.httpClient.get<ProductOpportunitiesApiResponse>(
+      `audiences/${params.audienceId}/products/opportunities`
+    )
+
+    if (response.status === 'no_analysis' || !response.opportunities) {
+      return { status: response.status, opportunities: [] }
+    }
+
+    return {
+      status: response.status,
+      opportunities: response.opportunities.map((o) => new ProductOpportunity({
+        id: o.id,
+        opportunityType: o.opportunity_type,
+        title: o.title,
+        description: o.description,
+        opportunityScore: o.opportunity_score,
+        demandSignals: o.demand_signals,
+        existingSolutionsCount: o.existing_solutions_count,
+        evidence: (o.evidence ?? []).map((e) => ({
+          quote: e.quote,
+          subreddit: e.subreddit,
+          postUrl: e.post_url,
+        })),
+        relatedProducts: o.related_products ?? [],
       })),
     }
   }
