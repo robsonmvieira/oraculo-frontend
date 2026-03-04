@@ -609,6 +609,8 @@
       "hashtags": "Hashtags",
       "image": "Generated Image",
       "imageAspectRatio": "Aspect ratio: {{ratio}}",
+      "imageLoadError": "Could not load the image",
+      "openImageLink": "Open image link",
       "modelUsed": "Model: {{model}}",
       "copy": "Copy",
       "copied": "Copied!",

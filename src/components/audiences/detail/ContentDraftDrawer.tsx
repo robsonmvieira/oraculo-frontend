@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Copy, Check, Hash, FileText, Target, Image, BookOpen, MessageSquare, Linkedin, Twitter, Instagram } from 'lucide-react'
+import { Copy, Check, Hash, FileText, Target, Image, BookOpen, MessageSquare, Linkedin, Twitter, Instagram, ImageOff, ExternalLink } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -155,18 +155,11 @@ export function ContentDraftDrawer({ draft, open, onClose }: Readonly<ContentDra
 
           {/* Generated Image */}
           {draft.getImageUrl() && (
-            <DraftSection icon={Image} title={t('contentSuggestions.drafts.image')}>
-              <img
-                src={draft.getImageUrl()!}
-                alt="Generated content"
-                className="w-full rounded-lg border border-gray-200 dark:border-zinc-700"
-              />
-              {draft.getImageAspectRatio() && (
-                <p className="text-xs text-gray-400 dark:text-zinc-500 mt-2">
-                  {t('contentSuggestions.drafts.imageAspectRatio', { ratio: draft.getImageAspectRatio() })}
-                </p>
-              )}
-            </DraftSection>
+            <DraftImageSection
+              imageUrl={draft.getImageUrl()!}
+              aspectRatio={draft.getImageAspectRatio()}
+              t={t}
+            />
           )}
 
           {/* Model Info */}
@@ -203,6 +196,64 @@ function DraftSection({ icon: Icon, title, children }: Readonly<{ icon: React.El
       </div>
       {children}
     </div>
+  )
+}
+
+function DraftImageSection({ imageUrl, aspectRatio, t }: Readonly<{ imageUrl: string; aspectRatio: string | null; t: (key: string, options?: Record<string, string>) => string }>) {
+  const [imageError, setImageError] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  if (imageError) {
+    return (
+      <DraftSection icon={Image} title={t('contentSuggestions.drafts.image')}>
+        <div className="flex flex-col items-center justify-center gap-3 py-8 rounded-lg border border-dashed border-gray-300 dark:border-zinc-700 bg-gray-100 dark:bg-zinc-800/50">
+          <ImageOff className="w-8 h-8 text-gray-400 dark:text-zinc-500" />
+          <p className="text-sm text-gray-500 dark:text-zinc-400">
+            {t('contentSuggestions.drafts.imageLoadError')}
+          </p>
+          <a
+            href={imageUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-lime-600 dark:text-lime-400 hover:underline"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            {t('contentSuggestions.drafts.openImageLink')}
+          </a>
+        </div>
+        {aspectRatio && (
+          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-2">
+            {t('contentSuggestions.drafts.imageAspectRatio', { ratio: aspectRatio })}
+          </p>
+        )}
+      </DraftSection>
+    )
+  }
+
+  return (
+    <DraftSection icon={Image} title={t('contentSuggestions.drafts.image')}>
+      {!imageLoaded && (
+        <div className="flex items-center justify-center py-12 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 animate-pulse">
+          <Image className="w-8 h-8 text-gray-300 dark:text-zinc-600" />
+        </div>
+      )}
+      <img
+        src={imageUrl}
+        alt="Generated content"
+        className={cn(
+          'w-full rounded-lg border border-gray-200 dark:border-zinc-700',
+          !imageLoaded && 'hidden'
+        )}
+        onLoad={() => setImageLoaded(true)}
+        onError={() => setImageError(true)}
+        referrerPolicy="no-referrer"
+      />
+      {aspectRatio && (
+        <p className="text-xs text-gray-400 dark:text-zinc-500 mt-2">
+          {t('contentSuggestions.drafts.imageAspectRatio', { ratio: aspectRatio })}
+        </p>
+      )}
+    </DraftSection>
   )
 }
 
