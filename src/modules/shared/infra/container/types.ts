@@ -64,4 +64,10 @@ export const TYPES = {
   AskIntentUseCase: Symbol.for('AskIntentUseCase'),
   StreamTopicChatMessageUseCase: Symbol.for('StreamTopicChatMessageUseCase'),
   ExportTopicChatUseCase: Symbol.for('ExportTopicChatUseCase'),
+  StartIntentChatUseCase: Symbol.for('StartIntentChatUseCase'),
+  SendIntentChatMessageUseCase: Symbol.for('SendIntentChatMessageUseCase'),
+  ListIntentChatConversationsUseCase: Symbol.for('ListIntentChatConversationsUseCase'),
+  GetIntentChatMessagesUseCase: Symbol.for('GetIntentChatMessagesUseCase'),
+  ArchiveIntentChatUseCase: Symbol.for('ArchiveIntentChatUseCase'),
+  ExportIntentChatUseCase: Symbol.for('ExportIntentChatUseCase'),
 } as const

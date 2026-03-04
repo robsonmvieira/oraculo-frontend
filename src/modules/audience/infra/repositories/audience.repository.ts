@@ -44,6 +44,12 @@ import type { GetContentDraftDetailParams, GetContentDraftDetailResult } from '.
 import type { AskIntentParams, AskIntentResult } from '../../domain/use-cases/ask-intent.use-case'
 import type { StreamTopicChatMessageParams, StreamTopicChatMessageCallbacks } from '../../domain/use-cases/stream-topic-chat-message.use-case'
 import type { ExportTopicChatParams, ExportTopicChatResult } from '../../domain/use-cases/export-topic-chat.use-case'
+import type { StartIntentChatParams, StartIntentChatResult } from '../../domain/use-cases/start-intent-chat.use-case'
+import type { SendIntentChatMessageParams, SendIntentChatMessageResult } from '../../domain/use-cases/send-intent-chat-message.use-case'
+import type { ListIntentChatConversationsParams, ListIntentChatConversationsResult } from '../../domain/use-cases/list-intent-chat-conversations.use-case'
+import type { GetIntentChatMessagesParams, GetIntentChatMessagesResult } from '../../domain/use-cases/get-intent-chat-messages.use-case'
+import type { ArchiveIntentChatParams, ArchiveIntentChatResult } from '../../domain/use-cases/archive-intent-chat.use-case'
+import type { ExportIntentChatParams, ExportIntentChatResult } from '../../domain/use-cases/export-intent-chat.use-case'
 import type { TopicChatContextQuality } from '../../domain/entities/TopicConversation.entity'
 import { Keyword } from '../../domain/entities/Keyword.entity'
 import { Topic } from '../../domain/entities/Topic.entity'
@@ -64,6 +70,8 @@ import { ContentSuggestionAnalysis, ContentSuggestion } from '../../domain/entit
 import type { ContentSuggestionAnalysisStatus, ContentSuggestionPriority, ContentSuggestionFormat, ContentSuggestionTone, ContentSuggestionFeedbackStatus } from '../../domain/entities/ContentSuggestion.entity'
 import { ContentDraft } from '../../domain/entities/ContentDraft.entity'
 import { IntentAskResponse } from '../../domain/entities/IntentAskResponse.entity'
+import { IntentConversation } from '../../domain/entities/IntentConversation.entity'
+import { IntentConversationMessage } from '../../domain/entities/IntentConversationMessage.entity'
 import type { ContentDraftPlatform, ContentDraftStatus } from '../../domain/entities/ContentDraft.entity'
 
 interface AudienceTemplateResponse {
@@ -391,6 +399,57 @@ interface GetTopicChatMessagesApiResponse {
 }
 
 interface ArchiveTopicChatApiResponse {
+  status: string
+  conversation_id: string
+}
+
+interface StartIntentChatApiResponse {
+  conversation_id: string
+  intent_category: string
+  context_quality: string
+  suggestion: string | null
+}
+
+interface SendIntentChatMessageApiResponse {
+  answer: string
+  context_quality: string
+  message_id: string
+  conversation_id: string
+  suggestion: string | null
+}
+
+interface IntentConversationApiItem {
+  conversation_id: string
+  title: string
+  intent_category: string
+  context_quality: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+interface ListIntentChatConversationsApiResponse {
+  conversations: IntentConversationApiItem[]
+}
+
+interface IntentConversationMessageApiItem {
+  message_id: string
+  role: string
+  content: string
+  context_quality: string | null
+  created_at: string
+}
+
+interface GetIntentChatMessagesApiResponse {
+  conversation_id: string
+  title: string
+  intent_category: string
+  context_quality: string
+  is_active: boolean
+  messages: IntentConversationMessageApiItem[]
+}
+
+interface ArchiveIntentChatApiResponse {
   status: string
   conversation_id: string
 }
@@ -1693,6 +1752,103 @@ export class AudienceRepository implements IAudienceRepository {
     const disposition = response.headers.get('Content-Disposition') ?? ''
     const filenameMatch = /filename="?(.+?)"?$/.exec(disposition)
     const filename = filenameMatch?.[1] ?? `chat-export-${new Date().toISOString().slice(0, 10)}.md`
+
+    return { blob, filename }
+  }
+
+  async startIntentChat(params: StartIntentChatParams): Promise<StartIntentChatResult> {
+    const response = await this.httpClient.post<StartIntentChatApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/chat?window=${params.window}`
+    )
+    return {
+      conversationId: response.conversation_id,
+      intentCategory: response.intent_category,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      suggestion: response.suggestion,
+    }
+  }
+
+  async sendIntentChatMessage(params: SendIntentChatMessageParams): Promise<SendIntentChatMessageResult> {
+    const response = await this.httpClient.post<SendIntentChatMessageApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/chat/${params.conversationId}/messages?window=${params.window}`,
+      { question: params.question }
+    )
+    return {
+      answer: response.answer,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      messageId: response.message_id,
+      conversationId: response.conversation_id,
+      suggestion: response.suggestion,
+    }
+  }
+
+  async listIntentChatConversations(params: ListIntentChatConversationsParams): Promise<ListIntentChatConversationsResult> {
+    const response = await this.httpClient.get<ListIntentChatConversationsApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/chat`
+    )
+    return {
+      conversations: response.conversations.map((c) => new IntentConversation({
+        conversationId: c.conversation_id,
+        title: c.title,
+        intentCategory: c.intent_category,
+        contextQuality: c.context_quality as 'rich' | 'limited',
+        isActive: c.is_active,
+        createdAt: c.created_at,
+        updatedAt: c.updated_at,
+      })),
+    }
+  }
+
+  async getIntentChatMessages(params: GetIntentChatMessagesParams): Promise<GetIntentChatMessagesResult> {
+    const response = await this.httpClient.get<GetIntentChatMessagesApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/chat/${params.conversationId}/messages`
+    )
+    return {
+      conversationId: response.conversation_id,
+      title: response.title,
+      intentCategory: response.intent_category,
+      contextQuality: response.context_quality as 'rich' | 'limited',
+      isActive: response.is_active,
+      messages: response.messages.map((m) => new IntentConversationMessage({
+        messageId: m.message_id,
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+        contextQuality: m.context_quality as 'rich' | 'limited' | null,
+        createdAt: m.created_at,
+      })),
+    }
+  }
+
+  async archiveIntentChat(params: ArchiveIntentChatParams): Promise<ArchiveIntentChatResult> {
+    const response = await this.httpClient.delete<ArchiveIntentChatApiResponse>(
+      `audiences/${params.audienceId}/themes/intents/${params.category}/chat/${params.conversationId}`
+    )
+    return {
+      status: response.status,
+      conversationId: response.conversation_id,
+    }
+  }
+
+  async exportIntentChat(params: ExportIntentChatParams): Promise<ExportIntentChatResult> {
+    const token = localStorage.getItem('access_token')
+    const url = `${API_BASE_URL}/audiences/${params.audienceId}/themes/intents/${params.category}/chat/${params.conversationId}/export`
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
+    const blob = await response.blob()
+
+    const disposition = response.headers.get('Content-Disposition') ?? ''
+    const filenameMatch = /filename="?(.+?)"?$/.exec(disposition)
+    const filename = filenameMatch?.[1] ?? `intent-chat-export-${new Date().toISOString().slice(0, 10)}.md`
 
     return { blob, filename }
   }
