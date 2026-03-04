@@ -75,3 +75,6 @@ export type { ContentDraftDrawerProps } from './ContentDraftDrawer'
 
 export { PainPatternsSection } from './PainPatternsSection'
 export type { PainPatternsSectionProps } from './PainPatternsSection'
+
+export { YouTubeValidationTabContent } from './youtube-validation'
+export type { YouTubeValidationTabContentProps } from './youtube-validation'

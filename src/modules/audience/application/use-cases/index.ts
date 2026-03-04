@@ -50,3 +50,6 @@ export { GetIntentChatMessagesUseCase } from './get-intent-chat-messages-use-cas
 export { ArchiveIntentChatUseCase } from './archive-intent-chat-use-case'
 export { ExportIntentChatUseCase } from './export-intent-chat-use-case'
 export { SemanticSearchUseCase } from './semantic-search-use-case'
+export { GetYouTubeValidationUseCase } from './get-youtube-validation-use-case'
+export { TriggerYouTubeValidationUseCase } from './trigger-youtube-validation-use-case'
+export { GetYouTubeValidationVideosUseCase } from './get-youtube-validation-videos-use-case'

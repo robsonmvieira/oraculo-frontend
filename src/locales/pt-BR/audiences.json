@@ -412,7 +412,8 @@
     "products": "Produtos",
     "askAI": "Perguntar à IA",
     "askComingSoon": "Em breve - Faça perguntas sobre esta audiência",
-    "productsComingSoon": "Em breve - Descubra produtos relevantes para esta audiência"
+    "productsComingSoon": "Em breve - Descubra produtos relevantes para esta audiência",
+    "youtube": "YouTube"
   },
   "semanticSearch": {
     "title": "Pesquise sua audiência",
@@ -709,6 +710,53 @@
       "noDrafts": "Nenhum draft ainda",
       "noDraftsDescription": "Selecione as plataformas acima e clique em \"Produzir Conteúdo\" para gerar os drafts.",
       "errorMessage": "Erro: {{message}}"
+    }
+  },
+  "youtubeValidation": {
+    "title": "Validação Cross-Platform YouTube",
+    "subtitle": "Valide os tópicos da sua audiência no YouTube para encontrar oportunidades cross-platform",
+    "startValidation": "Validar no YouTube",
+    "processing": "Validando tópicos no YouTube...",
+    "processingHelp": "Isso pode levar 3-5 minutos. Estamos coletando vídeos, comentários e transcrições de cada tópico.",
+    "failed": "Validação YouTube falhou. Tente novamente.",
+    "noAnalysis": "Nenhuma validação YouTube ainda",
+    "noAnalysisDescription": "Clique no botão acima para validar os tópicos da sua audiência com conteúdo do YouTube.",
+    "summary": {
+      "title": "Resumo Cross-Platform",
+      "topicsAnalyzed": "Tópicos analisados",
+      "topicsWithTraction": "Com tração no YouTube",
+      "contentGaps": "Gaps de conteúdo",
+      "avgTraction": "Tração média",
+      "videosAnalyzed": "Vídeos analisados",
+      "commentsAnalyzed": "Comentários analisados",
+      "keyFindings": "Principais Descobertas",
+      "bestOpportunity": "Melhor Oportunidade",
+      "biggestDivergence": "Maior Divergência"
+    },
+    "topic": {
+      "tractionScore": "Score de Tração",
+      "sentiment": "Sentimento",
+      "reddit": "Reddit",
+      "youtube": "YouTube",
+      "alignment": "Alinhamento",
+      "contentGap": "Gap de Conteúdo",
+      "contentSaturated": "Saturado",
+      "productMentions": "Menções de Produtos",
+      "audienceOverlap": "Sobreposição de Audiência",
+      "opportunityInsights": "Insights de Oportunidade",
+      "viewVideos": "Ver vídeos coletados"
+    },
+    "videos": {
+      "title": "Vídeos Coletados",
+      "views": "visualizações",
+      "likes": "curtidas",
+      "comments": "comentários",
+      "duration": "duração",
+      "transcript": "Transcrição",
+      "noTranscript": "Sem transcrição",
+      "publishedAt": "Publicado",
+      "tags": "Tags",
+      "noVideos": "Nenhum vídeo coletado para este tópico"
     }
   }
 }

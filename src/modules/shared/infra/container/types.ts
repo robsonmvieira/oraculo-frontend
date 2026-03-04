@@ -71,4 +71,7 @@ export const TYPES = {
   ArchiveIntentChatUseCase: Symbol.for('ArchiveIntentChatUseCase'),
   ExportIntentChatUseCase: Symbol.for('ExportIntentChatUseCase'),
   SemanticSearchUseCase: Symbol.for('SemanticSearchUseCase'),
+  GetYouTubeValidationUseCase: Symbol.for('GetYouTubeValidationUseCase'),
+  TriggerYouTubeValidationUseCase: Symbol.for('TriggerYouTubeValidationUseCase'),
+  GetYouTubeValidationVideosUseCase: Symbol.for('GetYouTubeValidationVideosUseCase'),
 } as const

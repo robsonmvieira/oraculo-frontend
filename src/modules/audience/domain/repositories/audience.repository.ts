@@ -48,6 +48,9 @@ import type { GetIntentChatMessagesParams, GetIntentChatMessagesResult } from ".
 import type { ArchiveIntentChatParams, ArchiveIntentChatResult } from "../use-cases/archive-intent-chat.use-case";
 import type { ExportIntentChatParams, ExportIntentChatResult } from "../use-cases/export-intent-chat.use-case";
 import type { SemanticSearchParams, SemanticSearchUseCaseResult } from "../use-cases/semantic-search.use-case";
+import type { GetYouTubeValidationParams, GetYouTubeValidationResult } from "../use-cases/get-youtube-validation.use-case";
+import type { TriggerYouTubeValidationParams, TriggerYouTubeValidationResult } from "../use-cases/trigger-youtube-validation.use-case";
+import type { GetYouTubeValidationVideosParams, GetYouTubeValidationVideosResult } from "../use-cases/get-youtube-validation-videos.use-case";
 
 export interface IAudienceRepository {
   listUserAudiences(): Promise<Audience[]>
@@ -102,4 +105,7 @@ export interface IAudienceRepository {
   archiveIntentChat(params: ArchiveIntentChatParams): Promise<ArchiveIntentChatResult>
   exportIntentChat(params: ExportIntentChatParams): Promise<ExportIntentChatResult>
   semanticSearch(params: SemanticSearchParams): Promise<SemanticSearchUseCaseResult>
+  getYouTubeValidation(params: GetYouTubeValidationParams): Promise<GetYouTubeValidationResult>
+  triggerYouTubeValidation(params: TriggerYouTubeValidationParams): Promise<TriggerYouTubeValidationResult>
+  getYouTubeValidationVideos(params: GetYouTubeValidationVideosParams): Promise<GetYouTubeValidationVideosResult>
 }

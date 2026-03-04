@@ -74,7 +74,12 @@ import { IntentConversation } from '../../domain/entities/IntentConversation.ent
 import { IntentConversationMessage } from '../../domain/entities/IntentConversationMessage.entity'
 import type { ContentDraftPlatform, ContentDraftStatus } from '../../domain/entities/ContentDraft.entity'
 import type { SemanticSearchParams, SemanticSearchUseCaseResult } from '../../domain/use-cases/semantic-search.use-case'
+import type { GetYouTubeValidationParams, GetYouTubeValidationResult, YouTubeValidationStatus } from '../../domain/use-cases/get-youtube-validation.use-case'
+import type { TriggerYouTubeValidationParams, TriggerYouTubeValidationResult } from '../../domain/use-cases/trigger-youtube-validation.use-case'
+import type { GetYouTubeValidationVideosParams, GetYouTubeValidationVideosResult } from '../../domain/use-cases/get-youtube-validation-videos.use-case'
 import { SemanticSearchResult } from '../../domain/entities/SemanticSearchResult.entity'
+import { YouTubeValidation } from '../../domain/entities/YouTubeValidation.entity'
+import { YouTubeCollectedVideo } from '../../domain/entities/YouTubeCollectedVideo.entity'
 
 interface AudienceTemplateResponse {
   id: string
@@ -714,6 +719,78 @@ interface SemanticSearchApiResponse {
   context_quality: string
   cached: boolean
   query: string
+}
+
+interface YouTubeValidationApiResponse {
+  status: string
+  validation_id?: string
+  audience_id?: string
+  completed_at?: string
+  model_used?: string
+  total_videos?: number
+  total_comments?: number
+  analysis_data?: {
+    topics: Array<{
+      topic_name: string
+      traction_score: number
+      sentiment_comparison: {
+        reddit: string
+        youtube: string
+        alignment: string
+      }
+      content_gap: boolean
+      content_saturated: boolean
+      product_mentions: string[]
+      audience_overlap_score: number
+      opportunity_insights: string
+    }>
+    cross_platform_summary: {
+      total_topics_with_traction: number
+      avg_traction_score: number
+      content_gaps_found: number
+      key_findings: string[]
+      best_opportunity: string
+      biggest_divergence: string
+    }
+  }
+  summary?: {
+    topics_analyzed: number
+    topics_with_youtube_traction: number
+    content_gaps_found: number
+    avg_traction_score: number
+    total_videos_analyzed: number
+    total_comments_analyzed: number
+  }
+  message?: string
+}
+
+interface TriggerYouTubeValidationApiResponse {
+  status: string
+  validation_id: string
+  topics_count: number
+  message?: string
+}
+
+interface YouTubeValidationVideosApiResponse {
+  status: string
+  validation_id: string
+  topic_name: string
+  videos_count: number
+  videos: Array<{
+    id: string
+    video_id: string
+    title: string
+    channel_name: string
+    views: number
+    likes: number
+    duration_seconds: number
+    tags: string[]
+    description: string
+    comments_count: number
+    has_transcript: boolean
+    transcript_lang: string | null
+    published_at: string
+  }>
 }
 
 export class AudienceRepository implements IAudienceRepository {
@@ -1932,5 +2009,101 @@ export class AudienceRepository implements IAudienceRepository {
       cached: response.cached,
       query: response.query,
     })
+  }
+
+  async getYouTubeValidation(params: GetYouTubeValidationParams): Promise<GetYouTubeValidationResult> {
+    const response = await this.httpClient.get<YouTubeValidationApiResponse>(
+      `audiences/${params.audienceId}/youtube-validation`
+    )
+
+    const status = response.status as YouTubeValidationStatus
+
+    if (status !== 'ready' || !response.analysis_data) {
+      return { status, data: null }
+    }
+
+    return {
+      status,
+      data: new YouTubeValidation({
+        validationId: response.validation_id ?? '',
+        audienceId: response.audience_id ?? params.audienceId,
+        status: response.status,
+        completedAt: response.completed_at ?? null,
+        modelUsed: response.model_used ?? null,
+        totalVideos: response.total_videos ?? 0,
+        totalComments: response.total_comments ?? 0,
+        analysisData: {
+          topics: (response.analysis_data.topics ?? []).map((t) => ({
+            topicName: t.topic_name,
+            tractionScore: t.traction_score,
+            sentimentComparison: {
+              reddit: t.sentiment_comparison.reddit,
+              youtube: t.sentiment_comparison.youtube,
+              alignment: t.sentiment_comparison.alignment,
+            },
+            contentGap: t.content_gap,
+            contentSaturated: t.content_saturated,
+            productMentions: t.product_mentions ?? [],
+            audienceOverlapScore: t.audience_overlap_score,
+            opportunityInsights: t.opportunity_insights,
+          })),
+          crossPlatformSummary: {
+            totalTopicsWithTraction: response.analysis_data.cross_platform_summary.total_topics_with_traction,
+            avgTractionScore: response.analysis_data.cross_platform_summary.avg_traction_score,
+            contentGapsFound: response.analysis_data.cross_platform_summary.content_gaps_found,
+            keyFindings: response.analysis_data.cross_platform_summary.key_findings ?? [],
+            bestOpportunity: response.analysis_data.cross_platform_summary.best_opportunity,
+            biggestDivergence: response.analysis_data.cross_platform_summary.biggest_divergence,
+          },
+        },
+        summary: response.summary ? {
+          topicsAnalyzed: response.summary.topics_analyzed,
+          topicsWithYoutubeTraction: response.summary.topics_with_youtube_traction,
+          contentGapsFound: response.summary.content_gaps_found,
+          avgTractionScore: response.summary.avg_traction_score,
+          totalVideosAnalyzed: response.summary.total_videos_analyzed,
+          totalCommentsAnalyzed: response.summary.total_comments_analyzed,
+        } : null,
+      }),
+    }
+  }
+
+  async triggerYouTubeValidation(params: TriggerYouTubeValidationParams): Promise<TriggerYouTubeValidationResult> {
+    const forceParam = params.force ? '?force=true' : ''
+    const response = await this.httpClient.post<TriggerYouTubeValidationApiResponse>(
+      `audiences/${params.audienceId}/youtube-validation${forceParam}`
+    )
+    return {
+      status: response.status,
+      validationId: response.validation_id,
+      topicsCount: response.topics_count,
+    }
+  }
+
+  async getYouTubeValidationVideos(params: GetYouTubeValidationVideosParams): Promise<GetYouTubeValidationVideosResult> {
+    const response = await this.httpClient.get<YouTubeValidationVideosApiResponse>(
+      `audiences/${params.audienceId}/youtube-validation/${encodeURIComponent(params.topicName)}/videos`
+    )
+    return {
+      status: response.status,
+      validationId: response.validation_id,
+      topicName: response.topic_name,
+      videosCount: response.videos_count,
+      videos: (response.videos ?? []).map((v) => new YouTubeCollectedVideo({
+        id: v.id,
+        videoId: v.video_id,
+        title: v.title,
+        channelName: v.channel_name,
+        views: v.views,
+        likes: v.likes,
+        durationSeconds: v.duration_seconds,
+        tags: v.tags ?? [],
+        description: v.description ?? '',
+        commentsCount: v.comments_count,
+        hasTranscript: v.has_transcript,
+        transcriptLang: v.transcript_lang,
+        publishedAt: v.published_at,
+      })),
+    }
   }
 }
