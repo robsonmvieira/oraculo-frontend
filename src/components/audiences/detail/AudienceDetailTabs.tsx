@@ -13,6 +13,7 @@ import {
   AlertsTabContent,
 } from '@/components/audiences/detail'
 import { ContentSuggestionsTabContent } from './ContentSuggestionsTabContent'
+import { SemanticSearchSection } from './ask/SemanticSearchSection'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { TopicDetail, ThemeDetail, ThemeGridItem } from '@/components/audiences/detail'
 import type { SimilarCommunity } from './SimilarCommunitiesGrid'
@@ -410,15 +411,7 @@ export function AudienceDetailTabs({
       </TabsContent>
 
       <TabsContent value="ask" className="mt-6">
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center">
-          <Sparkles className="w-8 h-8 text-lime mx-auto mb-3" />
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-            {t('tabs.askAI')}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-zinc-400">
-            {t('tabs.askComingSoon')}
-          </p>
-        </div>
+        <SemanticSearchSection audienceId={audienceId} />
       </TabsContent>
 
       <TabsContent value="products" className="mt-6">
