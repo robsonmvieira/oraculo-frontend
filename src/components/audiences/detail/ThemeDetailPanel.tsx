@@ -412,6 +412,7 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
             {showPatterns && isIntentTheme && (
               <PainPatternsSection
                 patterns={theme.painPatterns ?? []}
+                intentCategory={intentCategory}
                 onRefresh={handleRefreshPatterns}
                 isRefreshing={refreshIntentsMutation.isPending}
               />

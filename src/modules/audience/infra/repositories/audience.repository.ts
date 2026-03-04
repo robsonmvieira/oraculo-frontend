@@ -507,6 +507,10 @@ interface IntentAnalysisApiResponse {
       post_count: number
       total_upvotes: number
       total_comments: number
+      validation_score?: 'high' | 'medium' | 'low'
+      suggested_coping?: string[]
+      recommended_solutions?: string[]
+      community_consensus?: 'strong' | 'moderate' | 'weak' | 'divided'
       submissions: Array<{
         title: string
         body: string
@@ -514,6 +518,7 @@ interface IntentAnalysisApiResponse {
         score: number
         num_comments: number
         permalink: string
+        top_comments?: Array<{ body: string; score: number; author: string }>
       }>
     }>
     rank: number
@@ -1329,6 +1334,10 @@ export class AudienceRepository implements IAudienceRepository {
           postCount: pp.post_count,
           totalUpvotes: pp.total_upvotes,
           totalComments: pp.total_comments,
+          validationScore: pp.validation_score,
+          suggestedCoping: pp.suggested_coping,
+          recommendedSolutions: pp.recommended_solutions,
+          communityConsensus: pp.community_consensus,
           submissions: pp.submissions.map((s) => ({
             title: s.title,
             body: s.body,
@@ -1336,6 +1345,11 @@ export class AudienceRepository implements IAudienceRepository {
             score: s.score,
             numComments: s.num_comments,
             permalink: s.permalink,
+            topComments: s.top_comments?.map((c) => ({
+              body: c.body,
+              score: c.score,
+              author: c.author,
+            })),
           })),
         })),
         rank: i.rank,
