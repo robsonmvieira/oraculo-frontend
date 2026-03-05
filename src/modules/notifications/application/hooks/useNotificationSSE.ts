@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/modules/auth'
 import { toast } from '@/hooks/useToast'
@@ -99,6 +100,7 @@ function invalidateAnalysisQueries(
 
 export function useNotificationSSE() {
   const sseRef = useRef<NotificationSSEService | null>(null)
+  const { t } = useTranslation('notifications')
   const { isAuthenticated } = useAuthStore()
   const queryClient = useQueryClient()
   const incrementUnreadCount = useNotificationStore((state) => state.incrementUnreadCount)
@@ -128,8 +130,8 @@ export function useNotificationSSE() {
 
         const isAlert = notification.getType().startsWith('topic_alert_')
         toast({
-          title: notification.getTitle(),
-          description: notification.getMessage(),
+          title: t(`messages.${notification.getTitle()}`, notification.getTitle()),
+          description: t(`messages.${notification.getMessage()}`, notification.getMessage()),
           variant: isAlert || notification.isSuccess() ? 'success' : 'destructive',
         })
       },

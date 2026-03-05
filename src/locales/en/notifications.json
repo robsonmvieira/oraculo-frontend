@@ -48,5 +48,15 @@
     "markedAsRead": "Notification marked as read",
     "allMarkedAsRead": "All notifications marked as read",
     "error": "Failed to update notification"
+  },
+  "messages": {
+    "theme_panel_complete_title": "Theme Panel Ready",
+    "theme_panel_complete_msg_audience": "Your theme panel analysis is complete.",
+    "theme_panel_failed_title": "Theme Panel Failed",
+    "theme_panel_failed_msg_audience": "Failed to generate the theme panel.",
+    "theme_summary_complete_title": "Theme Summary Ready",
+    "theme_summary_complete_msg_audience": "Your theme summary is ready.",
+    "theme_summary_failed_title": "Theme Summary Failed",
+    "theme_summary_failed_msg_audience": "Failed to generate the theme summary."
   }
 }

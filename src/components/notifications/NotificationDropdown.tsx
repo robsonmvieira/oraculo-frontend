@@ -46,7 +46,7 @@ function DropdownNotificationItem({ notification, onMarkAsRead, isMarkingRead }:
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm truncate text-gray-900 dark:text-white font-medium">
-          {notification.title}
+          {t(`messages.${notification.title}`, notification.title)}
         </p>
         <p className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">
           {timeAgo}

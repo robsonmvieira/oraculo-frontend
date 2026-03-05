@@ -48,5 +48,15 @@
     "markedAsRead": "Notificacao marcada como lida",
     "allMarkedAsRead": "Todas as notificacoes marcadas como lidas",
     "error": "Erro ao atualizar notificacao"
+  },
+  "messages": {
+    "theme_panel_complete_title": "Painel de Tema Pronto",
+    "theme_panel_complete_msg_audience": "A analise do painel de tema foi concluida.",
+    "theme_panel_failed_title": "Painel de Tema Falhou",
+    "theme_panel_failed_msg_audience": "Erro ao gerar o painel de tema.",
+    "theme_summary_complete_title": "Resumo de Tema Pronto",
+    "theme_summary_complete_msg_audience": "O resumo do tema esta pronto.",
+    "theme_summary_failed_title": "Resumo de Tema Falhou",
+    "theme_summary_failed_msg_audience": "Erro ao gerar o resumo do tema."
   }
 }

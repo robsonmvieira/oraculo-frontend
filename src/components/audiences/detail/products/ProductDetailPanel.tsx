@@ -32,9 +32,10 @@ export function ProductDetailPanel({ product, audienceId }: Readonly<ProductDeta
 
   const { data: opportunitiesResult } = useGetProductOpportunities(audienceId, !!product)
 
+  const productName = product?.getNormalizedName() || product?.getProductName() || ''
   const relatedOpportunities = (opportunitiesResult?.opportunities ?? []).filter((opp) =>
     opp.getRelatedProducts().some(
-      (name) => product && name.toLowerCase() === product.getNormalizedName().toLowerCase()
+      (name) => productName && name.toLowerCase() === productName.toLowerCase()
     )
   )
 
@@ -89,10 +90,10 @@ export function ProductDetailPanel({ product, audienceId }: Readonly<ProductDeta
             {t(`productIntelligence.category.${product.getCategory()}`)}
           </span>
           <span className={`text-xs px-2 py-0.5 rounded-full ${sentimentColor}`}>
-            {t(`productIntelligence.sentiment.${product.getSentimentLabel()}`)} ({product.getSentimentScore().toFixed(1)})
+            {t(`productIntelligence.sentimentLabel.${product.getSentimentLabel()}`)} ({(product.getSentimentScore() ?? 0).toFixed(1)})
           </span>
           <span className="text-xs text-gray-500 dark:text-zinc-400">
-            {product.getTotalMentions()} {t('productIntelligence.mentions')}
+            {t('productIntelligence.mentions', { count: product.getTotalMentions() })}
           </span>
         </div>
       </div>
@@ -108,7 +109,7 @@ export function ProductDetailPanel({ product, audienceId }: Readonly<ProductDeta
                 key={community}
                 className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
               >
-                r/{community}
+                {community.startsWith('r/') ? community : `r/${community}`}
               </span>
             ))}
           </div>
@@ -212,7 +213,7 @@ export function ProductDetailPanel({ product, audienceId }: Readonly<ProductDeta
                   &ldquo;{ev.quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-2 mt-1.5 text-[10px] text-gray-400 dark:text-zinc-500">
-                  <span>r/{ev.sourceSubreddit}</span>
+                  <span>{ev.sourceSubreddit.startsWith('r/') ? ev.sourceSubreddit : `r/${ev.sourceSubreddit}`}</span>
                   {ev.score > 0 && <span>{ev.score} pts</span>}
                 </div>
               </div>
