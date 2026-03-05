@@ -50,7 +50,7 @@ export function NotificationCard({ notification, onMarkAsRead, isMarkingRead }: 
               ? 'text-gray-900 dark:text-white'
               : 'text-gray-600 dark:text-zinc-400'
           )}>
-            {notification.getTitle()}
+            {t(`messages.${notification.getTitle()}`, notification.getTitle())}
           </h4>
           {isUnread && (
             <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
@@ -58,7 +58,7 @@ export function NotificationCard({ notification, onMarkAsRead, isMarkingRead }: 
         </div>
 
         <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5 line-clamp-2">
-          {notification.getMessage()}
+          {t(`messages.${notification.getMessage()}`, notification.getMessage())}
         </p>
 
         {isUnread && onMarkAsRead && (

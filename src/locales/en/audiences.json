@@ -213,7 +213,11 @@
         "platform_update": "Platform Update",
         "tool": "Tool",
         "industry_trend": "Industry Trend",
-        "launch": "Launch"
+        "launch": "Launch",
+        "tool_showcase": "Tool Showcase",
+        "portfolio_showcase": "Portfolio Showcase",
+        "case_study": "Case Study",
+        "open_source": "Open Source"
       },
       "keywords": {
         "agency": "Agency",
@@ -766,6 +770,8 @@
     "reanalyze": "Re-analyze",
     "weekly": "Weekly",
     "monthly": "Monthly",
+    "windowWeek": "Last 7 days",
+    "windowMonth": "Last 30 days",
     "processing": "Analyzing products mentioned by your audience...",
     "processingHelp": "This may take 2-3 minutes. We're extracting products from posts and detecting market opportunities.",
     "failed": "Product analysis failed. Please try again.",

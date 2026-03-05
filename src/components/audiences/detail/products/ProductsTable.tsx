@@ -47,7 +47,7 @@ export function ProductsTable({
       case 'mentions':
         return b.getTotalMentions() - a.getTotalMentions()
       case 'sentiment':
-        return b.getSentimentScore() - a.getSentimentScore()
+        return (b.getSentimentScore() ?? 0) - (a.getSentimentScore() ?? 0)
       case 'name':
         return a.getProductName().localeCompare(b.getProductName())
       default:
@@ -185,7 +185,8 @@ export function ProductsTable({
             const trendColor = trendColorMap[product.getTrendDirection()] ?? 'text-yellow-500'
             const sentimentColor = sentimentColorMap[product.getSentimentLabel()] ?? 'bg-gray-400'
 
-            const sentimentPercent = ((product.getSentimentScore() + 1) / 2) * 100
+            const score = product.getSentimentScore() ?? 0
+            const sentimentPercent = ((score + 1) / 2) * 100
 
             return (
               <button
@@ -221,7 +222,7 @@ export function ProductsTable({
                         />
                       </div>
                       <span className="text-[10px] text-gray-500 dark:text-zinc-400 w-8 text-right">
-                        {product.getSentimentScore().toFixed(1)}
+                        {score.toFixed(1)}
                       </span>
                     </div>
 

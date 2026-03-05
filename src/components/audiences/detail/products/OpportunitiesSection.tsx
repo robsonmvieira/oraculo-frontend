@@ -7,10 +7,10 @@ export interface OpportunitiesSectionProps {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  unmet_need: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  improvement: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  new_market: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  integration: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  unmet_demand: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  declining_product: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  underserved_niche: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  emerging_trend: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
 }
 
 export function OpportunitiesSection({ opportunities }: Readonly<OpportunitiesSectionProps>) {
@@ -22,7 +22,7 @@ export function OpportunitiesSection({ opportunities }: Readonly<OpportunitiesSe
     <div className="space-y-3">
       <h4 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
         <Lightbulb className="w-4 h-4 text-lime" />
-        {t('productIntelligence.detail.opportunities')}
+        {t('productIntelligence.opportunities.title')}
       </h4>
 
       {opportunities.map((opp) => {
@@ -37,7 +37,7 @@ export function OpportunitiesSection({ opportunities }: Readonly<OpportunitiesSe
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${typeColor}`}>
-                    {t(`productIntelligence.opportunityType.${opp.getOpportunityType()}`)}
+                    {t(`productIntelligence.opportunities.type.${opp.getOpportunityType()}`)}
                   </span>
                 </div>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -63,10 +63,10 @@ export function OpportunitiesSection({ opportunities }: Readonly<OpportunitiesSe
 
             <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-zinc-400">
               <span>
-                {t('productIntelligence.demandSignals')}: <strong className="text-gray-700 dark:text-zinc-300">{opp.getDemandSignals()}</strong>
+                {t('productIntelligence.opportunities.demandSignals')}: <strong className="text-gray-700 dark:text-zinc-300">{opp.getDemandSignals()}</strong>
               </span>
               <span>
-                {t('productIntelligence.existingSolutions')}: <strong className="text-gray-700 dark:text-zinc-300">{opp.getExistingSolutionsCount()}</strong>
+                {t('productIntelligence.opportunities.existingSolutions')}: <strong className="text-gray-700 dark:text-zinc-300">{opp.getExistingSolutionsCount()}</strong>
               </span>
             </div>
 

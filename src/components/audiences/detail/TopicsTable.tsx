@@ -189,8 +189,8 @@ export function TopicsTable({
                   : 'border-gray-200 dark:border-zinc-700 hover:border-lime dark:hover:border-lime'
               }`}
             >
-              <div className="flex items-center gap-2 md:gap-4">
-                <p className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate shrink-0">
+              <div className="flex items-center gap-2 md:gap-4 min-w-0">
+                <p className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate min-w-0">
                   {topic.name}
                 </p>
 

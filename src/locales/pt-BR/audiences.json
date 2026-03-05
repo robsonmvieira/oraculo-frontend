@@ -213,7 +213,11 @@
         "platform_update": "Atualização de Plataforma",
         "tool": "Ferramenta",
         "industry_trend": "Tendência do Setor",
-        "launch": "Lançamento"
+        "launch": "Lançamento",
+        "tool_showcase": "Vitrine de Ferramentas",
+        "portfolio_showcase": "Vitrine de Portfólio",
+        "case_study": "Estudo de Caso",
+        "open_source": "Código Aberto"
       },
       "keywords": {
         "agency": "Agência",
@@ -766,6 +770,8 @@
     "reanalyze": "Re-analisar",
     "weekly": "Semanal",
     "monthly": "Mensal",
+    "windowWeek": "Últimos 7 dias",
+    "windowMonth": "Últimos 30 dias",
     "processing": "Analisando produtos mencionados pela sua audiência...",
     "processingHelp": "Isso pode levar 2-3 minutos. Estamos extraindo produtos dos posts e detectando oportunidades de mercado.",
     "failed": "A análise de produtos falhou. Tente novamente.",

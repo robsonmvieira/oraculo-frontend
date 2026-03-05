@@ -4,11 +4,13 @@ import { Package, AlertCircle, RefreshCw, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   useGetProductIntelligence,
+  useGetProductOpportunities,
   useTriggerProductIntelligence,
 } from '@/modules/audience/application/hooks'
 import { toast } from '@/hooks/useToast'
 import { ProductsTable } from './ProductsTable'
 import { ProductDetailPanel } from './ProductDetailPanel'
+import { OpportunitiesSection } from './OpportunitiesSection'
 import type { ProductProfile } from '@/modules/audience/domain/entities/ProductProfile.entity'
 
 export interface ProductsTabContentProps {
@@ -18,6 +20,7 @@ export interface ProductsTabContentProps {
 export function ProductsTabContent({ audienceId }: Readonly<ProductsTabContentProps>) {
   const { t } = useTranslation('audiences')
   const { data, isLoading } = useGetProductIntelligence(audienceId, true)
+  const { data: opportunitiesResult } = useGetProductOpportunities(audienceId, data?.status === 'ready')
   const triggerMutation = useTriggerProductIntelligence()
   const [selectedProduct, setSelectedProduct] = useState<ProductProfile | null>(null)
   const [windowDropdownOpen, setWindowDropdownOpen] = useState(false)
@@ -126,21 +129,29 @@ export function ProductsTabContent({ audienceId }: Readonly<ProductsTabContentPr
           </p>
         </div>
       ) : (
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-          <div className="w-full md:w-1/2">
-            <ProductsTable
-              products={products}
-              totalCount={totalProducts}
-              selectedProductId={selectedProduct?.getId() ?? null}
-              onProductSelect={handleProductSelect}
-            />
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+            <div className="w-full md:w-1/2">
+              <ProductsTable
+                products={products}
+                totalCount={totalProducts}
+                selectedProductId={selectedProduct?.getId() ?? null}
+                onProductSelect={handleProductSelect}
+              />
+            </div>
+            <div className="w-full md:w-1/2">
+              <ProductDetailPanel
+                product={selectedProduct}
+                audienceId={audienceId}
+              />
+            </div>
           </div>
-          <div className="w-full md:w-1/2">
-            <ProductDetailPanel
-              product={selectedProduct}
-              audienceId={audienceId}
-            />
-          </div>
+
+          {(opportunitiesResult?.opportunities?.length ?? 0) > 0 && (
+            <div className="border-t border-gray-200 dark:border-zinc-700 pt-6">
+              <OpportunitiesSection opportunities={opportunitiesResult!.opportunities} />
+            </div>
+          )}
         </div>
       )}
     </div>
