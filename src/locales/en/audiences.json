@@ -817,7 +817,8 @@
       "evidenceQuotes": "Evidence Quotes",
       "useCases": "Use Cases",
       "communities": "Communities",
-      "noData": "No data available"
+      "noData": "No data available",
+      "productDetails": "Product details"
     },
     "opportunities": {
       "title": "Market Opportunities",

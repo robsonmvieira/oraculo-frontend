@@ -832,22 +832,25 @@ interface TriggerProductIntelligenceApiResponse {
 }
 
 interface ProductDetailApiResponse {
-  id: string
-  product_name: string
-  normalized_name?: string
-  category: string
-  total_mentions: number
-  sentiment_score: number
-  sentiment_label: string
-  trend_direction: string
-  communities?: string[]
-  positive_aspects?: string[]
-  negative_aspects?: string[]
-  gaps?: string[]
-  alternatives?: Array<{ name: string; sentiment_label: string }>
-  evidence_quotes?: Array<{ quote: string; source_subreddit: string; score: number }>
-  use_cases?: string[]
-  created_at?: string
+  status: string
+  product: {
+    id: string
+    product_name: string
+    normalized_name?: string
+    category: string
+    total_mentions: number
+    sentiment_score: number
+    sentiment_label: string
+    trend_direction: string
+    communities?: string[]
+    positive_aspects?: string[]
+    negative_aspects?: string[]
+    gaps?: string[]
+    alternatives?: Array<{ name: string; sentiment_label: string }>
+    evidence_quotes?: Array<{ quote: string; source_subreddit: string; score: number }>
+    use_cases?: string[]
+    created_at?: string
+  } | null
 }
 
 interface ProductOpportunitiesApiResponse {
@@ -2252,35 +2255,36 @@ export class AudienceRepository implements IAudienceRepository {
       `audiences/${params.audienceId}/products/${params.productId}`
     )
 
-    if (!response.id) {
+    const p = response.product
+    if (!p) {
       return { product: null }
     }
 
     return {
       product: new ProductProfile({
-        id: response.id,
-        productName: response.product_name,
-        normalizedName: response.normalized_name ?? '',
-        category: response.category,
-        totalMentions: response.total_mentions,
-        sentimentScore: response.sentiment_score,
-        sentimentLabel: response.sentiment_label,
-        trendDirection: response.trend_direction,
-        communities: response.communities ?? [],
-        positiveAspects: response.positive_aspects ?? [],
-        negativeAspects: response.negative_aspects ?? [],
-        gaps: response.gaps ?? [],
-        alternatives: (response.alternatives ?? []).map((a) => ({
+        id: p.id,
+        productName: p.product_name,
+        normalizedName: p.normalized_name ?? '',
+        category: p.category,
+        totalMentions: p.total_mentions,
+        sentimentScore: p.sentiment_score,
+        sentimentLabel: p.sentiment_label,
+        trendDirection: p.trend_direction,
+        communities: p.communities ?? [],
+        positiveAspects: p.positive_aspects ?? [],
+        negativeAspects: p.negative_aspects ?? [],
+        gaps: p.gaps ?? [],
+        alternatives: (p.alternatives ?? []).map((a) => ({
           name: a.name,
           sentimentLabel: a.sentiment_label,
         })),
-        evidenceQuotes: (response.evidence_quotes ?? []).map((e) => ({
+        evidenceQuotes: (p.evidence_quotes ?? []).map((e) => ({
           quote: e.quote,
           sourceSubreddit: e.source_subreddit,
           score: e.score,
         })),
-        useCases: response.use_cases ?? [],
-        createdAt: response.created_at ?? null,
+        useCases: p.use_cases ?? [],
+        createdAt: p.created_at ?? null,
       }),
     }
   }
