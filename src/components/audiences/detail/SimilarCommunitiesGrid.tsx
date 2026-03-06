@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { TrendingUp } from 'lucide-react'
+import { Avatar } from '@/components/ui'
 
 export interface SimilarCommunity {
   id: string
   name: string
+  icon?: string
   members: number
   weeklyGrowth: number
   sizeCategory: string
@@ -90,9 +92,12 @@ export function SimilarCommunitiesGrid({ communities, isLoading, onAddToAudience
             className="bg-white dark:bg-zinc-900 rounded-2xl p-5 flex flex-col"
           >
             <div className="flex items-start gap-4 mb-3">
-              <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-zinc-700 flex items-center justify-center text-lg font-medium text-gray-600 dark:text-zinc-300 shrink-0">
-                {subreddit.name.charAt(2).toUpperCase()}
-              </div>
+              <Avatar
+                src={subreddit.icon}
+                alt={subreddit.name}
+                fallback={subreddit.name.charAt(2)}
+                size="lg"
+              />
               <div className="flex-1 min-w-0">
                 <h4 className="font-bold text-gray-900 dark:text-white text-base">
                   {subreddit.name}

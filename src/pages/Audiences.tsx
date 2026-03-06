@@ -1,23 +1,18 @@
 import { useRef, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { gsap } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks'
 import { AudiencesToolbar, UserAudiencesSection, TemplateAudiencesSection } from '@/components/audiences'
 import type { SortOption, ViewMode } from '@/components/audiences'
-import { SelectAudienceModal } from '@/components/shared'
-import { useFetchDefaultAudiences, useCreateAudience, useListUserAudiences } from '@/modules/audience/application/hooks'
+import { useFetchDefaultAudiences, useListUserAudiences } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
-import { toast } from '@/hooks'
 
 export function Audiences() {
-  const { t } = useTranslation('audiences')
   const templatesGridRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
-  const { openModal, closeModal } = useCreateAudienceStore()
-  const createAudienceMutation = useCreateAudience()
+  const { openModal } = useCreateAudienceStore()
 
   const { data: userAudiencesData, isLoading: isLoadingUserAudiences } = useListUserAudiences()
   const { data: templates } = useFetchDefaultAudiences()
@@ -44,6 +39,7 @@ export function Audiences() {
     subreddits: template.getCommunities().map((community, index) => ({
       id: `${template.getId()}-${index}`,
       name: `r/${community.name}`,
+      icon: community.icon_url,
     })),
   }))
 
@@ -125,35 +121,6 @@ export function Audiences() {
         onAddClick={openModal}
       />
 
-      <SelectAudienceModal
-        onCreateAudience={(name, selectedCommunityNames) => {
-          createAudienceMutation.mutate(
-            {
-              name,
-              description: '',
-              subreddit_names: selectedCommunityNames,
-            },
-            {
-              onSuccess: () => {
-                closeModal()
-                toast({
-                  title: t('toast.created'),
-                  description: t('toast.createdDescription'),
-                  variant: 'success',
-                })
-              },
-              onError: () => {
-                toast({
-                  title: t('toast.createFailed'),
-                  description: t('toast.genericError'),
-                  variant: 'destructive',
-                })
-              },
-            }
-          )
-        }}
-        isLoading={createAudienceMutation.isPending}
-      />
     </div>
   )
 }

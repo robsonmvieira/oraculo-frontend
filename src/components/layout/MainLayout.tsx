@@ -5,6 +5,7 @@ import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { useReducedMotion } from '@/hooks'
 import { useNotificationSSE } from '@/modules/notifications'
+import { SelectAudienceModal } from '@/components/shared'
 
 export function MainLayout() {
   const contentRef = useRef<HTMLDivElement>(null)
@@ -32,6 +33,7 @@ export function MainLayout() {
 
       <div className="md:ml-20">
         <Topbar />
+        <SelectAudienceModal />
 
         <main
           ref={contentRef}

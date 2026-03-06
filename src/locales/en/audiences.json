@@ -799,13 +799,15 @@
     "trend": {
       "rising": "Rising",
       "stable": "Stable",
-      "declining": "Declining"
+      "declining": "Declining",
+      "null": "No data"
     },
     "sentimentLabel": {
       "positive": "Positive",
       "negative": "Negative",
       "neutral": "Neutral",
-      "mixed": "Mixed"
+      "mixed": "Mixed",
+      "null": "No data"
     },
     "detail": {
       "selectProduct": "Select a product",
