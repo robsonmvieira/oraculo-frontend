@@ -1,6 +1,5 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Youtube, AlertCircle, RefreshCw } from 'lucide-react'
+import { Youtube, AlertCircle, RefreshCw, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   useGetYouTubeValidation,
@@ -12,15 +11,18 @@ import { TopicAnalysisAccordion } from './TopicAnalysisAccordion'
 
 export interface YouTubeValidationTabContentProps {
   audienceId: string
+  hasTopicsReady: boolean
 }
 
-export function YouTubeValidationTabContent({ audienceId }: Readonly<YouTubeValidationTabContentProps>) {
+export function YouTubeValidationTabContent({ audienceId, hasTopicsReady }: Readonly<YouTubeValidationTabContentProps>) {
   const { t } = useTranslation('audiences')
   const { data, isLoading } = useGetYouTubeValidation(audienceId, true)
   const triggerMutation = useTriggerYouTubeValidation()
 
   const status = data?.status ?? 'no_analysis'
   const validation = data?.data ?? null
+
+  const canTrigger = hasTopicsReady && !triggerMutation.isPending && status !== 'processing'
 
   const handleTrigger = (force = false) => {
     triggerMutation.mutate({ audienceId, force }, {
@@ -44,7 +46,7 @@ export function YouTubeValidationTabContent({ audienceId }: Readonly<YouTubeVali
 
         <button
           onClick={() => handleTrigger(status === 'ready' || status === 'failed')}
-          disabled={triggerMutation.isPending || status === 'processing'}
+          disabled={!canTrigger}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-[#FF0000] text-white hover:bg-[#CC0000] transition-colors cursor-pointer disabled:opacity-50"
         >
           {(triggerMutation.isPending || status === 'processing') ? (
@@ -55,6 +57,16 @@ export function YouTubeValidationTabContent({ audienceId }: Readonly<YouTubeVali
           {t('youtubeValidation.startValidation')}
         </button>
       </div>
+
+      {/* Prerequisite warning */}
+      {!hasTopicsReady && status === 'no_analysis' && (
+        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900/30 rounded-lg p-3 flex items-start gap-2">
+          <Info className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+          <p className="text-xs text-amber-700 dark:text-amber-300">
+            {t('youtubeValidation.prerequisite')}
+          </p>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">

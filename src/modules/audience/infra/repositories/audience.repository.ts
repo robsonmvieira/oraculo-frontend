@@ -743,12 +743,14 @@ interface YouTubeValidationApiResponse {
         reddit: string
         youtube: string
         alignment: string
+        divergence?: string
       }
       content_gap: boolean
+      content_gap_detail?: string
       content_saturated: boolean
       product_mentions: string[]
       audience_overlap_score: number
-      opportunity_insights: string
+      opportunity_insights: string | string[]
     }>
     cross_platform_summary: {
       total_topics_with_traction: number
@@ -766,6 +768,9 @@ interface YouTubeValidationApiResponse {
     avg_traction_score: number
     total_videos_analyzed: number
     total_comments_analyzed: number
+    headline?: string
+    key_opportunities?: string[]
+    risk_factors?: string[]
   }
   message?: string
 }
@@ -2108,20 +2113,25 @@ export class AudienceRepository implements IAudienceRepository {
         totalVideos: response.total_videos ?? 0,
         totalComments: response.total_comments ?? 0,
         analysisData: {
-          topics: (response.analysis_data.topics ?? []).map((t) => ({
-            topicName: t.topic_name,
-            tractionScore: t.traction_score,
-            sentimentComparison: {
-              reddit: t.sentiment_comparison.reddit,
-              youtube: t.sentiment_comparison.youtube,
-              alignment: t.sentiment_comparison.alignment,
-            },
-            contentGap: t.content_gap,
-            contentSaturated: t.content_saturated,
-            productMentions: t.product_mentions ?? [],
-            audienceOverlapScore: t.audience_overlap_score,
-            opportunityInsights: t.opportunity_insights,
-          })),
+          topics: (response.analysis_data.topics ?? []).map((t) => {
+            const insights = t.opportunity_insights
+            return {
+              topicName: t.topic_name,
+              tractionScore: t.traction_score,
+              sentimentComparison: {
+                reddit: t.sentiment_comparison.reddit,
+                youtube: t.sentiment_comparison.youtube,
+                alignment: t.sentiment_comparison.alignment,
+                divergence: t.sentiment_comparison.divergence ?? null,
+              },
+              contentGap: t.content_gap,
+              contentGapDetail: t.content_gap_detail ?? null,
+              contentSaturated: t.content_saturated,
+              productMentions: t.product_mentions ?? [],
+              audienceOverlapScore: t.audience_overlap_score,
+              opportunityInsights: Array.isArray(insights) ? insights : insights ? [insights] : [],
+            }
+          }),
           crossPlatformSummary: {
             totalTopicsWithTraction: response.analysis_data.cross_platform_summary.total_topics_with_traction,
             avgTractionScore: response.analysis_data.cross_platform_summary.avg_traction_score,
@@ -2138,6 +2148,9 @@ export class AudienceRepository implements IAudienceRepository {
           avgTractionScore: response.summary.avg_traction_score,
           totalVideosAnalyzed: response.summary.total_videos_analyzed,
           totalCommentsAnalyzed: response.summary.total_comments_analyzed,
+          headline: response.summary.headline ?? null,
+          keyOpportunities: response.summary.key_opportunities ?? [],
+          riskFactors: response.summary.risk_factors ?? [],
         } : null,
       }),
     }

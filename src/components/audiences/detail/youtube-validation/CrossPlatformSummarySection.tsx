@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { BarChart3, TrendingUp, Lightbulb } from 'lucide-react'
+import { BarChart3, TrendingUp, Lightbulb, AlertTriangle, Rocket } from 'lucide-react'
 import type { ValidationSummary, CrossPlatformSummary } from '@/modules/audience/domain/entities/YouTubeValidation.entity'
 
 export interface CrossPlatformSummarySectionProps {
@@ -14,7 +14,7 @@ export function CrossPlatformSummarySection({ summary, crossPlatform }: Readonly
     { label: t('youtubeValidation.summary.topicsAnalyzed'), value: summary.topicsAnalyzed },
     { label: t('youtubeValidation.summary.topicsWithTraction'), value: summary.topicsWithYoutubeTraction },
     { label: t('youtubeValidation.summary.contentGaps'), value: summary.contentGapsFound },
-    { label: t('youtubeValidation.summary.avgTraction'), value: `${(summary.avgTractionScore * 100).toFixed(0)}%` },
+    { label: t('youtubeValidation.summary.avgTraction'), value: `${summary.avgTractionScore.toFixed(1)}/10` },
     { label: t('youtubeValidation.summary.videosAnalyzed'), value: summary.totalVideosAnalyzed },
     { label: t('youtubeValidation.summary.commentsAnalyzed'), value: summary.totalCommentsAnalyzed },
   ]
@@ -26,6 +26,13 @@ export function CrossPlatformSummarySection({ summary, crossPlatform }: Readonly
           <BarChart3 className="w-4 h-4 text-lime" />
           {t('youtubeValidation.summary.title')}
         </h4>
+
+        {/* Headline */}
+        {summary.headline && (
+          <p className="text-sm text-gray-700 dark:text-zinc-300 mb-4 font-medium">
+            {summary.headline}
+          </p>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {metrics.map((metric) => (
@@ -73,6 +80,40 @@ export function CrossPlatformSummarySection({ summary, crossPlatform }: Readonly
             </div>
           )}
         </div>
+
+        {/* Key Opportunities */}
+        {summary.keyOpportunities.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <h5 className="text-xs font-medium text-gray-700 dark:text-zinc-300 flex items-center gap-1.5">
+              <Rocket className="w-3.5 h-3.5 text-green-500" />
+              {t('youtubeValidation.summary.keyOpportunities')}
+            </h5>
+            <ul className="space-y-1">
+              {summary.keyOpportunities.map((opp) => (
+                <li key={opp} className="text-xs text-gray-600 dark:text-zinc-400 pl-5 relative before:content-['•'] before:absolute before:left-1.5 before:text-green-400">
+                  {opp}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Risk Factors */}
+        {summary.riskFactors.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <h5 className="text-xs font-medium text-gray-700 dark:text-zinc-300 flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+              {t('youtubeValidation.summary.riskFactors')}
+            </h5>
+            <ul className="space-y-1">
+              {summary.riskFactors.map((risk) => (
+                <li key={risk} className="text-xs text-gray-600 dark:text-zinc-400 pl-5 relative before:content-['•'] before:absolute before:left-1.5 before:text-red-400">
+                  {risk}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )
