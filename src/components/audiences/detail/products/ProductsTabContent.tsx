@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Package, AlertCircle, RefreshCw, ChevronDown } from 'lucide-react'
+import { Package, AlertCircle, RefreshCw, ChevronDown, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   useGetProductIntelligence,
@@ -8,6 +8,7 @@ import {
   useTriggerProductIntelligence,
 } from '@/modules/audience/application/hooks'
 import { toast } from '@/hooks/useToast'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import { ProductsTable } from './ProductsTable'
 import { ProductDetailPanel } from './ProductDetailPanel'
 import { OpportunitiesSection } from './OpportunitiesSection'
@@ -24,6 +25,9 @@ export function ProductsTabContent({ audienceId }: Readonly<ProductsTabContentPr
   const triggerMutation = useTriggerProductIntelligence()
   const [selectedProduct, setSelectedProduct] = useState<ProductProfile | null>(null)
   const [windowDropdownOpen, setWindowDropdownOpen] = useState(false)
+  const [opportunitiesOpen, setOpportunitiesOpen] = useState(false)
+
+  const opportunities = opportunitiesResult?.opportunities ?? []
 
   const status = data?.status ?? 'no_analysis'
   const products = data?.products ?? []
@@ -129,7 +133,20 @@ export function ProductsTabContent({ audienceId }: Readonly<ProductsTabContentPr
           </p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
+          {opportunities.length > 0 && (
+            <button
+              onClick={() => setOpportunitiesOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+            >
+              <Lightbulb className="w-4 h-4 text-lime" />
+              {t('productIntelligence.opportunities.title')}
+              <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-lime text-black">
+                {opportunities.length}
+              </span>
+            </button>
+          )}
+
           <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             <div className="w-full md:w-1/2">
               <ProductsTable
@@ -147,11 +164,19 @@ export function ProductsTabContent({ audienceId }: Readonly<ProductsTabContentPr
             </div>
           </div>
 
-          {(opportunitiesResult?.opportunities?.length ?? 0) > 0 && (
-            <div className="border-t border-gray-200 dark:border-zinc-700 pt-6">
-              <OpportunitiesSection opportunities={opportunitiesResult!.opportunities} />
-            </div>
-          )}
+          <Sheet open={opportunitiesOpen} onOpenChange={setOpportunitiesOpen}>
+            <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>{t('productIntelligence.opportunities.title')}</SheetTitle>
+                <SheetDescription className="sr-only">
+                  {t('productIntelligence.opportunities.title')}
+                </SheetDescription>
+              </SheetHeader>
+              <div className="px-6 pb-6">
+                <OpportunitiesSection opportunities={opportunities} />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       )}
     </div>

@@ -178,7 +178,7 @@ export function ProductsTable({
         ))}
       </div>
 
-      <div className="max-h-[900px] overflow-y-auto">
+      <div className="max-h-[600px] overflow-y-auto">
         <div ref={listRef} className="space-y-2">
           {sortedProducts.map((product) => {
             const TrendIcon = trendIconMap[product.getTrendDirection()] ?? Minus
