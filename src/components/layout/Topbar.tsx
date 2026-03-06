@@ -17,11 +17,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 import { useThemeStore } from '@/modules/shared'
 import { useAuthStore, useLogout } from '@/modules/auth'
 import { useUnreadCount, useNotificationStore } from '@/modules/notifications'
 import { NotificationDropdown } from '@/components/notifications'
 import { useReducedMotion } from '@/hooks'
+import { useCreateAudienceStore } from '@/modules/audience/application/store'
 
 const mobileNavItems = [
   { icon: Home, path: '/dashboard', label: 'Dashboard' },
@@ -47,6 +49,8 @@ export function Topbar() {
   const { theme, toggleTheme } = useThemeStore()
   const { user } = useAuthStore()
   const handleLogout = useLogout()
+  const { t } = useTranslation('layout')
+  const { openModal } = useCreateAudienceStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   useUnreadCount()
@@ -133,9 +137,14 @@ export function Topbar() {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <Button variant="primary" size="md" className="gap-2 hidden sm:flex">
+        <Button
+          variant="primary"
+          size="md"
+          className="gap-2 hidden sm:flex"
+          onClick={openModal}
+        >
           <Plus className="w-4 h-4" />
-          Create Audience
+          {t('topbar.createAudience')}
         </Button>
 
         <button

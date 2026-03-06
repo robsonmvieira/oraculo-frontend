@@ -799,13 +799,15 @@
     "trend": {
       "rising": "Em alta",
       "stable": "Estável",
-      "declining": "Em queda"
+      "declining": "Em queda",
+      "null": "Sem dados"
     },
     "sentimentLabel": {
       "positive": "Positivo",
       "negative": "Negativo",
       "neutral": "Neutro",
-      "mixed": "Misto"
+      "mixed": "Misto",
+      "null": "Sem dados"
     },
     "detail": {
       "selectProduct": "Selecione um produto",

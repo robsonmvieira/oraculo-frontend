@@ -9,10 +9,9 @@ import {
   AudienceDetailTabs,
   DeleteAudienceModal,
 } from '@/components/audiences/detail'
-import { useGetAudienceTemplateById, useGetAudienceById, useUpdateAudience, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions, useAddCommunityToAudience, useMarkCommunityNotRelevant, useGetAudienceTopics } from '@/modules/audience/application/hooks'
+import { useGetAudienceTemplateById, useGetAudienceById, useDeleteAudience, useGetAudienceKeywords, useGetAudienceSuggestions, useAddCommunityToAudience, useMarkCommunityNotRelevant, useGetAudienceTopics } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { toast } from '@/hooks'
-import { SelectAudienceModal } from '@/components/shared'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
 import type { SimilarCommunity } from '@/components/audiences/detail/SimilarCommunitiesGrid'
 import type { AudienceStats, RadarData } from '@/components/audiences/detail/AboutAudiencePanel'
@@ -28,8 +27,7 @@ export function AudienceDetail() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-  const { openEditModal, closeModal } = useCreateAudienceStore()
-  const updateAudienceMutation = useUpdateAudience()
+  const { openEditModal } = useCreateAudienceStore()
   const deleteAudienceMutation = useDeleteAudience()
   const addCommunityMutation = useAddCommunityToAudience()
   const markNotRelevantMutation = useMarkCommunityNotRelevant()
@@ -109,12 +107,14 @@ export function AudienceDetail() {
     ? userAudience!.getCommunities().map((community, index) => ({
         id: `${audienceId}-${index}`,
         name: `r/${community.display.display_name}`,
+        icon: community.display.community_icon,
         members: community.display.subscribers ?? 0,
         monthlyGrowth: community.growth_month ?? 0,
       }))
     : audienceTemplate!.getCommunities().map((community, index) => ({
         id: `${audienceId}-${index}`,
         name: `r/${community.name}`,
+        icon: community.icon_url,
         members: community.subscribers ?? 0,
         monthlyGrowth: community.growth_month ?? 0,
       }))
@@ -171,7 +171,7 @@ export function AudienceDetail() {
         category: '',
       })
     )
-    openEditModal(audienceId, audienceName, communities)
+    openEditModal(audienceId, audienceName, communities, userAudience?.getDescription() ?? '')
   }
 
   const handleAddToAudience = (subredditName: string) => {
@@ -279,37 +279,6 @@ export function AudienceDetail() {
         onConfirm={handleDelete}
       />
 
-      <SelectAudienceModal
-        onCreateAudience={() => {}}
-        onUpdateAudience={(editAudienceId, name, selectedCommunityNames) => {
-          updateAudienceMutation.mutate(
-            {
-              audienceId: editAudienceId,
-              name,
-              description: userAudience?.getDescription() ?? '',
-              subreddit_names: selectedCommunityNames,
-            },
-            {
-              onSuccess: () => {
-                closeModal()
-                toast({
-                  title: t('toast.updated'),
-                  description: t('toast.updatedDescription'),
-                  variant: 'success',
-                })
-              },
-              onError: () => {
-                toast({
-                  title: t('toast.updateFailed'),
-                  description: t('toast.genericError'),
-                  variant: 'destructive',
-                })
-              },
-            }
-          )
-        }}
-        isLoading={updateAudienceMutation.isPending}
-      />
     </div>
   )
 }

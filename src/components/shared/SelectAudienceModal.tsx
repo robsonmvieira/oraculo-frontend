@@ -1,33 +1,24 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Globe, Loader2 } from 'lucide-react'
-import { useDebounce } from '@/hooks'
+import { useDebounce, toast } from '@/hooks'
 import { Modal } from './Modal'
 import { CommunitySelectCard } from './CommunitySelectCard'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useBrowseCommunities } from '@/modules/community/application/hooks'
-import { useGetAudienceSuggestions } from '@/modules/audience/application/hooks'
+import { useGetAudienceSuggestions, useCreateAudience, useUpdateAudience } from '@/modules/audience/application/hooks'
 import { useCreateAudienceStore } from '@/modules/audience/application/store'
 import { Community } from '@/modules/community/domain/entities/Community.entity'
 
-export interface SelectAudienceModalProps {
-  onCreateAudience: (name: string, selectedCommunityNames: string[]) => void
-  onUpdateAudience?: (audienceId: string, name: string, selectedCommunityNames: string[]) => void
-  isLoading?: boolean
-}
-
-export function SelectAudienceModal({
-  onCreateAudience,
-  onUpdateAudience,
-  isLoading = false,
-}: Readonly<SelectAudienceModalProps>) {
+export function SelectAudienceModal() {
   const {
     audienceName,
     selectedCommunities,
     isModalOpen,
     mode,
     editingAudienceId,
+    editingAudienceDescription,
     setAudienceName,
     toggleCommunity,
     closeModal,
@@ -37,6 +28,10 @@ export function SelectAudienceModal({
   const { t } = useTranslation('audiences')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearch = useDebounce(searchQuery, 300)
+
+  const createAudienceMutation = useCreateAudience()
+  const updateAudienceMutation = useUpdateAudience()
+  const isLoading = createAudienceMutation.isPending || updateAudienceMutation.isPending
 
   const isEditMode = mode === 'edit'
 
@@ -128,13 +123,47 @@ export function SelectAudienceModal({
     toggleCommunity(community)
   }
 
+  const mutationCallbacks = {
+    onSuccess: () => {
+      closeModal()
+      setSearchQuery('')
+      toast({
+        title: isEditMode ? t('toast.updated') : t('toast.created'),
+        description: isEditMode ? t('toast.updatedDescription') : t('toast.createdDescription'),
+        variant: 'success',
+      })
+    },
+    onError: () => {
+      toast({
+        title: isEditMode ? t('toast.updateFailed') : t('toast.createFailed'),
+        description: t('toast.genericError'),
+        variant: 'destructive',
+      })
+    },
+  }
+
   const handleSubmit = () => {
     if (!audienceName.trim()) return
 
-    if (mode === 'edit' && editingAudienceId && onUpdateAudience) {
-      onUpdateAudience(editingAudienceId, audienceName.trim(), getSelectedNames())
+    if (isEditMode && editingAudienceId) {
+      updateAudienceMutation.mutate(
+        {
+          audienceId: editingAudienceId,
+          name: audienceName.trim(),
+          description: editingAudienceDescription,
+          subreddit_names: getSelectedNames(),
+        },
+        mutationCallbacks
+      )
     } else {
-      onCreateAudience(audienceName.trim(), getSelectedNames())
+      createAudienceMutation.mutate(
+        {
+          name: audienceName.trim(),
+          description: '',
+          subreddit_names: getSelectedNames(),
+        },
+        mutationCallbacks
+      )
     }
   }
 
