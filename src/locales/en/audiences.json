@@ -454,7 +454,8 @@
     "type": {
       "new_topic": "New Topic",
       "growth_spike": "Growth Spike",
-      "new_theme": "New Theme"
+      "new_theme": "New Theme",
+      "cross_platform_validated": "Cross-Platform Validated"
     },
     "severity": {
       "info": "Info",
@@ -764,6 +765,23 @@
       "publishedAt": "Published",
       "tags": "Tags",
       "noVideos": "No videos collected for this topic"
+    },
+    "decisionMatrix": {
+      "title": "Decision Matrix",
+      "topic": "Topic",
+      "traction": "Traction",
+      "gap": "Gap",
+      "saturated": "Saturated",
+      "action": "Suggested Action",
+      "yes": "Yes",
+      "no": "No",
+      "actions": {
+        "ideal": "Ideal opportunity — invest now",
+        "differentiate": "Good topic, needs differentiation",
+        "avoid": "Avoid — saturated market",
+        "niche": "Niche potential",
+        "no_traction": "No traction — skip"
+      }
     }
   },
   "productIntelligence": {

@@ -1,4 +1,4 @@
-export type AlertType = 'new_topic' | 'growth_spike' | 'new_theme'
+export type AlertType = 'new_topic' | 'growth_spike' | 'new_theme' | 'cross_platform_validated'
 
 export type AlertSeverity = 'info' | 'warning' | 'critical'
 

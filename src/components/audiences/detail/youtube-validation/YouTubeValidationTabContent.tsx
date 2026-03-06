@@ -7,6 +7,7 @@ import {
 } from '@/modules/audience/application/hooks'
 import { toast } from '@/hooks/useToast'
 import { CrossPlatformSummarySection } from './CrossPlatformSummarySection'
+import { DecisionMatrixSection } from './DecisionMatrixSection'
 import { TopicAnalysisAccordion } from './TopicAnalysisAccordion'
 
 export interface YouTubeValidationTabContentProps {
@@ -113,6 +114,8 @@ export function YouTubeValidationTabContent({ audienceId, hasTopicsReady }: Read
             summary={validation.getSummary()}
             crossPlatform={validation.getAnalysisData().crossPlatformSummary}
           />
+
+          <DecisionMatrixSection topics={validation.getAnalysisData().topics} />
 
           <div className="space-y-3">
             {validation.getAnalysisData().topics.map((topic) => (
