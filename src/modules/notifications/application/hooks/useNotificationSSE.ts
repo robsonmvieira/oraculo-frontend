@@ -30,7 +30,7 @@ function invalidateAnalysisQueries(
 
   if (!audienceId) return
 
-  if (type === 'topic_alert_new_topic' || type === 'topic_alert_growth_spike' || type === 'topic_alert_new_theme') {
+  if (type === 'topic_alert_new_topic' || type === 'topic_alert_growth_spike' || type === 'topic_alert_new_theme' || type === 'topic_alert_cross_platform_validated') {
     queryClient.invalidateQueries({ queryKey: ALERTS_QUERY_KEY(audienceId) })
     queryClient.invalidateQueries({ queryKey: ALERTS_SUMMARY_QUERY_KEY(audienceId) })
     return

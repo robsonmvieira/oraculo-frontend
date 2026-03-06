@@ -454,7 +454,8 @@
     "type": {
       "new_topic": "Novo Tópico",
       "growth_spike": "Pico de Crescimento",
-      "new_theme": "Novo Tema"
+      "new_theme": "Novo Tema",
+      "cross_platform_validated": "Validação Cross-Platform"
     },
     "severity": {
       "info": "Info",
@@ -764,6 +765,23 @@
       "publishedAt": "Publicado",
       "tags": "Tags",
       "noVideos": "Nenhum vídeo coletado para este tópico"
+    },
+    "decisionMatrix": {
+      "title": "Matriz de Decisão",
+      "topic": "Tópico",
+      "traction": "Tração",
+      "gap": "Gap",
+      "saturated": "Saturado",
+      "action": "Ação Sugerida",
+      "yes": "Sim",
+      "no": "Não",
+      "actions": {
+        "ideal": "Oportunidade ideal — investir agora",
+        "differentiate": "Bom tema, precisa de diferenciação",
+        "avoid": "Evitar — mercado saturado",
+        "niche": "Potencial de nicho",
+        "no_traction": "Sem tração — evitar"
+      }
     }
   },
   "productIntelligence": {

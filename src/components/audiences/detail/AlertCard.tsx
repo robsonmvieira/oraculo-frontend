@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Clock, X, Zap, Flame, Sparkles, AlertTriangle, Info, AlertOctagon } from 'lucide-react'
+import { Clock, X, Zap, Flame, Sparkles, Youtube, AlertTriangle, Info, AlertOctagon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { TopicAlert } from '@/modules/topic-alerts'
 
@@ -13,6 +13,7 @@ const typeIcons: Record<string, React.ElementType> = {
   new_topic: Zap,
   growth_spike: Flame,
   new_theme: Sparkles,
+  cross_platform_validated: Youtube,
 }
 
 const severityConfig: Record<string, { icon: React.ElementType; bgClass: string; textClass: string; badgeBg: string; badgeText: string }> = {

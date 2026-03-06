@@ -10,7 +10,7 @@ export interface AlertsTabContentProps {
   audienceId: string
 }
 
-const ALERT_TYPES: AlertType[] = ['new_topic', 'growth_spike', 'new_theme']
+const ALERT_TYPES: AlertType[] = ['new_topic', 'growth_spike', 'new_theme', 'cross_platform_validated']
 const SEVERITIES: AlertSeverity[] = ['info', 'warning', 'critical']
 
 export function AlertsTabContent({ audienceId }: Readonly<AlertsTabContentProps>) {
