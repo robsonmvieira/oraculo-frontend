@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronRight, TrendingUp, Eye } from 'lucide-react'
+import { ChevronDown, ChevronRight, TrendingUp, Eye, AlertTriangle, Info } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { TopicAnalysis } from '@/modules/audience/domain/entities/YouTubeValidation.entity'
 import { TopicVideosSection } from './TopicVideosSection'
@@ -15,7 +15,7 @@ export function TopicAnalysisAccordion({ topic, audienceId }: Readonly<TopicAnal
   const [isExpanded, setIsExpanded] = useState(false)
   const [showVideos, setShowVideos] = useState(false)
 
-  const tractionPercent = (topic.tractionScore * 100).toFixed(0)
+  const tractionDisplay = topic.tractionScore.toFixed(1)
 
   return (
     <div className="border border-gray-200 dark:border-zinc-700 rounded-xl overflow-hidden">
@@ -38,18 +38,26 @@ export function TopicAnalysisAccordion({ topic, audienceId }: Readonly<TopicAnal
               ? t('youtubeValidation.topic.contentGap')
               : topic.contentSaturated
                 ? t('youtubeValidation.topic.contentSaturated')
-                : `${tractionPercent}%`
+                : `${tractionDisplay}/10`
             }
           </Badge>
           <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-400">
             <TrendingUp className="w-3 h-3" />
-            {tractionPercent}%
+            {tractionDisplay}/10
           </div>
         </div>
       </button>
 
       {isExpanded && (
         <div className="px-4 pb-4 space-y-4">
+          {/* Content Gap Detail */}
+          {topic.contentGap && topic.contentGapDetail && (
+            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900/30 rounded-lg p-3 flex gap-2">
+              <Info className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
+              <p className="text-xs text-amber-700 dark:text-amber-300">{topic.contentGapDetail}</p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Sentiment Comparison */}
             <div className="bg-gray-50 dark:bg-zinc-800 rounded-lg p-3">
@@ -72,6 +80,14 @@ export function TopicAnalysisAccordion({ topic, audienceId }: Readonly<TopicAnal
                   </Badge>
                 </div>
               </div>
+
+              {/* Sentiment Divergence Explanation */}
+              {topic.sentimentComparison.divergence && (
+                <div className="mt-2 pt-2 border-t border-gray-200 dark:border-zinc-700 flex gap-1.5">
+                  <AlertTriangle className="w-3 h-3 text-amber-500 mt-0.5 shrink-0" />
+                  <p className="text-xs text-gray-600 dark:text-zinc-400">{topic.sentimentComparison.divergence}</p>
+                </div>
+              )}
             </div>
 
             {/* Metrics */}
@@ -79,11 +95,11 @@ export function TopicAnalysisAccordion({ topic, audienceId }: Readonly<TopicAnal
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-gray-500 dark:text-zinc-400">{t('youtubeValidation.topic.tractionScore')}</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{tractionPercent}%</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{tractionDisplay}/10</span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-gray-500 dark:text-zinc-400">{t('youtubeValidation.topic.audienceOverlap')}</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{(topic.audienceOverlapScore * 100).toFixed(0)}%</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{topic.audienceOverlapScore.toFixed(1)}/10</span>
                 </div>
                 {topic.productMentions.length > 0 && (
                   <div className="text-xs">
@@ -100,12 +116,18 @@ export function TopicAnalysisAccordion({ topic, audienceId }: Readonly<TopicAnal
           </div>
 
           {/* Opportunity Insights */}
-          {topic.opportunityInsights && (
+          {topic.opportunityInsights.length > 0 && (
             <div className="bg-lime/5 border border-lime/20 rounded-lg p-3">
               <p className="text-xs font-medium text-lime-700 dark:text-lime-400 mb-1">
                 {t('youtubeValidation.topic.opportunityInsights')}
               </p>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">{topic.opportunityInsights}</p>
+              <ul className="space-y-1">
+                {topic.opportunityInsights.map((insight) => (
+                  <li key={insight} className="text-xs text-gray-600 dark:text-zinc-400 pl-4 relative before:content-['•'] before:absolute before:left-0.5 before:text-lime-500">
+                    {insight}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 

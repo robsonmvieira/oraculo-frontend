@@ -2,6 +2,7 @@ export interface SentimentComparison {
   reddit: string
   youtube: string
   alignment: string
+  divergence: string | null
 }
 
 export interface TopicAnalysis {
@@ -9,10 +10,11 @@ export interface TopicAnalysis {
   tractionScore: number
   sentimentComparison: SentimentComparison
   contentGap: boolean
+  contentGapDetail: string | null
   contentSaturated: boolean
   productMentions: string[]
   audienceOverlapScore: number
-  opportunityInsights: string
+  opportunityInsights: string[]
 }
 
 export interface CrossPlatformSummary {
@@ -36,6 +38,9 @@ export interface ValidationSummary {
   avgTractionScore: number
   totalVideosAnalyzed: number
   totalCommentsAnalyzed: number
+  headline: string | null
+  keyOpportunities: string[]
+  riskFactors: string[]
 }
 
 interface YouTubeValidationProps {

@@ -421,7 +421,7 @@ export function AudienceDetailTabs({
       </TabsContent>
 
       <TabsContent value="youtube" className="mt-6">
-        <YouTubeValidationTabContent audienceId={audienceId} />
+        <YouTubeValidationTabContent audienceId={audienceId} hasTopicsReady={totalTopics > 0} />
       </TabsContent>
 
       <TabsContent value="products" className="mt-6">
