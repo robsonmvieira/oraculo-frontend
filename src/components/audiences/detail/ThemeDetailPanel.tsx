@@ -202,48 +202,50 @@ export function ThemeDetailPanel({ theme, audienceId, intentCategory, embedded =
               </>
             )}
 
-            <div className="flex flex-wrap justify-end gap-2 mb-6">
-              <Button
-                variant={showPosts ? 'primary' : 'outline'}
-                size="sm"
-                className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowPosts(!showPosts); setShowPatterns(false); setShowAsk(false); setShowChat(false) } : undefined}
-              >
-                <Search className="w-3.5 h-3.5" />
-                {t('themes.browseAll')}
-              </Button>
-              <Button
-                variant={showPatterns ? 'primary' : 'outline'}
-                size="sm"
-                className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowPatterns(!showPatterns); setShowPosts(false); setShowAsk(false); setShowChat(false) } : undefined}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                {t('themes.patterns')}
-              </Button>
-              <Button
-                variant={showAsk ? 'primary' : 'outline'}
-                size="sm"
-                className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowAsk(!showAsk); setShowPosts(false); setShowPatterns(false); setShowChat(false) } : undefined}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                {t('themes.ask')}
-              </Button>
-              <Button
-                variant={showChat ? 'primary' : 'outline'}
-                size="sm"
-                className="gap-1.5"
-                onClick={isIntentTheme ? () => { setShowChat(!showChat); setShowPosts(false); setShowPatterns(false); setShowAsk(false) } : undefined}
-              >
-                <MessageSquareText className="w-3.5 h-3.5" />
-                {t('themes.intentChat.title')}
-              </Button>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                <Copy className="w-3.5 h-3.5" />
-                {t('themes.copy')}
-              </Button>
-            </div>
+            {isIntentTheme && (
+              <div className="flex flex-wrap justify-end gap-2 mb-6">
+                <Button
+                  variant={showPosts ? 'primary' : 'outline'}
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => { setShowPosts(!showPosts); setShowPatterns(false); setShowAsk(false); setShowChat(false) }}
+                >
+                  <Search className="w-3.5 h-3.5" />
+                  {t('themes.browseAll')}
+                </Button>
+                <Button
+                  variant={showPatterns ? 'primary' : 'outline'}
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => { setShowPatterns(!showPatterns); setShowPosts(false); setShowAsk(false); setShowChat(false) }}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {t('themes.patterns')}
+                </Button>
+                <Button
+                  variant={showAsk ? 'primary' : 'outline'}
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => { setShowAsk(!showAsk); setShowPosts(false); setShowPatterns(false); setShowChat(false) }}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {t('themes.ask')}
+                </Button>
+                <Button
+                  variant={showChat ? 'primary' : 'outline'}
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => { setShowChat(!showChat); setShowPosts(false); setShowPatterns(false); setShowAsk(false) }}
+                >
+                  <MessageSquareText className="w-3.5 h-3.5" />
+                  {t('themes.intentChat.title')}
+                </Button>
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Copy className="w-3.5 h-3.5" />
+                  {t('themes.copy')}
+                </Button>
+              </div>
+            )}
 
             {/* Narrative Summaries */}
             {theme.summaryThemes && theme.summaryThemes.length > 0 && audienceId && (
